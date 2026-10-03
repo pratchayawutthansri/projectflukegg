@@ -57,65 +57,19 @@
 
 ---
 
-## 🗄️ โครงสร้างฐานข้อมูลสำหรับ Phase 2 (Cloud Database Schema)
+## 🗄️ โครงสร้างฐานข้อมูล Supabase PostgreSQL (Cloud Database Schema)
 
-เตรียมพร้อมสำหรับการเชื่อมต่อ **Cloudflare D1 (Serverless SQLite)** ในก้าวถัดไป:
+โปรเจกต์ใช้ **Supabase (PostgreSQL + Auth + Row Level Security)** เพื่อการซิงค์ข้อมูลแบบเรียลไทม์ข้ามเครื่อง โดยมีไฟล์ Migration พร้อมใช้งานใน [supabase_schema.sql](file:///d:/projectflukegg/supabase_schema.sql)
 
-```sql
--- 1. ตารางข้อมูลผู้ใช้งาน (Users & Authentication)
-CREATE TABLE users (
-    id TEXT PRIMARY KEY,
-    member_id TEXT UNIQUE NOT NULL,
-    display_name TEXT NOT NULL,
-    password_hash TEXT NOT NULL,
-    weight_kg REAL DEFAULT 70,
-    height_cm REAL DEFAULT 175,
-    age INTEGER DEFAULT 25,
-    daily_calorie_target INTEGER DEFAULT 650,
-    gym_name TEXT DEFAULT 'Gym Gym Gym',
-    theme_mode TEXT DEFAULT 'yellow',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+### โครงสร้าง 4 ตารางหลัก:
+1. **`public.profiles`**: เก็บข้อมูลส่วนตัว, น้ำหนัก, ส่วนสูง, เป้าหมายแคลอรี และธีม (เชื่อมกับ `auth.users`)
+2. **`public.workout_sessions`**: เก็บประวัติการซ้อมจริง, ระยะเวลา, แคลอรีที่เผาผลาญ
+3. **`public.scheduled_plans`**: เก็บลูปตารางซ้อมล่วงหน้า, เครื่องเล่น (JSONB), ระยะทางวิ่ง
+4. **`public.transactions`**: เก็บบัญชีรายรับ-รายจ่าย Fit & Finance
 
--- 2. ตารางบันทึกการซ้อมจริง (Workout Sessions)
-CREATE TABLE workout_sessions (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    session_date DATE NOT NULL,
-    title TEXT NOT NULL,
-    duration_minutes INTEGER DEFAULT 0,
-    calories_burned INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
+### 🔒 ความปลอดภัย (Row Level Security - RLS):
+ทุกตารางเปิดใช้งาน **RLS** 100% ทำให้ผู้ใช้งานแต่ละคนสามารถ อ่าน/เขียน/ลบ ได้เฉพาะข้อมูลของบัญชีตัวเองเท่านั้น ปลอดภัยต่อความเป็นส่วนตัวระดับสูงสุด
 
--- 3. ตารางตารางซ้อมที่วางแผนล่วงหน้า (Scheduled Plans)
-CREATE TABLE scheduled_plans (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    plan_date DATE NOT NULL,
-    title TEXT NOT NULL,
-    muscle_group TEXT NOT NULL,
-    routine_items_json TEXT NOT NULL, -- บันทึกเครื่องเล่นและน้ำหนักในรูปแบบ JSON
-    running_distance_km REAL DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
--- 4. ตารางบันทึกรายรับ-รายจ่าย (Fit & Daily Finance Transactions)
-CREATE TABLE transactions (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    tx_date DATE NOT NULL,
-    title TEXT NOT NULL,
-    tx_type TEXT CHECK(tx_type IN ('income', 'expense')) NOT NULL,
-    category TEXT NOT NULL,
-    amount REAL NOT NULL,
-    note TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-```
 
 ---
 
