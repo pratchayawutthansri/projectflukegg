@@ -5,12 +5,46 @@
 
 ---
 
-## 📌 ภาพรวมโปรเจกต์ (Project Overview)
+## 🌐 ลิงก์ระบบโปรดักชัน & แหล่งจัดเก็บโค้ด (Production & Repository)
 
-**Gym Gym Gym** ได้รับการออกแบบภายใต้แนวคิด **Dual-Track Discipline (วินัยคู่ขนาน)**:
-1. **Physical Health (Fit)**: ระบบจัดตารางซ้อมอัจฉริยะ (Smart Scheduler) สุ่มเซ็ตเครื่องเล่น 15 ที/เซ็ต ตามกลุ่มกล้ามเนื้อ คำนวณระยะทางวิ่ง แคลอรีที่เผาผลาญ และตัวจับเวลาพักเซ็ต (Rest Timer)
-2. **Financial Control (Finance)**: ระบบบันทึกรายรับ-รายจ่ายสุขภาพและชีวิตประจำวัน คำนวณยอดคงเหลือสุทธิ (Net Balance) แบบเรียลไทม์
-3. **Design System**: Neo-Brutalist Minimalism ผสานเส้นโค้งของคลื่นของเหลวสีดำ (Fluid Organic Wave), ใช้ฟอนต์ Outfit & Prompt, ไร้ Emoji โดยใช้ไอคอน Lucide 100%
+* **🚀 Production URL (ใช้งานจริง)**: [https://projectflukegg.vercel.app](https://projectflukegg.vercel.app)
+* **🐙 GitHub Repository**: [https://github.com/pratchayawutthansri/projectflukegg](https://github.com/pratchayawutthansri/projectflukegg)
+* **⚡ CI/CD Pipeline**: Git Push Trigger Auto-Deployment (Vercel Edge Network)
+* **📲 Application Type**: Progressive Web App (PWA) — ติดตั้งลงมือถือและคอมพิวเตอร์ได้เต็มจอ
+
+---
+
+## 📱 ระบบ Progressive Web App (PWA) & การติดตั้งลงเครื่อง
+
+แอปพลิเคชันได้รับการยกระดับเป็น **Native-like Web App** เต็มรูปแบบ:
+
+1. **โหมดการแสดงผล (Standalone Display)**: แสดงผลเต็มจอไร้แถบ URL เสมือนแอปพลิเคชัน Native
+2. **ระบบแคชออฟไลน์ (Offline-Ready Service Worker `sw.js`)**: บันทึกและเรียกดูข้อมูลได้แม้สัญญาณอินเทอร์เน็ตขาดหาย
+3. **ไอคอนความละเอียดสูง (Adaptive High-Res Icons)**: รองรับความละเอียด 192x192 และ 512x512 พร้อม Maskable Icon บน Android และ Apple Touch Icon บน iOS
+4. **ปุ่มติดตั้งในตัว (In-App Install Trigger)**: เข้าไปที่แท็บ **ตั้งค่า (Settings)** เพื่อกดติดตั้งลงเครื่องได้ในคลิกเดียว
+
+### 📌 วิธีติดตั้งลงอุปกรณ์:
+* **iPhone / iPad (Safari)**: กดปุ่มแชร์ **(Share 📤)** -> เลือก **"เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen ➕)**
+* **Android (Chrome)**: กดปุ่ม **"ติดตั้งแอป" (Install App)** บนแถบแจ้งเตือน หรือกดจุด 3 จุด **(⋮)** -> เลือก **"ติดตั้งแอป"**
+* **Windows / macOS (Chrome / Edge)**: กดไอคอนรูปคอมพิวเตอร์/ติดตั้ง บนแถบ Address Bar ขวาบน
+
+---
+
+## 🗺️ แผนการพัฒนาโปรเจกต์ (Project Roadmap)
+
+- [x] **Phase 1: Local-First Core Application**
+  - ดีไซน์ระบบ Neo-Brutalist Minimalism ผสาน Fluid Organic Wave
+  - ระบบจัดตารางซ้อมอัจฉริยะ (15 ที/เซ็ต) คำนวณระยะทางวิ่งและแคลอรี
+  - ระบบบันทึกรายรับ-รายจ่ายและคำนวณ Net Balance เรียลไทม์
+  - ระบบประมวลผล LocalStorage ภายในเครื่อง (ข้อมูลคงอยู่ตลอด ไม่หายแม้ปิดเว็บ)
+- [x] **Phase 1.5: Production Deployment & PWA Installation**
+  - ติดตั้ง Git Version Control และ Push ขึ้น GitHub
+  - ตั้งค่า CI/CD Auto-Deploy ขึ้น Vercel Edge Network
+  - พัฒนา Service Worker, Web Manifest และรองรับการติดตั้งลงหน้าจอโฮมมือถือ
+- [ ] **Phase 2: Cloud Database & Cross-Device Sync (Next Milestone)**
+  - ออกแบบ Cloudflare D1 / Cloud Database เชื่อมต่อกับ Backend API
+  - ระบบบัญชีสมาชิกบนคลาวด์ (Cloud Authentication)
+  - ซิงค์ข้อมูลอัตโนมัติข้ามเครื่องแบบไร้รอยต่อ (มือถือ ↔ คอมพิวเตอร์)
 
 ---
 
@@ -23,70 +57,9 @@
 
 ---
 
-## ☁️ แผนสถาปัตยกรรมคลาวด์และการ Deploy (Cloud Architecture Plan)
+## 🗄️ โครงสร้างฐานข้อมูลสำหรับ Phase 2 (Cloud Database Schema)
 
-โปรเจกต์นี้วางแผนโครงสร้างพื้นฐานและการ Deploy บนสถาปัตยกรรมคลาวด์ยุคใหม่ (Modern Edge Architecture) โดยเน้นความปลอดภัย ความเร็ว และค่าใช้จ่ายศูนย์บาท (Free-Tier Friendly):
-
-### 1. โดเมนและความปลอดภัย (Domain & Edge Security)
-* **Custom Domain** เชื่อมต่อและจัดการ DNS ผ่าน **Cloudflare**
-* **Cloudflare Web Application Firewall (WAF)** ป้องกันการโจมตี DDoS, บล็อกบอท และสแกนช่องโหว่
-* **Cloudflare SSL/TLS**: กำหนดเป็นโหมด **`Full` หรือ `Full (strict)`** เสมอ เพื่อป้องกัน Redirect Loop (`ERR_TOO_MANY_REDIRECTS`)
-* **Edge Caching**: แคชไฟล์ Static (HTML, CSS, JS, Assets) กระจายบนเซิร์ฟเวอร์ Cloudflare ทั่วโลก (รวมถึงศูนย์ข้อมูลกรุงเทพฯ) ทำให้เปิดเว็บได้ในระดับเสี้ยววินาที
-
----
-
-### 2. ทางเลือกการ Deploy และฐานข้อมูล (Deployment & Database Architecture)
-
-#### 🌟 แนวทางแนะนำ: All-in-One Cloudflare (Cloudflare Pages + Cloudflare D1)
-รวมศูนย์การทำงานทั้งหมดไว้ที่ Cloudflare ที่เดียว บริหารจัดการง่าย มีโควต้าพื้นที่ใช้งานฟรีมหาศาล
-
-```
-[ User Browser / PWA ]
-          │
-          ▼
-┌────────────────────────────────────────────────────────┐
-│                   CLOUDFLARE EDGE                      │
-│                                                        │
-│  1. Cloudflare DNS & WAF (DDoS / Bot Protection)       │
-│  2. Cloudflare Pages (Frontend Hosting: React + Vite)   │
-│  3. Cloudflare Workers / Functions (Backend REST API)   │
-│  4. Cloudflare D1 Database (Serverless SQLite Engine)  │
-└────────────────────────────────────────────────────────┘
-```
-
-* **Frontend Hosting**: **Cloudflare Pages** เชื่อมต่อ Git Repository Deploy อัตโนมัติทุกครั้งที่ `git push`
-* **Database**: **Cloudflare D1 (Serverless Relational SQL)**
-  * ความจุฟรี: **5 GB** (มากกว่า Supabase 10 เท่า)
-  * โควต้าอ่านฟรี: **5,000,000 rows/วัน**
-  * โควต้าเขียนฟรี: **100,000 rows/วัน**
-  * อ่านเขียนด้วยความเร็วระดับ Edge Latency ไม่ต้องเปิดพอร์ตฐานข้อมูลภายนอก
-
----
-
-#### 🔄 แนวทางสำรอง: Hybrid Architecture (Vercel + Cloudflare D1)
-สำหรับผู้ที่ต้องการใช้หน้าจัดการแดชบอร์ดของ Vercel สำหรับ Frontend
-
-```
-[ User Browser ]
-       │
-       ▼
- [ Cloudflare DNS / WAF ]
-       │
-       ├─────────────────────────────────┐
-       ▼                                 ▼
-[ Vercel Edge Network ]      [ Cloudflare Worker API ]
-Frontend (React SPA)                     │
-       │                                 ▼
-       └────────────── API ──────────> [ Cloudflare D1 Database ]
-```
-
-* **Frontend**: Deploy บน **Vercel** พร้อมไฟล์ `vercel.json` รองรับ SPA Rewrite (ป้องกัน Error 404)
-* **DNS & Security**: ชี้โดเมนผ่าน **Cloudflare Proxy (เมฆสีส้ม)**
-* **Database & API**: **Cloudflare Worker** ต่อเข้าหา **Cloudflare D1** ให้บริการ API แก่หน้าบ้าน Vercel
-
----
-
-## 🗄️ โครงสร้างฐานข้อมูล Cloudflare D1 (Database Schema Concept)
+เตรียมพร้อมสำหรับการเชื่อมต่อ **Cloudflare D1 (Serverless SQLite)** ในก้าวถัดไป:
 
 ```sql
 -- 1. ตารางข้อมูลผู้ใช้งาน (Users & Authentication)
@@ -165,14 +138,19 @@ npm run build
 
 ```
 projectflukegg/
+├── public/
+│   ├── icon-192.png          # High-Res PWA App Icon (192x192)
+│   ├── icon-512.png          # High-Res PWA App Icon (512x512)
+│   ├── flukexd-logo.png      # Original Phoenix Logo
+│   ├── manifest.json         # Web App Manifest Configuration
+│   └── sw.js                 # PWA Service Worker (Offline Cache)
 ├── src/
 │   ├── components/           # UI Components (Dashboard, Workout, Calendar, Finance, Summary, Settings, Auth)
 │   ├── utils/                # Workout Calculator, Finance Engine, LocalStorage Manager
-│   ├── types.ts              # TypeScript Type Definitions
+│   ├── types/                # TypeScript Type Definitions
 │   ├── App.tsx               # Main Application Router & Authentication Guard
 │   ├── index.css             # Neo-Brutalist CSS Tokens & Responsive Styles
-│   └── main.tsx              # React Entry Point
-├── public/                   # Static Assets, Logos & PWA Manifest
+│   └── main.tsx              # React Entry Point & SW Registration
 ├── vercel.json               # Vercel SPA Routing Configuration
 ├── index.html                # HTML Document & Viewport Configuration
 └── README.md                 # Project Documentation & Architecture
