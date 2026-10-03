@@ -667,8 +667,8 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
           <button
             onClick={() => handleAddMachine(inlineMachineName, inlineMuscle)}
             style={{
-              backgroundColor: '#0a0a0c',
-              color: 'var(--theme-accent, #ffe500)',
+              background: 'var(--theme-card-bg, #0a0a0c)',
+              color: '#ffffff',
               border: 'none',
               borderRadius: '12px',
               padding: '0 16px',
@@ -681,7 +681,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
               whiteSpace: 'nowrap',
             }}
           >
-            <Plus size={16} /> {userProfile.language === 'en' ? 'Add' : 'เพิ่ม'}
+            <Plus size={16} color="#ffffff" /> {userProfile.language === 'en' ? 'Add' : 'เพิ่ม'}
           </button>
         </div>
       </div>
@@ -1017,7 +1017,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
         style={{ padding: '16px 24px', marginTop: '6px' }}
       >
         <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Check size={18} color="var(--theme-accent, #ffe500)" /> {userProfile.language === 'en' ? 'Finish & Summary Today Workout' : 'สรุปและเสร็จสิ้นการซ้อมที่ Gym Gym Gym'}
+          <Check size={18} color="#ffffff" /> {userProfile.language === 'en' ? 'Finish & Summary Today Workout' : 'สรุปและเสร็จสิ้นการซ้อมที่ Gym Gym Gym'}
         </span>
         <ChevronRight size={18} />
       </button>

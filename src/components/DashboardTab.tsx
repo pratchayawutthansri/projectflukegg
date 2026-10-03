@@ -195,14 +195,14 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
 
           <span
             style={{
-              backgroundColor: 'var(--theme-accent, #ffe500)',
-              color: '#0a0a0c',
+              background: 'var(--theme-card-bg, #0a0a0c)',
+              color: '#ffffff',
               fontFamily: 'Outfit, sans-serif',
               fontWeight: 800,
               fontSize: '11px',
               padding: '3px 8px',
               borderRadius: '8px',
-              border: '1px solid #0a0a0c',
+              border: '1px solid var(--theme-card-border, #0a0a0c)',
             }}
           >
             GYM GYM GYM
@@ -296,15 +296,15 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
                   width: '44px',
                   height: '44px',
                   borderRadius: '14px',
-                  backgroundColor: '#0a0a0c',
-                  color: 'var(--theme-accent, #ffe500)',
+                  background: 'var(--theme-card-bg, #0a0a0c)',
+                  color: '#ffffff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
                 }}
               >
-                <Dumbbell size={22} />
+                <Dumbbell size={22} color="#ffffff" />
               </div>
               <div>
                 <h3

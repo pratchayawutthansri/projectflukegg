@@ -96,15 +96,15 @@ export const TermsModal: React.FC<TermsModalProps> = ({
                 width: '34px',
                 height: '34px',
                 borderRadius: '10px',
-                backgroundColor: '#0a0a0c',
+                background: 'var(--theme-card-bg, #0a0a0c)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: 'var(--theme-accent, #ffe500)',
+                color: '#ffffff',
                 flexShrink: 0,
               }}
             >
-              <FileText size={18} color="var(--theme-accent, #ffe500)" strokeWidth={2.2} />
+              <FileText size={18} color="#ffffff" strokeWidth={2.2} />
             </div>
             <h2
               style={{
@@ -167,8 +167,8 @@ export const TermsModal: React.FC<TermsModalProps> = ({
                   height: '26px',
                   minWidth: '26px',
                   borderRadius: '50%',
-                  backgroundColor: '#0a0a0c',
-                  color: 'var(--theme-accent, #ffe500)',
+                  background: 'var(--theme-card-bg, #0a0a0c)',
+                  color: '#ffffff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -208,9 +208,9 @@ export const TermsModal: React.FC<TermsModalProps> = ({
             onClick={handleConfirm}
             style={{
               width: '100%',
-              backgroundColor: '#0a0a0c',
-              color: 'var(--theme-accent, #ffe500)',
-              border: '2px solid #0a0a0c',
+              background: 'var(--theme-card-bg, #0a0a0c)',
+              color: '#ffffff',
+              border: '2px solid var(--theme-card-border, #0a0a0c)',
               borderRadius: '16px',
               padding: '15px 20px',
               fontSize: '16px',

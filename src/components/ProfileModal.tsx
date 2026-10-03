@@ -157,11 +157,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           {/* Member Digital Card */}
           <div
             style={{
-              backgroundColor: '#0a0a0c',
+              background: 'var(--theme-card-bg, #0a0a0c)',
               color: '#ffffff',
               borderRadius: '20px',
               padding: '18px',
-              border: '2px solid #0a0a0c',
+              border: '2px solid var(--theme-card-border, #0a0a0c)',
               boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
               position: 'relative',
               overflow: 'hidden',
@@ -210,14 +210,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '17px', fontWeight: 800, margin: 0 }}>
                     {name || 'Fluke'}
                   </h3>
-                  <span style={{ fontSize: '11px', color: 'var(--theme-accent, #ffe500)', fontWeight: 600 }}>
+                  <span style={{ fontSize: '11px', color: '#ffffff', opacity: 0.92, fontWeight: 600 }}>
                     Gym Gym Gym Official Member
                   </span>
                 </div>
               </div>
 
               <div style={{ textAlign: 'right' }}>
-                <span style={{ fontSize: '10px', color: '#a1a1aa', display: 'block' }}>
+                <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.8)', display: 'block' }}>
                   {userProfile.language === 'en' ? 'Height · Age' : 'ส่วนสูง · อายุ'}
                 </span>
                 <span
@@ -240,28 +240,28 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 gap: '8px',
                 marginTop: '14px',
                 paddingTop: '12px',
-                borderTop: '1px solid rgba(255,255,255,0.1)',
+                borderTop: '1px solid rgba(255,255,255,0.2)',
                 textAlign: 'center',
                 fontSize: '11px',
               }}
             >
               <div>
-                <span style={{ color: '#a1a1aa', display: 'block' }}>
+                <span style={{ color: 'rgba(255, 255, 255, 0.8)', display: 'block' }}>
                   {userProfile.language === 'en' ? 'Weight' : 'น้ำหนักตัว'}
                 </span>
-                <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '13px' }}>{weightKg} kg</strong>
+                <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '13px', color: '#ffffff' }}>{weightKg} kg</strong>
               </div>
               <div>
-                <span style={{ color: '#a1a1aa', display: 'block' }}>
+                <span style={{ color: 'rgba(255, 255, 255, 0.8)', display: 'block' }}>
                   {userProfile.language === 'en' ? 'Height' : 'ส่วนสูง'}
                 </span>
-                <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '13px' }}>{heightCm} cm</strong>
+                <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '13px', color: '#ffffff' }}>{heightCm} cm</strong>
               </div>
               <div>
-                <span style={{ color: '#a1a1aa', display: 'block' }}>
+                <span style={{ color: 'rgba(255, 255, 255, 0.8)', display: 'block' }}>
                   {userProfile.language === 'en' ? 'Age' : 'อายุ'}
                 </span>
-                <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '13px', color: 'var(--theme-accent, #ffe500)' }}>
+                <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '13px', color: '#ffffff' }}>
                   {age} {userProfile.language === 'en' ? 'yrs' : 'ปี'}
                 </strong>
               </div>

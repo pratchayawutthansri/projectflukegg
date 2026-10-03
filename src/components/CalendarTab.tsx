@@ -84,8 +84,8 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
         <button
           onClick={() => onOpenSchedulerWithDate(selectedDate)}
           style={{
-            backgroundColor: '#0a0a0c',
-            color: 'var(--theme-accent, #ffe500)',
+            background: 'var(--theme-card-bg, #0a0a0c)',
+            color: '#ffffff',
             border: 'none',
             borderRadius: '9999px',
             padding: '8px 16px',
@@ -95,10 +95,10 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
             alignItems: 'center',
             gap: '6px',
             cursor: 'pointer',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.15)',
           }}
         >
-          <Plus size={14} /> {t.scheduleWorkout}
+          <Plus size={14} color="#ffffff" /> {t.scheduleWorkout}
         </button>
       </div>
 
@@ -368,8 +368,8 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
               {plan.runningDistanceKm && (
                 <div
                   style={{
-                    backgroundColor: '#0a0a0c',
-                    color: 'var(--theme-accent, #ffe500)',
+                    background: 'var(--theme-card-bg, #0a0a0c)',
+                    color: '#ffffff',
                     borderRadius: '12px',
                     padding: '8px 12px',
                     display: 'flex',
@@ -381,7 +381,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Navigation size={14} />
+                    <Navigation size={14} color="#ffffff" />
                     <span>
                       {userProfile.language === 'en'
                         ? `Target Run: ${plan.runningDistanceKm} km`
@@ -465,7 +465,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                 style={{ padding: '14px 20px' }}
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Play size={16} fill="var(--theme-accent, #ffe500)" color="var(--theme-accent, #ffe500)" />
+                  <Play size={16} fill="#ffffff" color="#ffffff" />
                   {userProfile.language === 'en' ? 'Start Workout with this Routine Now' : 'โหลดเข้าโหมดซ้อม Gym Gym Gym ทันที'}
                 </span>
                 <ChevronRight size={18} />

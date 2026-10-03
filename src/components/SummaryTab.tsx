@@ -205,8 +205,8 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
               type="button"
               onClick={() => setSelectedDate(todayStr)}
               style={{
-                backgroundColor: '#0a0a0c',
-                color: 'var(--theme-accent, #ffe500)',
+                background: 'var(--theme-card-bg, #0a0a0c)',
+                color: '#ffffff',
                 border: 'none',
                 borderRadius: '8px',
                 padding: '6px 10px',
@@ -283,7 +283,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
                 fontFamily: 'Outfit, sans-serif',
                 fontSize: '26px',
                 fontWeight: 800,
-                color: userProfile.themeMode === 'yellow' ? '#ffe500' : 'var(--theme-accent, #ffffff)',
+                color: '#ffffff',
                 marginTop: '2px',
               }}
             >
@@ -398,14 +398,14 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
                 width: '32px',
                 height: '32px',
                 borderRadius: '10px',
-                backgroundColor: '#0a0a0c',
-                color: 'var(--theme-accent, #ffe500)',
+                background: 'var(--theme-card-bg, #0a0a0c)',
+                color: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Dumbbell size={16} />
+              <Dumbbell size={16} color="#ffffff" />
             </div>
             <div>
               <h2 style={{ fontSize: '15px', fontWeight: 800, color: '#0a0a0c', margin: 0 }}>

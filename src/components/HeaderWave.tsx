@@ -1,7 +1,6 @@
 import React from 'react';
 import { Plus, Dumbbell, Globe, Languages } from 'lucide-react';
 import type { UserProfile } from '../types';
-import { getTheme } from '../utils/theme';
 import { getTranslation } from '../utils/translations';
 
 interface HeaderWaveProps {
@@ -19,7 +18,6 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
   onOpenLanding,
   onToggleLanguage,
 }) => {
-  const theme = getTheme(userProfile.themeMode);
   const t = getTranslation(userProfile.language || 'th');
   const isEn = userProfile.language === 'en';
 
@@ -50,16 +48,16 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div
               style={{
-                width: '34px',
-                height: '34px',
-                borderRadius: '8px',
+                width: '36px',
+                height: '36px',
+                borderRadius: '10px',
                 overflow: 'hidden',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: '#000000',
-                border: `1.5px solid ${theme.accent}`,
-                boxShadow: `0 2px 10px ${theme.accentGlow}`,
+                border: '1.5px solid rgba(255, 255, 255, 0.45)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
               }}
             >
               <img
@@ -73,12 +71,13 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
               <span
                 style={{
                   fontFamily: 'Outfit, sans-serif',
-                  fontWeight: 800,
-                  fontSize: '18px',
+                  fontWeight: 900,
+                  fontSize: '19px',
                   letterSpacing: '-0.3px',
                   color: '#ffffff',
                   display: 'block',
                   lineHeight: 1.1,
+                  textShadow: '0 1px 3px rgba(0, 0, 0, 0.4)',
                 }}
               >
                 GYM GYM GYM
@@ -86,10 +85,13 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
               <span
                 style={{
                   fontFamily: 'Outfit, sans-serif',
-                  fontWeight: 600,
-                  fontSize: '9px',
-                  color: theme.accent,
-                  letterSpacing: '1px',
+                  fontWeight: 800,
+                  fontSize: '10px',
+                  color: '#ffffff',
+                  opacity: 0.95,
+                  letterSpacing: '1.2px',
+                  display: 'inline-block',
+                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.45)',
                 }}
               >
                 {t.appSub}
@@ -104,50 +106,54 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
                 type="button"
                 onClick={onToggleLanguage}
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                  border: '1px solid rgba(255, 255, 255, 0.25)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.32)',
+                  backdropFilter: 'blur(8px)',
+                  border: '1px solid rgba(255, 255, 255, 0.45)',
                   borderRadius: '9999px',
-                  padding: '5px 11px',
+                  padding: '5px 12px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '5px',
                   color: '#ffffff',
                   fontFamily: 'Outfit, Prompt, sans-serif',
                   fontSize: '11px',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.18)',
                 }}
                 title="Switch Language / สลับภาษา"
               >
-                <Languages size={13} color="#ffffff" />
-                <span>{isEn ? 'EN' : 'TH'}</span>
+                <Languages size={14} color="#ffffff" strokeWidth={2.5} />
+                <span style={{ color: '#ffffff', fontWeight: 800 }}>{isEn ? 'EN' : 'TH'}</span>
               </button>
             )}
 
-          {onOpenLanding && (
-            <button
-              onClick={onOpenLanding}
-              title="ดูหน้าเว็บไซต์แนะนำ & วิธีใช้งาน"
-              style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                border: '1px solid rgba(255, 255, 255, 0.25)',
-                color: '#ffffff',
-                borderRadius: '9999px',
-                padding: '5px 11px',
-                fontSize: '11px',
-                fontWeight: 700,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              <Globe size={13} color="#ffffff" />
-              <span>{isEn ? 'Manual' : 'คู่มือ / เว็บไซต์'}</span>
-            </button>
-          )}
+            {onOpenLanding && (
+              <button
+                onClick={onOpenLanding}
+                title="ดูหน้าเว็บไซต์แนะนำ & วิธีใช้งาน"
+                style={{
+                  backgroundColor: 'rgba(0, 0, 0, 0.32)',
+                  backdropFilter: 'blur(8px)',
+                  border: '1px solid rgba(255, 255, 255, 0.45)',
+                  color: '#ffffff',
+                  borderRadius: '9999px',
+                  padding: '5px 12px',
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.18)',
+                }}
+              >
+                <Globe size={14} color="#ffffff" strokeWidth={2.5} />
+                <span style={{ color: '#ffffff', fontWeight: 800 }}>{isEn ? 'Manual' : 'คู่มือ / เว็บไซต์'}</span>
+              </button>
+            )}
           </div>
         </div>
 
