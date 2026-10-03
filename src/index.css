@@ -1,0 +1,327 @@
+/* ====================================================================
+   FLUKEXD GYM OS - DESIGN SYSTEM
+   Monochrome Neo-Brutalist Minimalism with Fluid Organic Waves
+   Universal iOS & Android Mobile-First Architecture
+   ==================================================================== */
+
+:root {
+  --color-black: #0a0a0c;
+  --color-white: #ffffff;
+  --color-card-bg: #ffffff;
+  --color-canvas: #f2f2f4;
+  --color-canvas-subtle: #fafafb;
+  --color-border: #141416;
+  --color-border-light: rgba(0, 0, 0, 0.12);
+  --color-border-subtle: rgba(0, 0, 0, 0.06);
+
+  /* Subtle Gym Accent */
+  --color-yellow-gym: #ffe500;
+  --color-yellow-glow: rgba(255, 229, 0, 0.25);
+  --color-yellow-hover: #f5dc00;
+  
+  /* Financial status colors */
+  --color-income: #10b981;
+  --color-income-bg: #ecfdf5;
+  --color-expense: #f43f5e;
+  --color-expense-bg: #fff1f2;
+
+  /* Typography */
+  --font-heading: 'Outfit', 'Prompt', -apple-system, sans-serif;
+  --font-body: 'Prompt', 'Outfit', -apple-system, sans-serif;
+
+  /* Elevations */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
+  --shadow-neo: 0 4px 0 #000000;
+  --shadow-neo-sm: 0 2px 0 #000000;
+
+  /* Radii */
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 26px;
+  --radius-xl: 34px;
+  --radius-pill: 9999px;
+
+  /* Animation */
+  --transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overscroll-behavior-y: contain; /* Prevents pull-to-refresh interference on iOS/Android */
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-canvas);
+  color: var(--color-black);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Base App Container */
+#root {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background-color: var(--color-white);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.08);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* High-Contrast Action Pill Buttons */
+.btn-black-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border: 1.5px solid var(--color-black);
+  border-radius: var(--radius-pill);
+  padding: 14px 22px;
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+  text-decoration: none;
+  width: 100%;
+  user-select: none;
+}
+
+.btn-black-pill:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+.btn-white-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  border: 1.5px solid var(--color-black);
+  border-radius: var(--radius-pill);
+  padding: 13px 22px;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  width: 100%;
+  user-select: none;
+}
+
+.btn-white-pill:active {
+  transform: scale(0.97);
+  background-color: var(--color-canvas-subtle);
+}
+
+/* Inverted Icon Tile */
+.icon-tile-black {
+  width: 62px;
+  height: 62px;
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 1.5px solid var(--color-black);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.icon-tile-black:active {
+  transform: scale(0.94);
+}
+
+/* Clean Bordered Card */
+.neo-card {
+  background-color: var(--color-white);
+  border: 1.5px solid var(--color-black);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.neo-card:active {
+  transform: scale(0.98);
+}
+
+/* Stat Box Grid */
+.stat-box-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.stat-box {
+  background: var(--color-white);
+  border: 1.5px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-box .number {
+  font-family: var(--font-heading);
+  fontSize: 24px;
+  font-weight: 700;
+  color: var(--color-black);
+  line-height: 1.2;
+}
+
+.stat-box .label {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Bottom Nav Bar - Native iOS Home Indicator & Android Navigation Bar Safe Area */
+.bottom-nav {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.96);
+  border-top: 1.5px solid var(--color-border-light);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-top: 6px;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-bottom: max(10px, env(safe-area-inset-bottom, 10px));
+  z-index: 50;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.nav-tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  color: #71717a;
+  cursor: pointer;
+  padding: 3px 2px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  user-select: none;
+  flex: 1;
+  max-width: 68px;
+}
+
+.nav-tab-btn:active {
+  transform: scale(0.92);
+}
+
+.nav-tab-btn.active {
+  color: var(--color-black);
+}
+
+.nav-tab-btn.active .nav-icon-wrap {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  transform: scale(1.05);
+}
+
+.nav-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  border-radius: 9999px;
+}
+
+/* ====================================================================
+   Custom Click-Anywhere Time Picker Component
+   Expands webkit picker indicator to cover 100% of the container
+   so tapping anywhere immediately triggers the native time picker
+   ==================================================================== */
+.time-picker-full-cover {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+}
+
+.time-picker-full-cover input[type="time"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 5;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.time-picker-full-cover input[type="time"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
