@@ -11,6 +11,9 @@ import {
   Palette,
   Globe,
   Trash2,
+  Smartphone,
+  Download,
+  Info,
 } from 'lucide-react';
 import type { UserProfile } from '../types';
 
@@ -43,6 +46,51 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
   const [isSaved, setIsSaved] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [showInstallHelp, setShowInstallHelp] = useState(false);
+
+  useEffect(() => {
+    // Check if already running as installed standalone PWA
+    if (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone === true
+    ) {
+      setIsInstalled(true);
+    }
+
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    const handleAppInstalled = () => {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setIsInstalled(true);
+      }
+      setDeferredPrompt(null);
+    } else {
+      setShowInstallHelp((prev) => !prev);
+    }
+  };
+
 
   useEffect(() => {
     setName(userProfile.name);
@@ -497,6 +545,118 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           </button>
         </div>
       )}
+
+      {/* PWA / Install Application Card */}
+      <div
+        style={{
+          backgroundColor: '#0a0a0c',
+          color: '#ffffff',
+          borderRadius: '24px',
+          padding: '20px',
+          border: '2px solid #0a0a0c',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '12px',
+                backgroundColor: '#facc15',
+                color: '#0a0a0c',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 900,
+              }}
+            >
+              <Smartphone size={22} />
+            </div>
+            <div>
+              <div style={{ fontSize: '15px', fontWeight: 800, fontFamily: 'Outfit, Prompt, sans-serif' }}>
+                ติดตั้งแอพพลิเคชัน (Install App)
+              </div>
+              <div style={{ fontSize: '12px', color: '#a1a1aa' }}>
+                {isInstalled ? 'ติดตั้งลงเครื่องเรียบร้อยแล้ว' : 'ใช้งานเต็มจอ ไร้แถบ URL รวดเร็วและบันทึกออฟไลน์'}
+              </div>
+            </div>
+          </div>
+          {isInstalled && (
+            <span
+              style={{
+                backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                color: '#4ade80',
+                fontSize: '11px',
+                fontWeight: 700,
+                padding: '4px 10px',
+                borderRadius: '9999px',
+                border: '1px solid #22c55e',
+              }}
+            >
+              ติดตั้งแล้ว
+            </span>
+          )}
+        </div>
+
+        {!isInstalled && (
+          <>
+            <button
+              type="button"
+              onClick={handleInstallClick}
+              style={{
+                width: '100%',
+                padding: '12px 18px',
+                backgroundColor: '#facc15',
+                color: '#0a0a0c',
+                border: 'none',
+                borderRadius: '9999px',
+                fontFamily: 'Outfit, Prompt, sans-serif',
+                fontSize: '14px',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(250, 204, 21, 0.35)',
+                transition: 'transform 0.15s ease',
+              }}
+            >
+              <Download size={18} />
+              <span>{deferredPrompt ? 'กดติดตั้งแอปลงเครื่องทันที' : 'ดูวิธีติดตั้งลงหน้าจอโฮม'}</span>
+            </button>
+
+            {showInstallHelp && (
+              <div
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                  borderRadius: '16px',
+                  padding: '14px',
+                  fontSize: '12px',
+                  lineHeight: 1.6,
+                  color: '#d4d4d8',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                }}
+              >
+                <div style={{ fontWeight: 700, color: '#facc15', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Info size={14} /> วิธีเพิ่มลงหน้าจอมือถือ:
+                </div>
+                <div>
+                  • <strong>iOS (Safari):</strong> แตะปุ่มแชร์ <strong>(Share 📤)</strong> ด้านล่าง แล้วเลือก <strong>"เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen ➕)</strong>
+                </div>
+                <div>
+                  • <strong>Android (Chrome):</strong> แตะจุด 3 จุดมุมขวาบน <strong>(⋮)</strong> แล้วเลือก <strong>"ติดตั้งแอป" (Install app)</strong>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
 
       {/* Logout Action Area */}
       <div style={{ marginTop: '4px', marginBottom: '10px' }}>
