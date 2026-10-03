@@ -5,6 +5,7 @@ const STORAGE_KEYS = {
   WORKOUT_SESSIONS: 'flukexd_gym_workout_sessions',
   SCHEDULED_PLANS: 'flukexd_gym_scheduled_plans',
   TRANSACTIONS: 'flukexd_gym_transactions',
+  CUSTOM_CATEGORIES: 'flukexd_gym_custom_categories',
 };
 
 const getTodayString = () => new Date().toISOString().split('T')[0];

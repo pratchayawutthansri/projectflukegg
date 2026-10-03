@@ -81,12 +81,23 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
   const totalCalories = session ? session.caloriesBurned : 0;
   const workoutMinutes = session ? session.durationMinutes : 0;
 
+  // Filter for Section 2 (Finance): all, income only, expense only
+  const [summaryFilter, setSummaryFilter] = useState<'all' | 'income' | 'expense'>('all');
+
   // Category breakdown for expense
   const expenseByCategory: Record<string, number> = {};
   dailyTransactions
     .filter((t) => t.type === 'expense')
     .forEach((t) => {
       expenseByCategory[t.category] = (expenseByCategory[t.category] || 0) + t.amount;
+    });
+
+  // Category breakdown for income
+  const incomeByCategory: Record<string, number> = {};
+  dailyTransactions
+    .filter((t) => t.type === 'income')
+    .forEach((t) => {
+      incomeByCategory[t.category] = (incomeByCategory[t.category] || 0) + t.amount;
     });
 
   return (
@@ -375,7 +386,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
               {dailyNet >= 0 ? '+' : ''}{formatBaht(dailyNet)}
             </div>
             <span style={{ fontSize: '10px', color: '#a1a1aa', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {isEn ? 'In' : 'รับ'} +{formatBaht(dailyIncome)} | {isEn ? 'Out' : 'จ่าย'} -{formatBaht(dailyExpense)}
+              {isEn ? 'In' : 'รับ'} {dailyIncome > 0 ? `+${formatBaht(dailyIncome)}` : formatBaht(0)} | {isEn ? 'Out' : 'จ่าย'} {dailyExpense > 0 ? `-${formatBaht(dailyExpense)}` : formatBaht(0)}
             </span>
           </div>
         </div>
@@ -606,24 +617,134 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
           </button>
         </div>
 
-        {/* 2 Cashflow Metric Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
-          <div style={{ backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', padding: '10px 12px', borderRadius: '12px' }}>
-            <span style={{ fontSize: '11px', color: '#166534', fontWeight: 600 }}>{t.totalIncome}</span>
-            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', fontWeight: 800, color: '#15803d' }}>
-              +{formatBaht(dailyIncome)}
-            </div>
-          </div>
-          <div style={{ backgroundColor: '#fff1f2', border: '1px solid #fecdd3', padding: '10px 12px', borderRadius: '12px' }}>
-            <span style={{ fontSize: '11px', color: '#9f1239', fontWeight: 600 }}>{t.totalExpense}</span>
-            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', fontWeight: 800, color: '#be123c' }}>
-              -{formatBaht(dailyExpense)}
-            </div>
-          </div>
+        {/* 3 View Tabs: All, Income Only, Expense Only */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '6px',
+            backgroundColor: '#f4f4f5',
+            padding: '4px',
+            borderRadius: '14px',
+            marginBottom: '12px',
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setSummaryFilter('all')}
+            style={{
+              padding: '6px',
+              borderRadius: '10px',
+              border: 'none',
+              backgroundColor: summaryFilter === 'all' ? '#0a0a0c' : 'transparent',
+              color: summaryFilter === 'all' ? '#ffffff' : '#71717a',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              fontFamily: 'Prompt, sans-serif',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            {isEn ? 'All' : 'ทั้งหมด'} ({dailyTransactions.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setSummaryFilter('income')}
+            style={{
+              padding: '6px',
+              borderRadius: '10px',
+              border: 'none',
+              backgroundColor: summaryFilter === 'income' ? '#0a0a0c' : 'transparent',
+              color: summaryFilter === 'income' ? '#10b981' : '#71717a',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              fontFamily: 'Prompt, sans-serif',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            {isEn ? 'Income' : 'รายรับ'} ({dailyTransactions.filter(t => t.type === 'income').length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setSummaryFilter('expense')}
+            style={{
+              padding: '6px',
+              borderRadius: '10px',
+              border: 'none',
+              backgroundColor: summaryFilter === 'expense' ? '#0a0a0c' : 'transparent',
+              color: summaryFilter === 'expense' ? '#f43f5e' : '#71717a',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              fontFamily: 'Prompt, sans-serif',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            {isEn ? 'Expense' : 'รายจ่าย'} ({dailyTransactions.filter(t => t.type === 'expense').length})
+          </button>
         </div>
 
+        {/* Cashflow Metric Cards */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: summaryFilter === 'all' ? '1fr 1fr' : '1fr',
+          gap: '8px',
+          marginBottom: '12px'
+        }}>
+          {(summaryFilter === 'all' || summaryFilter === 'income') && (
+            <div style={{ backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', padding: '10px 12px', borderRadius: '12px' }}>
+              <span style={{ fontSize: '11px', color: '#166534', fontWeight: 600 }}>{t.totalIncome}</span>
+              <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '18px', fontWeight: 800, color: '#15803d' }}>
+                {dailyIncome > 0 ? `+${formatBaht(dailyIncome)}` : formatBaht(0)}
+              </div>
+            </div>
+          )}
+
+          {(summaryFilter === 'all' || summaryFilter === 'expense') && (
+            <div style={{
+              backgroundColor: dailyExpense > 0 ? '#fff1f2' : '#f4f4f5',
+              border: dailyExpense > 0 ? '1px solid #fecdd3' : '1px solid #e4e4e7',
+              padding: '10px 12px',
+              borderRadius: '12px'
+            }}>
+              <span style={{ fontSize: '11px', color: dailyExpense > 0 ? '#9f1239' : '#71717a', fontWeight: 600 }}>{t.totalExpense}</span>
+              <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '18px', fontWeight: 800, color: dailyExpense > 0 ? '#be123c' : '#71717a' }}>
+                {dailyExpense > 0 ? `-${formatBaht(dailyExpense)}` : formatBaht(0)}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Income Category Breakdown */}
+        {(summaryFilter === 'all' || summaryFilter === 'income') && Object.keys(incomeByCategory).length > 0 && (
+          <div style={{ marginBottom: '12px' }}>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: '#166534', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+              {isEn ? "Today's Income by Category:" : 'หมวดหมู่รายรับในวันนี้:'}
+            </span>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+              {Object.entries(incomeByCategory).map(([cat, amt]) => (
+                <div
+                  key={cat}
+                  style={{
+                    backgroundColor: '#f0fdf4',
+                    border: '1px solid #bbf7d0',
+                    padding: '4px 10px',
+                    borderRadius: '8px',
+                    fontSize: '11px',
+                    color: '#166534',
+                    fontWeight: 600,
+                  }}
+                >
+                  {getCategoryName(cat, userProfile.language)}: <strong style={{ color: '#15803d' }}>+{formatBaht(amt)}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Expense Category Breakdown */}
-        {Object.keys(expenseByCategory).length > 0 && (
+        {(summaryFilter === 'all' || summaryFilter === 'expense') && Object.keys(expenseByCategory).length > 0 && (
           <div style={{ marginBottom: '12px' }}>
             <span style={{ fontSize: '11px', fontWeight: 700, color: '#71717a', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
               {isEn ? "Today's Expense by Category:" : 'หมวดหมู่รายจ่ายในวันนี้:'}
@@ -649,47 +770,57 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
         )}
 
         {/* Itemized Transactions */}
-        {dailyTransactions.length > 0 ? (
+        {dailyTransactions.filter(t => summaryFilter === 'all' || t.type === summaryFilter).length > 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <span style={{ fontSize: '11px', fontWeight: 700, color: '#71717a', textTransform: 'uppercase' }}>
-              {isEn ? 'All Transactions:' : 'รายการทั้งหมด:'}
+              {summaryFilter === 'income'
+                ? (isEn ? 'Income Transactions:' : 'รายการรายรับ:')
+                : summaryFilter === 'expense'
+                ? (isEn ? 'Expense Transactions:' : 'รายการรายจ่าย:')
+                : (isEn ? 'All Transactions:' : 'รายการทั้งหมด:')}
             </span>
-            {dailyTransactions.map((tx) => (
-              <div
-                key={tx.id}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '8px 12px',
-                  backgroundColor: '#f8f8f9',
-                  borderRadius: '10px',
-                  fontSize: '12px',
-                  border: '1px solid #eeeeef',
-                }}
-              >
-                <div>
-                  <strong style={{ color: '#0a0a0c' }}>{tx.note}</strong>
-                  <span style={{ color: '#71717a', fontSize: '11px', display: 'block' }}>
-                    {getCategoryName(tx.category, userProfile.language)}
-                  </span>
-                </div>
-                <strong
+            {dailyTransactions
+              .filter(t => summaryFilter === 'all' || t.type === summaryFilter)
+              .map((tx) => (
+                <div
+                  key={tx.id}
                   style={{
-                    fontFamily: 'Outfit, sans-serif',
-                    fontSize: '13px',
-                    color: tx.type === 'income' ? '#15803d' : '#0a0a0c',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '8px 12px',
+                    backgroundColor: '#f8f8f9',
+                    borderRadius: '10px',
+                    fontSize: '12px',
+                    border: '1px solid #eeeeef',
                   }}
                 >
-                  {tx.type === 'income' ? '+' : '-'}{formatBaht(tx.amount)}
-                </strong>
-              </div>
-            ))}
+                  <div>
+                    <strong style={{ color: '#0a0a0c' }}>{tx.note}</strong>
+                    <span style={{ color: '#71717a', fontSize: '11px', display: 'block' }}>
+                      {getCategoryName(tx.category, userProfile.language)}
+                    </span>
+                  </div>
+                  <strong
+                    style={{
+                      fontFamily: 'Outfit, sans-serif',
+                      fontSize: '13px',
+                      color: tx.type === 'income' ? '#15803d' : '#0a0a0c',
+                    }}
+                  >
+                    {tx.type === 'income' ? '+' : '-'}{formatBaht(tx.amount)}
+                  </strong>
+                </div>
+              ))}
           </div>
         ) : (
           <div style={{ textAlign: 'center', padding: '16px', backgroundColor: '#f9f9fa', borderRadius: '12px' }}>
             <p style={{ fontSize: '12px', color: '#71717a', margin: 0 }}>
-              {isEn ? 'No transactions for selected date' : 'ไม่มีรายการรับจ่ายในวันที่เลือก'}
+              {summaryFilter === 'income'
+                ? (isEn ? 'No income recorded for this date' : 'ไม่มีรายการรายรับในวันที่เลือก')
+                : summaryFilter === 'expense'
+                ? (isEn ? 'No expense recorded for this date' : 'ไม่มีรายการรายจ่ายในวันที่เลือก')
+                : (isEn ? 'No transactions for selected date' : 'ไม่มีรายการรับจ่ายในวันที่เลือก')}
             </p>
           </div>
         )}

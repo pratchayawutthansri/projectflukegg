@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Wallet,
@@ -20,6 +20,7 @@ import {
   TrendingUp,
   Building2,
   Coins,
+  Pencil,
   Tag,
 } from 'lucide-react';
 
@@ -58,6 +59,11 @@ import {
   formatBaht,
   INCOME_CATEGORIES,
   getCategoryName,
+  getAllCategories,
+  addCustomCategory,
+  deleteCustomCategory,
+  AVAILABLE_ICONS,
+  type CategoryItem,
 } from '../utils/financeEngine';
 import { getTranslation } from '../utils/translations';
 
@@ -86,9 +92,20 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
   const [note, setNote] = useState<string>('');
   const [date, setDate] = useState<string>(todayStr);
 
+  // Filter tab for transaction history: all, income only, expense only
+  const [filterType, setFilterType] = useState<'all' | 'income' | 'expense'>('all');
+
   // Daily Report Summary Modal State
   const [showDailyReport, setShowDailyReport] = useState(false);
   const [reportDate, setReportDate] = useState<string>(todayStr);
+
+  // Custom Category Creation State
+  const [showAddCategory, setShowAddCategory] = useState(false);
+  const [newCatName, setNewCatName] = useState('');
+  const [newCatNameEn, setNewCatNameEn] = useState('');
+  const [newCatIcon, setNewCatIcon] = useState('tag');
+  // Force re-render when custom categories change
+  const [catVersion, setCatVersion] = useState(0);
 
   const handleSaveTransaction = (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,11 +123,40 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
 
     onAddTransaction(newTx);
     setShowAddModal(false);
+    // Reset ALL form fields to prevent stale data leaking between views
     setAmount('');
     setNote('');
+    setCategory(EXPENSE_CATEGORIES[0].name);
+    setTxType('expense');
+    setDate(todayStr);
+    setShowAddCategory(false);
+    // Focus filter on the type that was just added so user sees their record immediately
+    setFilterType(txType);
   };
 
-  const currentCategories = txType === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+  // catVersion is used as a dependency trigger for re-render when custom categories change
+  const currentCategories: CategoryItem[] = catVersion >= 0 ? getAllCategories(txType) : [];
+
+  const handleAddCategory = useCallback(() => {
+    if (!newCatName.trim()) return;
+    const newCat = addCustomCategory(txType, newCatName.trim(), newCatNameEn.trim() || newCatName.trim(), newCatIcon);
+    setCategory(newCat.name);
+    setNewCatName('');
+    setNewCatNameEn('');
+    setNewCatIcon('tag');
+    setShowAddCategory(false);
+    setCatVersion((v) => v + 1);
+  }, [newCatName, newCatNameEn, newCatIcon, txType]);
+
+  const handleDeleteCategory = useCallback((catItem: CategoryItem) => {
+    deleteCustomCategory(txType, catItem.id);
+    // If the deleted category was selected, reset to first default
+    if (category === catItem.name) {
+      const defaults = txType === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+      setCategory(defaults[0].name);
+    }
+    setCatVersion((v) => v + 1);
+  }, [txType, category]);
 
   // Filter transactions for daily report
   const dailyTransactions = transactions.filter((t) => t.date === reportDate);
@@ -185,7 +231,11 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
 
           <button
             onClick={() => {
+              setTxType('expense');
               setCategory(EXPENSE_CATEGORIES[0].name);
+              setAmount('');
+              setNote('');
+              setDate(todayStr);
               setShowAddModal(true);
             }}
             style={{
@@ -287,15 +337,71 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
             <div>
               <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.85)', display: 'block' }}>{t.totalExpense}</span>
               <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '14px', color: '#ffffff' }}>
-                -{formatBaht(summary.totalExpense)}
+                {summary.totalExpense > 0 ? `-${formatBaht(summary.totalExpense)}` : formatBaht(0)}
               </strong>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Expense Category Breakdown Section */}
-      {summary.categoryBreakdown.length > 0 && (
+      {/* Income Category Breakdown Section (shows when looking at all or income) */}
+      {(filterType === 'all' || filterType === 'income') && summary.incomeBreakdown && summary.incomeBreakdown.length > 0 && (
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: '#166534', textTransform: 'uppercase' }}>
+              {userProfile?.language === 'en' ? 'Income by Category:' : 'สัดส่วนรายรับตามหมวดหมู่:'}
+            </span>
+            <span style={{ fontSize: '11px', color: '#15803d', fontWeight: 600 }}>
+              {userProfile?.language === 'en' ? `Today's Income +${formatBaht(summary.todayIncome)}` : `รับวันนี้ +${formatBaht(summary.todayIncome)}`}
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
+            {summary.incomeBreakdown.slice(0, 4).map((cat) => (
+              <div
+                key={cat.category}
+                style={{
+                  flex: '0 0 auto',
+                  backgroundColor: '#f0fdf4',
+                  border: '1.5px solid #86efac',
+                  borderRadius: '16px',
+                  padding: '10px 14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: '0 2px 0 #15803d',
+                }}
+              >
+                <div
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '8px',
+                    background: '#15803d',
+                    color: '#ffffff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                  }}
+                >
+                  <CategoryIconBadge icon={cat.icon} size={16} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '11px', color: '#166534', fontWeight: 600 }}>{getCategoryName(cat.category, userProfile?.language || 'th')}</div>
+                  <div style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '13px', color: '#15803d' }}>
+                    +{formatBaht(cat.amount)}{' '}
+                    <span style={{ fontSize: '10px', color: '#166534', fontWeight: 600 }}>({cat.percentage}%)</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Expense Category Breakdown Section (shows when looking at all or expense) */}
+      {(filterType === 'all' || filterType === 'expense') && summary.categoryBreakdown.length > 0 && (
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
             <span style={{ fontSize: '12px', fontWeight: 700, color: '#71717a', textTransform: 'uppercase' }}>
@@ -350,6 +456,73 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
         </div>
       )}
 
+      {/* 3 View Tabs: All, Income Only, Expense Only */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '6px',
+          backgroundColor: '#f4f4f5',
+          padding: '4px',
+          borderRadius: '14px',
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => setFilterType('all')}
+          style={{
+            padding: '8px',
+            borderRadius: '10px',
+            border: 'none',
+            backgroundColor: filterType === 'all' ? '#0a0a0c' : 'transparent',
+            color: filterType === 'all' ? '#ffffff' : '#71717a',
+            fontSize: '12px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            fontFamily: 'Prompt, sans-serif',
+            transition: 'all 0.15s ease',
+          }}
+        >
+          {userProfile?.language === 'en' ? 'All' : 'ทั้งหมด'} ({transactions.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setFilterType('income')}
+          style={{
+            padding: '8px',
+            borderRadius: '10px',
+            border: 'none',
+            backgroundColor: filterType === 'income' ? '#0a0a0c' : 'transparent',
+            color: filterType === 'income' ? '#10b981' : '#71717a',
+            fontSize: '12px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            fontFamily: 'Prompt, sans-serif',
+            transition: 'all 0.15s ease',
+          }}
+        >
+          {userProfile?.language === 'en' ? 'Income' : 'รายรับ'} ({transactions.filter(t => t.type === 'income').length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setFilterType('expense')}
+          style={{
+            padding: '8px',
+            borderRadius: '10px',
+            border: 'none',
+            backgroundColor: filterType === 'expense' ? '#0a0a0c' : 'transparent',
+            color: filterType === 'expense' ? '#f43f5e' : '#71717a',
+            fontSize: '12px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            fontFamily: 'Prompt, sans-serif',
+            transition: 'all 0.15s ease',
+          }}
+        >
+          {userProfile?.language === 'en' ? 'Expense' : 'รายจ่าย'} ({transactions.filter(t => t.type === 'expense').length})
+        </button>
+      </div>
+
       {/* Transactions History Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <h2
@@ -360,13 +533,17 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
             color: '#0a0a0c',
           }}
         >
-          {userProfile?.language === 'en' ? `Transaction History (${transactions.length})` : `ประวัติรายการล่าสุด (${transactions.length} รายการ)`}
+          {filterType === 'income'
+            ? (userProfile?.language === 'en' ? 'Income Records' : 'เฉพาะรายการรายรับ')
+            : filterType === 'expense'
+            ? (userProfile?.language === 'en' ? 'Expense Records' : 'เฉพาะรายการรายจ่าย')
+            : (userProfile?.language === 'en' ? `Transaction History (${transactions.length})` : `ประวัติรายการล่าสุด (${transactions.length} รายการ)`)}
         </h2>
       </div>
 
       {/* Transactions List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {transactions.length === 0 ? (
+        {transactions.filter(t => filterType === 'all' || t.type === filterType).length === 0 ? (
           <div
             style={{
               padding: '30px',
@@ -377,10 +554,18 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
             }}
           >
             <Wallet size={28} color="#a1a1aa" style={{ margin: '0 auto 6px auto' }} />
-            <p style={{ fontSize: '13px', color: '#71717a' }}>{t.noTransactions}</p>
+            <p style={{ fontSize: '13px', color: '#71717a' }}>
+              {filterType === 'income'
+                ? (userProfile?.language === 'en' ? 'No income records found' : 'ยังไม่มีรายการรายรับ')
+                : filterType === 'expense'
+                ? (userProfile?.language === 'en' ? 'No expense records found' : 'ยังไม่มีรายการรายจ่าย')
+                : t.noTransactions}
+            </p>
           </div>
         ) : (
-          transactions.map((tx) => {
+          transactions
+            .filter(t => filterType === 'all' || t.type === filterType)
+            .map((tx) => {
             const isIncome = tx.type === 'income';
             return (
               <div
@@ -786,6 +971,8 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                   onClick={() => {
                     setTxType('expense');
                     setCategory(EXPENSE_CATEGORIES[0].name);
+                    setAmount('');
+                    setNote('');
                   }}
                   style={{
                     padding: '10px',
@@ -807,6 +994,8 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                   onClick={() => {
                     setTxType('income');
                     setCategory(INCOME_CATEGORIES[0].name);
+                    setAmount('');
+                    setNote('');
                   }}
                   style={{
                     padding: '10px',
@@ -861,30 +1050,224 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                   </label>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                     {currentCategories.map((c) => (
-                      <button
-                        type="button"
-                        key={c.name}
-                        onClick={() => setCategory(c.name)}
-                        style={{
-                          padding: '8px 12px',
-                          borderRadius: '10px',
-                          border: '1px solid ' + (category === c.name ? '#0a0a0c' : '#e4e4e7'),
-                          backgroundColor: category === c.name ? '#0a0a0c' : '#fafafa',
-                          color: category === c.name ? '#ffe500' : '#0a0a0c',
-                          fontSize: '12px',
-                          fontWeight: 600,
-                          fontFamily: 'Prompt, sans-serif',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                        }}
-                      >
-                        <CategoryIconBadge icon={c.icon} size={14} />
-                        <span>{userProfile?.language === 'en' ? (c.nameEn || c.name) : c.name}</span>
-                      </button>
+                      <div key={c.id || c.name} style={{ position: 'relative', display: 'inline-flex' }}>
+                        <button
+                          type="button"
+                          onClick={() => setCategory(c.name)}
+                          style={{
+                            padding: '8px 12px',
+                            borderRadius: '10px',
+                            border: '1px solid ' + (category === c.name ? '#0a0a0c' : '#e4e4e7'),
+                            backgroundColor: category === c.name ? '#0a0a0c' : '#fafafa',
+                            color: category === c.name ? '#ffe500' : '#0a0a0c',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            fontFamily: 'Prompt, sans-serif',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            paddingRight: c.isCustom ? '28px' : '12px',
+                          }}
+                        >
+                          <CategoryIconBadge icon={c.icon} size={14} />
+                          <span>{userProfile?.language === 'en' ? (c.nameEn || c.name) : c.name}</span>
+                        </button>
+                        {c.isCustom && (
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); handleDeleteCategory(c); }}
+                            title={userProfile?.language === 'en' ? 'Remove category' : 'ลบหมวดหมู่'}
+                            style={{
+                              position: 'absolute',
+                              top: '-4px',
+                              right: '-4px',
+                              width: '18px',
+                              height: '18px',
+                              borderRadius: '50%',
+                              backgroundColor: '#f43f5e',
+                              color: '#ffffff',
+                              border: 'none',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '11px',
+                              fontWeight: 800,
+                              lineHeight: 1,
+                              padding: 0,
+                              boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                            }}
+                          >
+                            ×
+                          </button>
+                        )}
+                      </div>
                     ))}
+
+                    {/* + Add Category Button */}
+                    <button
+                      type="button"
+                      onClick={() => setShowAddCategory(!showAddCategory)}
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '10px',
+                        border: '1.5px dashed #a1a1aa',
+                        backgroundColor: showAddCategory ? '#0a0a0c' : 'transparent',
+                        color: showAddCategory ? '#ffe500' : '#71717a',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        fontFamily: 'Prompt, sans-serif',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      <Plus size={14} />
+                      <span>{userProfile?.language === 'en' ? 'Add' : 'เพิ่ม'}</span>
+                    </button>
                   </div>
+
+                  {/* Inline Add Category Form */}
+                  {showAddCategory && (
+                    <div
+                      style={{
+                        marginTop: '10px',
+                        padding: '14px',
+                        borderRadius: '14px',
+                        border: '1.5px solid #0a0a0c',
+                        backgroundColor: '#fafafa',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px',
+                        boxShadow: '0 2px 0 #0a0a0c',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                        <Pencil size={14} color="#0a0a0c" />
+                        <span style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c' }}>
+                          {userProfile?.language === 'en' ? 'Create New Category' : 'สร้างหมวดหมู่ใหม่'}
+                        </span>
+                      </div>
+
+                      <input
+                        type="text"
+                        placeholder={userProfile?.language === 'en' ? 'Category name (TH)' : 'ชื่อหมวดหมู่ (ภาษาไทย)'}
+                        value={newCatName}
+                        onChange={(e) => setNewCatName(e.target.value)}
+                        style={{
+                          width: '100%',
+                          border: '1px solid #d4d4d8',
+                          borderRadius: '10px',
+                          padding: '10px 12px',
+                          fontSize: '13px',
+                          fontFamily: 'Prompt, sans-serif',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                        }}
+                      />
+
+                      <input
+                        type="text"
+                        placeholder={userProfile?.language === 'en' ? 'Category name (EN) - optional' : 'ชื่อภาษาอังกฤษ (ไม่ต้องก็ได้)'}
+                        value={newCatNameEn}
+                        onChange={(e) => setNewCatNameEn(e.target.value)}
+                        style={{
+                          width: '100%',
+                          border: '1px solid #d4d4d8',
+                          borderRadius: '10px',
+                          padding: '10px 12px',
+                          fontSize: '13px',
+                          fontFamily: 'Prompt, sans-serif',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                        }}
+                      />
+
+                      {/* Icon Picker */}
+                      <div>
+                        <span style={{ fontSize: '11px', fontWeight: 600, color: '#71717a', display: 'block', marginBottom: '4px' }}>
+                          {userProfile?.language === 'en' ? 'Choose Icon:' : 'เลือกไอคอน:'}
+                        </span>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                          {AVAILABLE_ICONS.map((iconName) => (
+                            <button
+                              type="button"
+                              key={iconName}
+                              onClick={() => setNewCatIcon(iconName)}
+                              style={{
+                                width: '36px',
+                                height: '36px',
+                                borderRadius: '10px',
+                                border: newCatIcon === iconName ? '2px solid #0a0a0c' : '1px solid #d4d4d8',
+                                backgroundColor: newCatIcon === iconName ? '#0a0a0c' : '#ffffff',
+                                color: newCatIcon === iconName ? '#ffe500' : '#52525b',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                transition: 'all 0.1s ease',
+                              }}
+                            >
+                              <CategoryIconBadge icon={iconName} size={16} />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Save / Cancel Buttons */}
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button
+                          type="button"
+                          onClick={handleAddCategory}
+                          disabled={!newCatName.trim()}
+                          style={{
+                            flex: 1,
+                            padding: '10px',
+                            borderRadius: '10px',
+                            border: 'none',
+                            backgroundColor: newCatName.trim() ? '#0a0a0c' : '#d4d4d8',
+                            color: newCatName.trim() ? '#ffffff' : '#a1a1aa',
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            fontFamily: 'Prompt, sans-serif',
+                            cursor: newCatName.trim() ? 'pointer' : 'not-allowed',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '4px',
+                          }}
+                        >
+                          <Plus size={14} />
+                          {userProfile?.language === 'en' ? 'Create' : 'สร้างหมวดหมู่'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowAddCategory(false);
+                            setNewCatName('');
+                            setNewCatNameEn('');
+                            setNewCatIcon('tag');
+                          }}
+                          style={{
+                            padding: '10px 16px',
+                            borderRadius: '10px',
+                            border: '1px solid #d4d4d8',
+                            backgroundColor: '#ffffff',
+                            color: '#71717a',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            fontFamily: 'Prompt, sans-serif',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          {userProfile?.language === 'en' ? 'Cancel' : 'ยกเลิก'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Note / Description */}
