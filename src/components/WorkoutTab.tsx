@@ -17,6 +17,7 @@ import {
 import type { ExerciseLog, ExerciseSet, MuscleGroup, RunningSession, UserProfile, WorkoutSession } from '../types';
 import { calculateRunningDetails, calculateWorkoutCalories, RUNNING_DISTANCES } from '../utils/workoutEngine';
 import { getTranslation, translateRoutineTitle } from '../utils/translations';
+import { EXERCISE_CATALOG, findExerciseDetail } from '../utils/exerciseLibrary';
 
 interface WorkoutTabProps {
   currentSession: WorkoutSession;
@@ -25,21 +26,7 @@ interface WorkoutTabProps {
   userProfile: UserProfile;
 }
 
-const COMMON_MACHINES: { name: string; muscle: MuscleGroup }[] = [
-  { name: 'Chest Press Machine', muscle: 'chest' },
-  { name: 'Pec Deck Machine (อก)', muscle: 'chest' },
-  { name: 'Incline Dumbbell Press', muscle: 'chest' },
-  { name: 'Lat Pulldown Machine', muscle: 'back' },
-  { name: 'Seated Cable Row (หลัง)', muscle: 'back' },
-  { name: 'Leg Press 45°', muscle: 'legs' },
-  { name: 'Leg Extension (ขาหน้า)', muscle: 'legs' },
-  { name: 'Lying Leg Curl (ขาหลัง)', muscle: 'legs' },
-  { name: 'Shoulder Press Machine', muscle: 'shoulders' },
-  { name: 'Dumbbell Lateral Raise', muscle: 'shoulders' },
-  { name: 'Preacher Curl Machine (หน้าแขน)', muscle: 'arms' },
-  { name: 'Tricep Rope Pushdown (หลังแขน)', muscle: 'arms' },
-  { name: 'Cable Crunch Machine (หน้าท้อง)', muscle: 'abs' },
-];
+
 
 export const WorkoutTab: React.FC<WorkoutTabProps> = ({
   currentSession,
@@ -60,7 +47,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
   // Modal / Exercise selection
   const [showAddMachine, setShowAddMachine] = useState(false);
   const [customMachineName, setCustomMachineName] = useState('');
-  const [selectedMuscle, setSelectedMuscle] = useState<MuscleGroup>('chest');
+  const [selectedMuscle, setSelectedMuscle] = useState<MuscleGroup | 'all'>('all');
 
   // Quick inline add machine input
   const [inlineMachineName, setInlineMachineName] = useState('');
@@ -118,16 +105,19 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
   };
 
   // Add new machine exercise: Defaults to 1 SET OF 15 REPS (15 ที)
-  const handleAddMachine = (name: string, muscle: MuscleGroup) => {
+  const handleAddMachine = (name: string, muscle: MuscleGroup, defaultWeight?: number) => {
     const trimmed = name.trim();
     if (!trimmed) return;
+
+    const catalogItem = findExerciseDetail(trimmed);
+    const initialWeight = defaultWeight !== undefined ? defaultWeight : (catalogItem?.baseWeightKg || 30);
 
     const newEx: ExerciseLog = {
       id: 'ex_' + Date.now(),
       name: trimmed,
       muscleGroup: muscle,
       sets: [
-        { id: 's_1', setNumber: 1, weightKg: 30, reps: 15, completed: false },
+        { id: 's_1', setNumber: 1, weightKg: initialWeight, reps: 15, completed: false },
       ],
     };
     const updatedExercises = [...currentSession.exercises, newEx];
@@ -806,6 +796,39 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
               </button>
             </div>
 
+            {/* Exercise Guidance / Form Tips (เพื่อให้คนออกกำลังกายรู้จุดโฟกัสและวิธีเล่น) */}
+            {(() => {
+              const detail = findExerciseDetail(ex.name);
+              if (!detail) return null;
+              return (
+                <div
+                  style={{
+                    backgroundColor: '#f8f8f9',
+                    border: '1px solid #e4e4e7',
+                    borderRadius: '12px',
+                    padding: '8px 12px',
+                    marginBottom: '10px',
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '8px',
+                    fontSize: '11.5px',
+                    lineHeight: 1.5,
+                    color: '#3f3f46',
+                  }}
+                >
+                  <span style={{ fontSize: '13px', flexShrink: 0, marginTop: '1px' }}>💡</span>
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#0a0a0c', marginBottom: '2px' }}>
+                      {userProfile.language === 'en' ? detail.targetMuscleEn : `จุดโฟกัส: ${detail.targetMuscleTh}`}
+                    </div>
+                    <div>
+                      {userProfile.language === 'en' ? detail.tipsEn : detail.tipsTh}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Sets Table with + / - Buttons for both weight and reps */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <div
@@ -1071,28 +1094,41 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                 {userProfile.language === 'en' ? 'Or enter custom machine name:' : 'หรือพิมพ์ชื่อเครื่องเล่นเอง:'}
               </label>
               
-              {/* Muscle selector chips */}
+              {/* Muscle selector chips with ALL option */}
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', margin: '6px 0 8px 0' }}>
-                {(['chest', 'back', 'legs', 'shoulders', 'arms', 'abs'] as MuscleGroup[]).map((m) => (
-                  <button
-                    type="button"
-                    key={m}
-                    onClick={() => setSelectedMuscle(m)}
-                    style={{
-                      padding: '4px 10px',
-                      borderRadius: '8px',
-                      border: '1px solid ' + (selectedMuscle === m ? '#0a0a0c' : '#e4e4e7'),
-                      backgroundColor: selectedMuscle === m ? '#0a0a0c' : '#f4f4f5',
-                      color: selectedMuscle === m ? '#ffffff' : '#0a0a0c',
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    {m}
-                  </button>
-                ))}
+                {[
+                  { id: 'all', labelTh: 'ทั้งหมด (ALL)', labelEn: 'ALL' },
+                  { id: 'chest', labelTh: 'อก (CHEST)', labelEn: 'CHEST' },
+                  { id: 'back', labelTh: 'หลัง (BACK)', labelEn: 'BACK' },
+                  { id: 'legs', labelTh: 'ขา (LEGS)', labelEn: 'LEGS' },
+                  { id: 'shoulders', labelTh: 'ไหล่ (SHOULDERS)', labelEn: 'SHOULDERS' },
+                  { id: 'arms', labelTh: 'แขน (ARMS)', labelEn: 'ARMS' },
+                  { id: 'abs', labelTh: 'หน้าท้อง (ABS)', labelEn: 'ABS' },
+                ].map((c) => {
+                  const isSelected = selectedMuscle === c.id;
+                  return (
+                    <button
+                      type="button"
+                      key={c.id}
+                      onClick={() => setSelectedMuscle(c.id as any)}
+                      style={{
+                        padding: '5px 12px',
+                        borderRadius: '9px',
+                        border: isSelected ? '1.5px solid var(--theme-card-border, #0a0a0c)' : '1px solid #e4e4e7',
+                        background: isSelected ? 'var(--theme-card-bg, #0a0a0c)' : '#f4f4f5',
+                        color: isSelected ? '#ffffff' : '#27272a',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        fontFamily: 'Outfit, Prompt, sans-serif',
+                        cursor: 'pointer',
+                        boxShadow: isSelected ? '0 2px 6px rgba(0,0,0,0.18)' : 'none',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      {userProfile.language === 'en' ? c.labelEn : c.labelTh}
+                    </button>
+                  );
+                })}
               </div>
 
               <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
@@ -1111,19 +1147,26 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                   }}
                 />
                 <button
+                  type="button"
                   onClick={() => {
                     if (customMachineName.trim()) {
-                      handleAddMachine(customMachineName.trim(), selectedMuscle);
+                      handleAddMachine(
+                        customMachineName.trim(),
+                        selectedMuscle === 'all' ? 'chest' : (selectedMuscle as MuscleGroup)
+                      );
                     }
                   }}
                   style={{
-                    backgroundColor: '#0a0a0c',
+                    background: 'var(--theme-card-bg, #0a0a0c)',
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '12px',
-                    padding: '0 16px',
-                    fontWeight: 700,
+                    padding: '0 20px',
+                    fontWeight: 800,
+                    fontSize: '13px',
+                    fontFamily: 'Prompt, sans-serif',
                     cursor: 'pointer',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
                   }}
                 >
                   {userProfile.language === 'en' ? 'Add' : 'เพิ่ม'}
@@ -1131,42 +1174,122 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
               </div>
             </div>
 
-            {/* Common Machines List */}
-            <span style={{ fontSize: '11px', fontWeight: 700, color: '#71717a', textTransform: 'uppercase' }}>
-              {userProfile.language === 'en' ? 'Popular Exercises:' : 'เครื่องเล่นยอดนิยม:'}
-            </span>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
-              {COMMON_MACHINES.map((item) => (
-                <div
-                  key={item.name}
-                  onClick={() => handleAddMachine(item.name, item.muscle)}
-                  className="neo-card"
-                  style={{ padding: '12px 16px' }}
-                >
-                  <div>
-                    <strong style={{ color: '#0a0a0c', fontSize: '14px' }}>{item.name}</strong>
-                    <span style={{ color: '#71717a', fontSize: '11px', display: 'block' }}>
-                      {userProfile.language === 'en'
-                        ? `Target: ${item.muscle} • Default 1 set of 15 reps`
-                        : `กลุ่มกล้ามเนื้อ: ${item.muscle} • ตั้งต้น 1 เซ็ต 15 ที`}
+            {/* Exercise Library with Full Details & Form Guidance */}
+            {(() => {
+              const filteredCatalog = selectedMuscle === 'all'
+                ? EXERCISE_CATALOG
+                : EXERCISE_CATALOG.filter((item) => item.muscle === selectedMuscle);
+
+              return (
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '14px', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#0a0a0c' }}>
+                      {userProfile.language === 'en' ? 'Exercise Library & Guidance:' : 'คลังเครื่องเล่น & วิธีเล่นที่ถูกต้อง:'}
+                    </span>
+                    <span style={{ fontSize: '11px', color: '#71717a', fontWeight: 600 }}>
+                      {filteredCatalog.length} {userProfile.language === 'en' ? 'machines' : 'เครื่อง'}
                     </span>
                   </div>
-                  <div
-                    style={{
-                      width: '28px',
-                      height: '28px',
-                      borderRadius: '50%',
-                      border: '1.5px solid #0a0a0c',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Plus size={14} color="#0a0a0c" />
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {filteredCatalog.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => handleAddMachine(item.name, item.muscle, item.baseWeightKg)}
+                        style={{
+                          backgroundColor: '#ffffff',
+                          border: '1.5px solid #0a0a0c',
+                          borderRadius: '18px',
+                          padding: '14px',
+                          boxShadow: '0 3px 0 #0a0a0c',
+                          cursor: 'pointer',
+                          transition: 'transform 0.1s ease',
+                        }}
+                        onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.99)')}
+                        onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '2px' }}>
+                              <strong style={{ color: '#0a0a0c', fontSize: '15px', fontWeight: 800, fontFamily: 'Outfit, Prompt, sans-serif' }}>
+                                {item.name}
+                              </strong>
+                              <span
+                                style={{
+                                  background: 'var(--theme-card-bg, #0a0a0c)',
+                                  color: '#ffffff',
+                                  fontSize: '10px',
+                                  fontWeight: 700,
+                                  padding: '2px 8px',
+                                  borderRadius: '9999px',
+                                  whiteSpace: 'nowrap',
+                                }}
+                              >
+                                {userProfile.language === 'en' ? item.muscleLabelEn : item.muscleLabelTh}
+                              </span>
+                            </div>
+                            <div style={{ fontSize: '12px', color: '#52525b', fontWeight: 600 }}>
+                              {userProfile.language === 'en' ? item.name : item.nameTh}
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            title={userProfile.language === 'en' ? 'Add this machine' : 'เพิ่มเครื่องเล่นนี้'}
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '50%',
+                              background: 'var(--theme-card-bg, #0a0a0c)',
+                              border: 'none',
+                              color: '#ffffff',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexShrink: 0,
+                              boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                              cursor: 'pointer',
+                            }}
+                          >
+                            <Plus size={16} color="#ffffff" strokeWidth={2.5} />
+                          </button>
+                        </div>
+
+                        {/* Exercise Detail & Guidance Box (ตัวคนออกกำลังกายจะได้รู้) */}
+                        <div
+                          style={{
+                            backgroundColor: '#f8f8f9',
+                            border: '1px solid #e4e4e7',
+                            borderRadius: '12px',
+                            padding: '9px 12px',
+                            marginTop: '10px',
+                            fontSize: '11.5px',
+                            lineHeight: 1.5,
+                            color: '#3f3f46',
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 800, color: '#0a0a0c', marginBottom: '3px' }}>
+                            <span>💡</span>
+                            <span>
+                              {userProfile.language === 'en'
+                                ? `Target Focus: ${item.targetMuscleEn}`
+                                : `จุดโฟกัสกล้ามเนื้อ: ${item.targetMuscleTh}`}
+                            </span>
+                          </div>
+                          <div style={{ color: '#52525b', marginBottom: '6px' }}>
+                            {userProfile.language === 'en' ? item.tipsEn : item.tipsTh}
+                          </div>
+                          <div style={{ paddingTop: '6px', borderTop: '1px dashed #d4d4d8', fontSize: '10.5px', color: '#71717a', display: 'flex', justifyContent: 'space-between' }}>
+                            <span>{userProfile.language === 'en' ? 'Default: 1 set × 15 reps' : 'ตั้งต้น: 1 เซ็ต × 15 ที'}</span>
+                            <span style={{ fontWeight: 600 }}>{userProfile.language === 'en' ? `Weight: ~${item.baseWeightKg} kg` : `น้ำหนักแนะนำ: ~${item.baseWeightKg} kg`}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
+              );
+            })()}
           </div>
         </div>
       )}

@@ -20,6 +20,7 @@ import {
   Activity,
 } from 'lucide-react';
 import { EXERCISE_LIBRARY } from '../utils/workoutEngine';
+import { findExerciseDetail } from '../utils/exerciseLibrary';
 import type { MuscleGroup, RoutineExercise, ScheduledPlan, UserProfile } from '../types';
 
 interface SmartSchedulerModalProps {
@@ -1040,44 +1041,66 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                   </select>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '160px', overflowY: 'auto' }}>
-                  {(EXERCISE_LIBRARY[addSelectedCategory] || []).map((ex) => (
-                    <div
-                      key={ex.name}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '6px 10px',
-                        backgroundColor: '#ffffff',
-                        borderRadius: '8px',
-                        border: '1px solid #e4e4e7',
-                      }}
-                    >
-                      <div>
-                        <strong style={{ fontSize: '12px', color: '#0a0a0c' }}>{ex.name}</strong>
-                        <span style={{ fontSize: '10px', color: '#71717a', marginLeft: '6px' }}>
-                          เริ่มต้น @{ex.baseWeight}kg · 15 ที
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleAddExerciseFromLibrary(ex)}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '180px', overflowY: 'auto' }}>
+                  {(EXERCISE_LIBRARY[addSelectedCategory] || []).map((ex) => {
+                    const detail = findExerciseDetail(ex.name);
+                    return (
+                      <div
+                        key={ex.name}
                         style={{
-                          background: 'var(--theme-card-bg, #0a0a0c)',
-                          color: '#ffffff',
-                          border: 'none',
-                          borderRadius: '6px',
-                          padding: '4px 10px',
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '7px 10px',
+                          backgroundColor: '#ffffff',
+                          borderRadius: '10px',
+                          border: '1px solid #e4e4e7',
+                          gap: '8px',
                         }}
                       >
-                        + เพิ่ม
-                      </button>
-                    </div>
-                  ))}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                            <strong style={{ fontSize: '12px', color: '#0a0a0c' }}>{ex.name}</strong>
+                            {detail && (
+                              <span
+                                style={{
+                                  background: 'var(--theme-card-bg, #0a0a0c)',
+                                  color: '#ffffff',
+                                  fontSize: '9.5px',
+                                  fontWeight: 700,
+                                  padding: '1px 6px',
+                                  borderRadius: '4px',
+                                }}
+                              >
+                                {detail.targetMuscleTh}
+                              </span>
+                            )}
+                          </div>
+                          <div style={{ fontSize: '10.5px', color: '#52525b', marginTop: '2px', lineHeight: 1.3 }}>
+                            เริ่มต้น @{ex.baseWeight}kg · 15 ที {detail ? `• 💡 ${detail.tipsTh}` : ''}
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleAddExerciseFromLibrary(ex)}
+                          style={{
+                            background: 'var(--theme-card-bg, #0a0a0c)',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '8px',
+                            padding: '6px 12px',
+                            fontSize: '11px',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            flexShrink: 0,
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.12)',
+                          }}
+                        >
+                          + เพิ่ม
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -1089,57 +1112,79 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {routineItems.map((item, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '8px 12px',
-                      backgroundColor: '#f8f8f9',
-                      borderRadius: '12px',
-                      border: '1px solid #e4e4e7',
-                    }}
-                  >
-                    {/* Left: Index & Name */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
-                      <span
-                        style={{
-                          width: '22px',
-                          height: '22px',
-                          borderRadius: '50%',
-                          background: 'var(--theme-card-bg, #0a0a0c)',
-                          color: '#ffffff',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '11px',
-                          fontFamily: 'Outfit, sans-serif',
-                          fontWeight: 700,
-                          flexShrink: 0,
-                        }}
-                      >
-                        {idx + 1}
-                      </span>
-                      <div style={{ minWidth: 0 }}>
-                        <strong
+                {routineItems.map((item, idx) => {
+                  const itemDetail = findExerciseDetail(item.exerciseName);
+                  return (
+                    <div
+                      key={idx}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '8px 12px',
+                        backgroundColor: '#f8f8f9',
+                        borderRadius: '12px',
+                        border: '1px solid #e4e4e7',
+                      }}
+                    >
+                      {/* Left: Index & Name */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
+                        <span
                           style={{
-                            color: '#0a0a0c',
-                            fontSize: '12px',
-                            display: 'block',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
+                            width: '22px',
+                            height: '22px',
+                            borderRadius: '50%',
+                            background: 'var(--theme-card-bg, #0a0a0c)',
+                            color: '#ffffff',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '11px',
+                            fontFamily: 'Outfit, sans-serif',
+                            fontWeight: 700,
+                            flexShrink: 0,
                           }}
                         >
-                          {item.exerciseName}
-                        </strong>
-                        <span style={{ fontSize: '10px', color: '#71717a' }}>
-                          {item.sets} เซ็ต × {item.reps}
+                          {idx + 1}
                         </span>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                            <strong
+                              style={{
+                                color: '#0a0a0c',
+                                fontSize: '12px',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {item.exerciseName}
+                            </strong>
+                            {itemDetail && (
+                              <span
+                                style={{
+                                  background: '#e4e4e7',
+                                  color: '#18181b',
+                                  fontSize: '9.5px',
+                                  fontWeight: 700,
+                                  padding: '1px 5px',
+                                  borderRadius: '4px',
+                                }}
+                              >
+                                🎯 {itemDetail.targetMuscleTh}
+                              </span>
+                            )}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10px', color: '#71717a', marginTop: '2px' }}>
+                            <span>{item.sets} เซ็ต × {item.reps}</span>
+                            {itemDetail && (
+                              <span style={{ color: '#71717a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                • 💡 {itemDetail.tipsTh}
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </div>
 
                     {/* Right: Weight Adjuster & Delete */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
@@ -1221,9 +1266,10 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                       </button>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
+                );
+              })}
+            </div>
+          )}
           </div>
 
           {/* LIVE SUMMARY STAT BOXES */}
