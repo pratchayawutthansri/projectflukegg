@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import type { ExerciseLog, ExerciseSet, MuscleGroup, RunningSession, UserProfile, WorkoutSession } from '../types';
 import { calculateRunningDetails, calculateWorkoutCalories, RUNNING_DISTANCES } from '../utils/workoutEngine';
+import { getTranslation, translateRoutineTitle } from '../utils/translations';
 
 interface WorkoutTabProps {
   currentSession: WorkoutSession;
@@ -46,6 +47,8 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
   onCompleteSession,
   userProfile,
 }) => {
+  const t = getTranslation(userProfile.language || 'th');
+
   // Session Timer
   const [isTimerRunning, setIsTimerRunning] = useState(true);
   const [elapsedSeconds, setElapsedSeconds] = useState(currentSession.durationMinutes * 60);
@@ -292,12 +295,12 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
       {/* Active Gym HUD Card */}
       <div
         style={{
-          backgroundColor: '#0a0a0c',
+          background: 'var(--theme-card-bg, #0a0a0c)',
           color: '#ffffff',
           borderRadius: '24px',
           padding: '20px',
-          border: '2px solid #0a0a0c',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+          border: '2px solid var(--theme-card-border, #0a0a0c)',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -308,8 +311,8 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                   width: '8px',
                   height: '8px',
                   borderRadius: '50%',
-                  backgroundColor: '#ffe500',
-                  boxShadow: '0 0 8px #ffe500',
+                  backgroundColor: '#ffffff',
+                  boxShadow: '0 0 8px #ffffff',
                 }}
               />
               <span
@@ -318,10 +321,10 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                   fontSize: '11px',
                   fontWeight: 700,
                   letterSpacing: '0.8px',
-                  color: '#ffe500',
+                  color: '#ffffff',
                 }}
               >
-                GYM GYM GYM LIVE
+                {t.gymLive}
               </span>
             </div>
             <h1
@@ -330,9 +333,10 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                 fontSize: '19px',
                 fontWeight: 800,
                 margin: '4px 0 0 0',
+                color: '#ffffff',
               }}
             >
-              {currentSession.title}
+              {translateRoutineTitle(currentSession.title, userProfile.language || 'th')}
             </h1>
           </div>
 
@@ -340,8 +344,8 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
           <button
             onClick={() => setIsTimerRunning(!isTimerRunning)}
             style={{
-              backgroundColor: '#1c1c22',
-              border: '1px solid rgba(255,255,255,0.2)',
+              backgroundColor: 'rgba(255, 255, 255, 0.22)',
+              border: '1.5px solid rgba(255, 255, 255, 0.4)',
               borderRadius: '50%',
               width: '42px',
               height: '42px',
@@ -350,9 +354,10 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
+              backdropFilter: 'blur(4px)',
             }}
           >
-            {isTimerRunning ? <Pause size={18} /> : <Play size={18} fill="#ffffff" />}
+            {isTimerRunning ? <Pause size={18} color="#ffffff" /> : <Play size={18} fill="#ffffff" color="#ffffff" />}
           </button>
         </div>
 
@@ -363,14 +368,15 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '8px',
             marginTop: '16px',
-            backgroundColor: '#141418',
+            backgroundColor: 'rgba(0, 0, 0, 0.22)',
+            backdropFilter: 'blur(8px)',
             padding: '12px',
             borderRadius: '16px',
-            border: '1px solid rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
           }}
         >
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '11px', color: '#a1a1aa', fontWeight: 500 }}>เวลาซ้อม</div>
+            <div style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.85)', fontWeight: 600 }}>{t.workoutDuration}</div>
             <div
               style={{
                 fontFamily: 'Outfit, sans-serif',
@@ -383,24 +389,10 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
             </div>
           </div>
 
-          <div style={{ textAlign: 'center', borderLeft: '1px solid #27272a', borderRight: '1px solid #27272a' }}>
-            <div style={{ fontSize: '11px', color: '#a1a1aa', fontWeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3px' }}>
-              <Flame size={12} color="#f43f5e" /> เผาผลาญรวม
+          <div style={{ textAlign: 'center', borderLeft: '1px solid rgba(255, 255, 255, 0.2)', borderRight: '1px solid rgba(255, 255, 255, 0.2)' }}>
+            <div style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.85)', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '3px' }}>
+              <Flame size={12} color="#ffffff" /> {t.totalBurned}
             </div>
-            <div
-              style={{
-                fontFamily: 'Outfit, sans-serif',
-                fontSize: '18px',
-                fontWeight: 800,
-                color: '#ffe500',
-              }}
-            >
-              {currentSession.caloriesBurned} <span style={{ fontSize: '11px', fontWeight: 500 }}>kcal</span>
-            </div>
-          </div>
-
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '11px', color: '#a1a1aa', fontWeight: 500 }}>ยกไปแล้ว</div>
             <div
               style={{
                 fontFamily: 'Outfit, sans-serif',
@@ -409,7 +401,21 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                 color: '#ffffff',
               }}
             >
-              {totalRepsDone} <span style={{ fontSize: '11px', fontWeight: 500 }}>ที</span>
+              {currentSession.caloriesBurned} <span style={{ fontSize: '11px', fontWeight: 500, color: 'rgba(255, 255, 255, 0.85)' }}>kcal</span>
+            </div>
+          </div>
+
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.85)', fontWeight: 600 }}>{t.repsDone}</div>
+            <div
+              style={{
+                fontFamily: 'Outfit, sans-serif',
+                fontSize: '18px',
+                fontWeight: 800,
+                color: '#ffffff',
+              }}
+            >
+              {totalRepsDone} <span style={{ fontSize: '11px', fontWeight: 500, color: 'rgba(255, 255, 255, 0.85)' }}>{t.repsUnit}</span>
             </div>
           </div>
         </div>
@@ -419,8 +425,10 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
           style={{
             marginTop: '12px',
             padding: '10px 14px',
-            backgroundColor: isRestActive ? '#ffe500' : '#1c1c22',
-            color: isRestActive ? '#0a0a0c' : '#d4d4d8',
+            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            border: '1px solid rgba(255, 255, 255, 0.25)',
+            backdropFilter: 'blur(8px)',
+            color: '#ffffff',
             borderRadius: '14px',
             display: 'flex',
             alignItems: 'center',
@@ -429,27 +437,28 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Timer size={16} />
-            <span style={{ fontSize: '12px', fontWeight: 700 }}>
+            <Timer size={16} color="#ffffff" />
+            <span style={{ fontSize: '12px', fontWeight: 700, color: '#ffffff' }}>
               {isRestActive
-                ? `พักเซ็ต: เหลืออีก ${restSecondsRemaining} วินาที`
-                : 'นาฬิกาพักเซ็ต (Rest Timer)'}
+                ? `${t.restingRemaining} ${restSecondsRemaining} ${t.secondsRemaining}`
+                : t.restTimer}
             </span>
           </div>
-          <div style={{ display: 'flex', gap: '4px' }}>
+          <div style={{ display: 'flex', gap: '5px' }}>
             {[30, 45, 60].map((sec) => (
               <button
                 key={sec}
                 onClick={() => startRestTimer(sec)}
                 style={{
-                  backgroundColor: isRestActive && restSecondsRemaining === sec ? '#0a0a0c' : '#27272a',
-                  color: isRestActive && restSecondsRemaining === sec ? '#ffe500' : '#ffffff',
-                  border: 'none',
+                  backgroundColor: isRestActive && restSecondsRemaining === sec ? '#ffffff' : 'rgba(255, 255, 255, 0.25)',
+                  color: isRestActive && restSecondsRemaining === sec ? '#0a0a0c' : '#ffffff',
+                  border: '1px solid rgba(255, 255, 255, 0.4)',
                   borderRadius: '8px',
-                  padding: '4px 8px',
+                  padding: '4px 9px',
                   fontSize: '11px',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   cursor: 'pointer',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 {sec}s
@@ -487,17 +496,17 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
             </div>
             <div>
               <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800, margin: 0 }}>
-                รอบระยะเวลาวิ่ง (Running Distance)
+                {userProfile.language === 'en' ? 'Running Tracker (Cardio)' : 'รอบระยะเวลาวิ่ง (Running Distance)'}
               </h2>
               <span style={{ fontSize: '11px', color: '#71717a' }}>
-                กด 1 ทีเพื่อบันทึกระยะทางและคำนวณแคลอรีอัตโนมัติ
+                {userProfile.language === 'en' ? 'Tap preset to log cardio distance & auto-calculate calories' : 'กด 1 ทีเพื่อบันทึกระยะทางและคำนวณแคลอรีอัตโนมัติ'}
               </span>
             </div>
           </div>
           {totalRunningKm > 0 && (
             <span
               style={{
-                backgroundColor: '#ffe500',
+                backgroundColor: 'var(--theme-accent, #ffe500)',
                 color: '#0a0a0c',
                 fontWeight: 800,
                 fontSize: '11px',
@@ -506,7 +515,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                 border: '1px solid #0a0a0c',
               }}
             >
-              รวม {totalRunningKm} กม.
+              {userProfile.language === 'en' ? `Total ${totalRunningKm} km` : `รวม ${totalRunningKm} กม.`}
             </span>
           )}
         </div>
@@ -535,7 +544,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                 <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '14px', fontWeight: 800, color: '#0a0a0c' }}>
                   {km}
                 </span>
-                <span style={{ fontSize: '10px', color: '#71717a', fontWeight: 600 }}>โล</span>
+                <span style={{ fontSize: '10px', color: '#71717a', fontWeight: 600 }}>{t.km}</span>
                 <span style={{ fontSize: '9px', color: '#f43f5e', fontWeight: 700, marginTop: '2px' }}>
                   ~{details.caloriesBurned}c
                 </span>
@@ -548,7 +557,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
         {currentSession.runningSessions && currentSession.runningSessions.length > 0 && (
           <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <span style={{ fontSize: '11px', fontWeight: 700, color: '#71717a', textTransform: 'uppercase' }}>
-              รอบวิ่งที่บันทึกแล้ววันนี้:
+              {userProfile.language === 'en' ? 'Logged Cardio Today:' : 'รอบวิ่งที่บันทึกแล้ววันนี้:'}
             </span>
             {currentSession.runningSessions.map((run) => (
               <div
@@ -566,8 +575,12 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Navigation size={14} color="#0a0a0c" />
-                  <strong>วิ่งระยะ {run.distanceKm} กิโลเมตร</strong>
-                  <span style={{ color: '#71717a' }}>(~{run.durationMinutes} นาที)</span>
+                  <strong>
+                    {userProfile.language === 'en'
+                      ? `Run ${run.distanceKm} km`
+                      : `วิ่งระยะ ${run.distanceKm} กิโลเมตร`}
+                  </strong>
+                  <span style={{ color: '#71717a' }}>(~{run.durationMinutes} {t.minutes})</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ color: '#f43f5e', fontWeight: 800 }}>+{run.caloriesBurned} kcal</span>
@@ -584,7 +597,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
         )}
       </div>
 
-      {/* SECTION: DIRECT INLINE ENTRY - "กรอกชนิดที่เล่นได้ด้วยสิ" */}
+      {/* SECTION: DIRECT INLINE ENTRY */}
       <div
         style={{
           backgroundColor: '#ffffff',
@@ -595,18 +608,18 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
         }}
       >
         <span style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'block', marginBottom: '8px' }}>
-          กรอกชนิดเครื่องเล่นที่กำลังเล่น (ตั้งต้น 1 เซ็ต 15 ที):
+          {userProfile.language === 'en' ? 'Add Exercise Machine (Default 1 set of 15 reps):' : 'กรอกชนิดเครื่องเล่นที่กำลังเล่น (ตั้งต้น 1 เซ็ต 15 ที):'}
         </span>
         
         {/* Muscle Selector Pills */}
         <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', marginBottom: '8px', paddingBottom: '2px' }}>
           {[
-            { id: 'chest', label: 'อก' },
-            { id: 'back', label: 'หลัง' },
-            { id: 'legs', label: 'ขา' },
-            { id: 'shoulders', label: 'ไหล่' },
-            { id: 'arms', label: 'แขน' },
-            { id: 'abs', label: 'หน้าท้อง' },
+            { id: 'chest', label: userProfile.language === 'en' ? 'Chest' : 'อก' },
+            { id: 'back', label: userProfile.language === 'en' ? 'Back' : 'หลัง' },
+            { id: 'legs', label: userProfile.language === 'en' ? 'Legs' : 'ขา' },
+            { id: 'shoulders', label: userProfile.language === 'en' ? 'Shoulders' : 'ไหล่' },
+            { id: 'arms', label: userProfile.language === 'en' ? 'Arms' : 'แขน' },
+            { id: 'abs', label: userProfile.language === 'en' ? 'Abs' : 'หน้าท้อง' },
           ].map((m) => (
             <button
               type="button"
@@ -633,7 +646,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
         <div style={{ display: 'flex', gap: '8px' }}>
           <input
             type="text"
-            placeholder="พิมพ์ชื่อเครื่องเล่น เช่น Seated Row, Leg Press..."
+            placeholder={userProfile.language === 'en' ? 'Type machine name e.g. Seated Row, Leg Press...' : 'พิมพ์ชื่อเครื่องเล่น เช่น Seated Row, Leg Press...'}
             value={inlineMachineName}
             onChange={(e) => setInlineMachineName(e.target.value)}
             onKeyDown={(e) => {
@@ -655,7 +668,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
             onClick={() => handleAddMachine(inlineMachineName, inlineMuscle)}
             style={{
               backgroundColor: '#0a0a0c',
-              color: '#ffe500',
+              color: 'var(--theme-accent, #ffe500)',
               border: 'none',
               borderRadius: '12px',
               padding: '0 16px',
@@ -668,7 +681,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
               whiteSpace: 'nowrap',
             }}
           >
-            <Plus size={16} /> เพิ่ม
+            <Plus size={16} /> {userProfile.language === 'en' ? 'Add' : 'เพิ่ม'}
           </button>
         </div>
       </div>
@@ -684,10 +697,14 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
               color: '#0a0a0c',
             }}
           >
-            รายการเครื่องเล่น ({currentSession.exercises.length} เครื่อง)
+            {userProfile.language === 'en'
+              ? `Machine Exercises (${currentSession.exercises.length})`
+              : `รายการเครื่องเล่น (${currentSession.exercises.length} เครื่อง)`}
           </h2>
           <span style={{ fontSize: '12px', color: '#71717a' }}>
-            สำเร็จ {totalCompletedSets} เซ็ต • สามารถแก้ไขชื่อและกด + - ได้ทันที
+            {userProfile.language === 'en'
+              ? `Completed ${totalCompletedSets} sets • Edit names and adjust + - anytime`
+              : `สำเร็จ ${totalCompletedSets} เซ็ต • สามารถแก้ไขชื่อและกด + - ได้ทันที`}
           </span>
         </div>
         <button
@@ -703,7 +720,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
             cursor: 'pointer',
           }}
         >
-          คลังเครื่องเล่น
+          {userProfile.language === 'en' ? 'Machine Library' : 'คลังเครื่องเล่น'}
         </button>
       </div>
 
@@ -802,10 +819,10 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                   padding: '0 4px',
                 }}
               >
-                <span>เซ็ต</span>
-                <span style={{ textAlign: 'center' }}>น้ำหนัก (kg) [- +]</span>
-                <span style={{ textAlign: 'center' }}>จำนวน (ที) [- +]</span>
-                <span style={{ textAlign: 'center' }}>เสร็จ</span>
+                <span>{userProfile.language === 'en' ? 'Set' : 'เซ็ต'}</span>
+                <span style={{ textAlign: 'center' }}>{userProfile.language === 'en' ? 'Weight (kg) [- +]' : 'น้ำหนัก (kg) [- +]'}</span>
+                <span style={{ textAlign: 'center' }}>{userProfile.language === 'en' ? 'Reps (15) [- +]' : 'จำนวน (ที) [- +]'}</span>
+                <span style={{ textAlign: 'center' }}>{userProfile.language === 'en' ? 'Done' : 'เสร็จ'}</span>
               </div>
 
               {ex.sets.map((set) => (
@@ -987,7 +1004,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                 gap: '6px',
               }}
             >
-              <Plus size={13} /> เพิ่มอีก 1 เซ็ต (15 ที)
+              <Plus size={13} /> {t.addSet}
             </button>
           </div>
         ))}
@@ -1000,7 +1017,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
         style={{ padding: '16px 24px', marginTop: '6px' }}
       >
         <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Check size={18} color="#ffe500" /> สรุปและเสร็จสิ้นการซ้อมที่ Gym Gym Gym
+          <Check size={18} color="var(--theme-accent, #ffe500)" /> {userProfile.language === 'en' ? 'Finish & Summary Today Workout' : 'สรุปและเสร็จสิ้นการซ้อมที่ Gym Gym Gym'}
         </span>
         <ChevronRight size={18} />
       </button>
@@ -1037,7 +1054,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div>
                 <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '18px', fontWeight: 800 }}>
-                  เลือกเครื่องเล่น (1 เซ็ต 15 ที)
+                  {userProfile.language === 'en' ? 'Select Machine (1 set of 15 reps)' : 'เลือกเครื่องเล่น (1 เซ็ต 15 ที)'}
                 </h3>
               </div>
               <button
@@ -1050,7 +1067,9 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
 
             {/* Custom Input */}
             <div style={{ marginBottom: '16px' }}>
-              <label style={{ fontSize: '12px', fontWeight: 600, color: '#71717a' }}>หรือพิมพ์ชื่อเครื่องเล่นเอง:</label>
+              <label style={{ fontSize: '12px', fontWeight: 600, color: '#71717a' }}>
+                {userProfile.language === 'en' ? 'Or enter custom machine name:' : 'หรือพิมพ์ชื่อเครื่องเล่นเอง:'}
+              </label>
               
               {/* Muscle selector chips */}
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', margin: '6px 0 8px 0' }}>
@@ -1079,7 +1098,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
               <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
                 <input
                   type="text"
-                  placeholder="เช่น Incline Chest Press..."
+                  placeholder={userProfile.language === 'en' ? 'e.g. Incline Chest Press...' : 'เช่น Incline Chest Press...'}
                   value={customMachineName}
                   onChange={(e) => setCustomMachineName(e.target.value)}
                   style={{
@@ -1107,14 +1126,14 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                     cursor: 'pointer',
                   }}
                 >
-                  เพิ่ม
+                  {userProfile.language === 'en' ? 'Add' : 'เพิ่ม'}
                 </button>
               </div>
             </div>
 
             {/* Common Machines List */}
             <span style={{ fontSize: '11px', fontWeight: 700, color: '#71717a', textTransform: 'uppercase' }}>
-              เครื่องเล่นยอดนิยม:
+              {userProfile.language === 'en' ? 'Popular Exercises:' : 'เครื่องเล่นยอดนิยม:'}
             </span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
               {COMMON_MACHINES.map((item) => (
@@ -1127,7 +1146,9 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                   <div>
                     <strong style={{ color: '#0a0a0c', fontSize: '14px' }}>{item.name}</strong>
                     <span style={{ color: '#71717a', fontSize: '11px', display: 'block' }}>
-                      กลุ่มกล้ามเนื้อ: {item.muscle} • ตั้งต้น 1 เซ็ต 15 ที
+                      {userProfile.language === 'en'
+                        ? `Target: ${item.muscle} • Default 1 set of 15 reps`
+                        : `กลุ่มกล้ามเนื้อ: ${item.muscle} • ตั้งต้น 1 เซ็ต 15 ที`}
                     </span>
                   </div>
                   <div

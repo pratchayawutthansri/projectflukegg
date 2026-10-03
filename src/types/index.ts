@@ -68,7 +68,7 @@ export interface Transaction {
   note: string;
 }
 
-export type ThemeMode = 'yellow' | 'green' | 'cyan' | 'orange' | 'purple' | 'monochrome';
+export type ThemeMode = 'yellow' | 'green' | 'cyan' | 'orange' | 'purple' | 'pink' | 'monochrome';
 export type Language = 'th' | 'en';
 
 export interface UserProfile {

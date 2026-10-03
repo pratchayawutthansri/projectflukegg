@@ -130,7 +130,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 margin: '3px 0 0 0',
               }}
             >
-              ข้อมูลสมาชิก
+              {userProfile.language === 'en' ? 'Member Profile' : 'ข้อมูลสมาชิก'}
             </h2>
           </div>
           <button
@@ -210,14 +210,16 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '17px', fontWeight: 800, margin: 0 }}>
                     {name || 'Fluke'}
                   </h3>
-                  <span style={{ fontSize: '11px', color: '#ffe500', fontWeight: 600 }}>
+                  <span style={{ fontSize: '11px', color: 'var(--theme-accent, #ffe500)', fontWeight: 600 }}>
                     Gym Gym Gym Official Member
                   </span>
                 </div>
               </div>
 
               <div style={{ textAlign: 'right' }}>
-                <span style={{ fontSize: '10px', color: '#a1a1aa', display: 'block' }}>ส่วนสูง · อายุ</span>
+                <span style={{ fontSize: '10px', color: '#a1a1aa', display: 'block' }}>
+                  {userProfile.language === 'en' ? 'Height · Age' : 'ส่วนสูง · อายุ'}
+                </span>
                 <span
                   style={{
                     fontFamily: 'Outfit, sans-serif',
@@ -226,7 +228,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     color: '#ffffff',
                   }}
                 >
-                  {heightCm} cm · {age} ปี
+                  {heightCm} cm · {age} {userProfile.language === 'en' ? 'yrs' : 'ปี'}
                 </span>
               </div>
             </div>
@@ -244,16 +246,24 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               }}
             >
               <div>
-                <span style={{ color: '#a1a1aa', display: 'block' }}>น้ำหนักตัว</span>
+                <span style={{ color: '#a1a1aa', display: 'block' }}>
+                  {userProfile.language === 'en' ? 'Weight' : 'น้ำหนักตัว'}
+                </span>
                 <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '13px' }}>{weightKg} kg</strong>
               </div>
               <div>
-                <span style={{ color: '#a1a1aa', display: 'block' }}>ส่วนสูง</span>
+                <span style={{ color: '#a1a1aa', display: 'block' }}>
+                  {userProfile.language === 'en' ? 'Height' : 'ส่วนสูง'}
+                </span>
                 <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '13px' }}>{heightCm} cm</strong>
               </div>
               <div>
-                <span style={{ color: '#a1a1aa', display: 'block' }}>อายุ</span>
-                <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '13px', color: '#ffe500' }}>{age} ปี</strong>
+                <span style={{ color: '#a1a1aa', display: 'block' }}>
+                  {userProfile.language === 'en' ? 'Age' : 'อายุ'}
+                </span>
+                <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '13px', color: 'var(--theme-accent, #ffe500)' }}>
+                  {age} {userProfile.language === 'en' ? 'yrs' : 'ปี'}
+                </strong>
               </div>
             </div>
           </div>
@@ -263,7 +273,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             {/* Name */}
             <div>
               <label style={{ fontSize: '12px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '5px' }}>
-                ชื่อของคุณ (Name):
+                {userProfile.language === 'en' ? 'Display Name:' : 'ชื่อของคุณ (Name):'}
               </label>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <input
@@ -271,7 +281,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="เช่น Fluke"
+                  placeholder={userProfile.language === 'en' ? 'e.g. Fluke' : 'เช่น Fluke'}
                   style={{
                     width: '100%',
                     border: '1.5px solid #0a0a0c',
@@ -291,7 +301,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '4px' }}>
-                  น้ำหนัก (กก.):
+                  {userProfile.language === 'en' ? 'Weight (kg):' : 'น้ำหนัก (กก.):'}
                 </label>
                 <input
                   type="number"
@@ -314,7 +324,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
               <div>
                 <label style={{ fontSize: '11px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '4px' }}>
-                  ส่วนสูง (ซม.):
+                  {userProfile.language === 'en' ? 'Height (cm):' : 'ส่วนสูง (ซม.):'}
                 </label>
                 <input
                   type="number"
@@ -337,7 +347,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
               <div>
                 <label style={{ fontSize: '11px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '4px' }}>
-                  อายุ (ปี):
+                  {userProfile.language === 'en' ? 'Age (yrs):' : 'อายุ (ปี):'}
                 </label>
                 <input
                   type="number"
@@ -359,32 +369,32 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               </div>
             </div>
 
-              <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '5px' }}>
-                  เป้าหมายแคล/วัน:
-                </label>
-                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                  <input
-                    type="number"
-                    step="50"
-                    min="200"
-                    max="5000"
-                    value={dailyCalorieTarget}
-                    onChange={(e) => setDailyCalorieTarget(e.target.value)}
-                    style={{
-                      width: '100%',
-                      border: '1.5px solid #0a0a0c',
-                      borderRadius: '14px',
-                      padding: '12px 14px',
-                      fontSize: '14px',
-                      fontFamily: 'Outfit, sans-serif',
-                      fontWeight: 700,
-                      outline: 'none',
-                    }}
-                  />
-                  <Target size={16} color="#71717a" style={{ position: 'absolute', right: '12px' }} />
-                </div>
+            <div>
+              <label style={{ fontSize: '12px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '5px' }}>
+                {userProfile.language === 'en' ? 'Daily Calorie Target (kcal):' : 'เป้าหมายแคล/วัน:'}
+              </label>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <input
+                  type="number"
+                  step="50"
+                  min="200"
+                  max="5000"
+                  value={dailyCalorieTarget}
+                  onChange={(e) => setDailyCalorieTarget(e.target.value)}
+                  style={{
+                    width: '100%',
+                    border: '1.5px solid #0a0a0c',
+                    borderRadius: '14px',
+                    padding: '12px 14px',
+                    fontSize: '14px',
+                    fontFamily: 'Outfit, sans-serif',
+                    fontWeight: 700,
+                    outline: 'none',
+                  }}
+                />
+                <Target size={16} color="#71717a" style={{ position: 'absolute', right: '12px' }} />
               </div>
+            </div>
 
             {/* Save Button */}
             <button
@@ -397,7 +407,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 borderColor: isSaved ? '#10b981' : '#0a0a0c',
               }}
             >
-              <span>{isSaved ? 'บันทึกข้อมูลเรียบร้อยแล้ว!' : 'บันทึกการตั้งค่าข้อมูลส่วนตัว'}</span>
+              <span>
+                {isSaved
+                  ? (userProfile.language === 'en' ? 'Profile Saved Successfully!' : 'บันทึกข้อมูลเรียบร้อยแล้ว!')
+                  : (userProfile.language === 'en' ? 'Save Profile Changes' : 'บันทึกการตั้งค่าข้อมูลส่วนตัว')}
+              </span>
               {isSaved ? <Check size={18} /> : <ChevronRight size={18} />}
             </button>
           </form>
@@ -424,10 +438,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               <LogIn size={18} color="#0a0a0c" />
               <div>
                 <strong style={{ fontSize: '13px', color: '#0a0a0c', display: 'block' }}>
-                  ระบบสมัครสมาชิก / สลับบัญชี
+                  {userProfile.language === 'en' ? 'Membership & Account Switch' : 'ระบบสมัครสมาชิก / สลับบัญชี'}
                 </strong>
                 <span style={{ fontSize: '11px', color: '#71717a' }}>
-                  สมัครสมาชิกใหม่ หรือเข้าสู่ระบบ Gym Gym Gym
+                  {userProfile.language === 'en' ? 'Sign up or log into Gym Gym Gym' : 'สมัครสมาชิกใหม่ หรือเข้าสู่ระบบ Gym Gym Gym'}
                 </span>
               </div>
             </div>

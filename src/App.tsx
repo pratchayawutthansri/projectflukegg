@@ -317,6 +317,7 @@ export const App: React.FC = () => {
               transactions={transactions}
               onAddTransaction={handleAddTransaction}
               onDeleteTransaction={handleDeleteTransaction}
+              userProfile={userProfile}
             />
           )}
 
@@ -353,11 +354,12 @@ export const App: React.FC = () => {
             <div
               className="nav-icon-wrap"
               style={{
-                backgroundColor: activeTab === 'dashboard' ? '#0a0a0c' : 'transparent',
-                color: activeTab === 'dashboard' ? currentTheme.accent : '#71717a',
+                background: activeTab === 'dashboard' ? 'var(--theme-card-bg, #0a0a0c)' : 'transparent',
+                color: activeTab === 'dashboard' ? '#ffffff' : '#71717a',
+                boxShadow: activeTab === 'dashboard' ? '0 2px 8px rgba(0,0,0,0.18)' : 'none',
               }}
             >
-              <Home size={17} />
+              <Home size={17} color={activeTab === 'dashboard' ? '#ffffff' : '#71717a'} />
             </div>
             <span>{t.dashboard}</span>
           </button>
@@ -372,11 +374,12 @@ export const App: React.FC = () => {
             <div
               className="nav-icon-wrap"
               style={{
-                backgroundColor: activeTab === 'workout' ? '#0a0a0c' : 'transparent',
-                color: activeTab === 'workout' ? currentTheme.accent : '#71717a',
+                background: activeTab === 'workout' ? 'var(--theme-card-bg, #0a0a0c)' : 'transparent',
+                color: activeTab === 'workout' ? '#ffffff' : '#71717a',
+                boxShadow: activeTab === 'workout' ? '0 2px 8px rgba(0,0,0,0.18)' : 'none',
               }}
             >
-              <Dumbbell size={17} />
+              <Dumbbell size={17} color={activeTab === 'workout' ? '#ffffff' : '#71717a'} />
             </div>
             <span>{t.workout}</span>
           </button>
@@ -391,11 +394,12 @@ export const App: React.FC = () => {
             <div
               className="nav-icon-wrap"
               style={{
-                backgroundColor: activeTab === 'calendar' ? '#0a0a0c' : 'transparent',
-                color: activeTab === 'calendar' ? currentTheme.accent : '#71717a',
+                background: activeTab === 'calendar' ? 'var(--theme-card-bg, #0a0a0c)' : 'transparent',
+                color: activeTab === 'calendar' ? '#ffffff' : '#71717a',
+                boxShadow: activeTab === 'calendar' ? '0 2px 8px rgba(0,0,0,0.18)' : 'none',
               }}
             >
-              <Calendar size={17} />
+              <Calendar size={17} color={activeTab === 'calendar' ? '#ffffff' : '#71717a'} />
             </div>
             <span>{t.calendar}</span>
           </button>
@@ -410,11 +414,12 @@ export const App: React.FC = () => {
             <div
               className="nav-icon-wrap"
               style={{
-                backgroundColor: activeTab === 'finance' ? '#0a0a0c' : 'transparent',
-                color: activeTab === 'finance' ? currentTheme.accent : '#71717a',
+                background: activeTab === 'finance' ? 'var(--theme-card-bg, #0a0a0c)' : 'transparent',
+                color: activeTab === 'finance' ? '#ffffff' : '#71717a',
+                boxShadow: activeTab === 'finance' ? '0 2px 8px rgba(0,0,0,0.18)' : 'none',
               }}
             >
-              <Wallet size={17} />
+              <Wallet size={17} color={activeTab === 'finance' ? '#ffffff' : '#71717a'} />
             </div>
             <span>{t.finance}</span>
           </button>
@@ -429,11 +434,12 @@ export const App: React.FC = () => {
             <div
               className="nav-icon-wrap"
               style={{
-                backgroundColor: activeTab === 'summary' ? '#0a0a0c' : 'transparent',
-                color: activeTab === 'summary' ? currentTheme.accent : '#71717a',
+                background: activeTab === 'summary' ? 'var(--theme-card-bg, #0a0a0c)' : 'transparent',
+                color: activeTab === 'summary' ? '#ffffff' : '#71717a',
+                boxShadow: activeTab === 'summary' ? '0 2px 8px rgba(0,0,0,0.18)' : 'none',
               }}
             >
-              <FileText size={17} />
+              <FileText size={17} color={activeTab === 'summary' ? '#ffffff' : '#71717a'} />
             </div>
             <span>{t.summary}</span>
           </button>
@@ -448,11 +454,12 @@ export const App: React.FC = () => {
             <div
               className="nav-icon-wrap"
               style={{
-                backgroundColor: activeTab === 'settings' ? '#0a0a0c' : 'transparent',
-                color: activeTab === 'settings' ? currentTheme.accent : '#71717a',
+                background: activeTab === 'settings' ? 'var(--theme-card-bg, #0a0a0c)' : 'transparent',
+                color: activeTab === 'settings' ? '#ffffff' : '#71717a',
+                boxShadow: activeTab === 'settings' ? '0 2px 8px rgba(0,0,0,0.18)' : 'none',
               }}
             >
-              <Settings size={17} />
+              <Settings size={17} color={activeTab === 'settings' ? '#ffffff' : '#71717a'} />
             </div>
             <span>{t.settings}</span>
           </button>
@@ -484,6 +491,7 @@ export const App: React.FC = () => {
           isOpen={isAuthOpen}
           onClose={() => setIsAuthOpen(false)}
           onSuccessAuth={handleSuccessAuth}
+          userProfile={userProfile}
         />
       </div>
   );

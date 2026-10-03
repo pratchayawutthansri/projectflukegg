@@ -51,26 +51,30 @@ const CategoryIconBadge: React.FC<{ icon: string; size?: number }> = ({ icon, si
       return <Tag size={size} />;
   }
 };
-import type { Transaction, TransactionType } from '../types';
+import type { Transaction, TransactionType, UserProfile } from '../types';
 import {
   calculateFinanceSummary,
   EXPENSE_CATEGORIES,
   formatBaht,
   INCOME_CATEGORIES,
 } from '../utils/financeEngine';
+import { getTranslation } from '../utils/translations';
 
 interface FinanceTabProps {
   transactions: Transaction[];
   onAddTransaction: (tx: Transaction) => void;
   onDeleteTransaction: (id: string) => void;
+  userProfile?: UserProfile;
 }
 
 export const FinanceTab: React.FC<FinanceTabProps> = ({
   transactions,
   onAddTransaction,
   onDeleteTransaction,
+  userProfile,
 }) => {
   const todayStr = new Date().toISOString().split('T')[0];
+  const t = getTranslation(userProfile?.language || 'th');
   const summary = calculateFinanceSummary(transactions, todayStr);
 
   // Add Transaction Modal State
@@ -152,7 +156,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
               margin: '2px 0 0 0',
             }}
           >
-            บัญชีรายรับ-รายจ่าย
+            {t.financeTitle}
           </h1>
         </div>
 
@@ -175,7 +179,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
               boxShadow: '0 2px 0 #0a0a0c',
             }}
           >
-            <FileText size={14} /> สรุปยอดรายวัน
+            <FileText size={14} /> {t.dailyReport}
           </button>
 
           <button
@@ -185,7 +189,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
             }}
             style={{
               backgroundColor: '#0a0a0c',
-              color: '#ffe500',
+              color: 'var(--theme-accent, #ffe500)',
               border: 'none',
               borderRadius: '9999px',
               padding: '8px 16px',
@@ -198,7 +202,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
               boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
             }}
           >
-            <Plus size={15} /> บันทึกใหม่
+            <Plus size={15} /> {t.newTransaction}
           </button>
         </div>
       </div>
@@ -214,7 +218,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
           boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
         }}
       >
-        <span style={{ fontSize: '12px', color: '#a1a1aa', fontWeight: 600 }}>ยอดเงินคงเหลือสุทธิ (Net Balance)</span>
+        <span style={{ fontSize: '12px', color: '#a1a1aa', fontWeight: 600 }}>{t.netBalance}</span>
         <div
           style={{
             fontFamily: 'Outfit, sans-serif',
@@ -256,7 +260,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
               <ArrowDownLeft size={16} />
             </div>
             <div>
-              <span style={{ fontSize: '11px', color: '#a1a1aa', display: 'block' }}>รายรับรวม</span>
+              <span style={{ fontSize: '11px', color: '#a1a1aa', display: 'block' }}>{t.totalIncome}</span>
               <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '14px', color: '#10b981' }}>
                 +{formatBaht(summary.totalIncome)}
               </strong>
@@ -279,7 +283,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
               <ArrowUpRight size={16} />
             </div>
             <div>
-              <span style={{ fontSize: '11px', color: '#a1a1aa', display: 'block' }}>รายจ่ายรวม</span>
+              <span style={{ fontSize: '11px', color: '#a1a1aa', display: 'block' }}>{t.totalExpense}</span>
               <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '14px', color: '#f43f5e' }}>
                 -{formatBaht(summary.totalExpense)}
               </strong>
@@ -293,9 +297,11 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
             <span style={{ fontSize: '12px', fontWeight: 700, color: '#71717a', textTransform: 'uppercase' }}>
-              สัดส่วนค่าใช้จ่ายตามหมวดหมู่:
+              {userProfile?.language === 'en' ? 'Expense by Category:' : 'สัดส่วนค่าใช้จ่ายตามหมวดหมู่:'}
             </span>
-            <span style={{ fontSize: '11px', color: '#71717a' }}>จ่ายวันนี้ {formatBaht(summary.todayExpense)}</span>
+            <span style={{ fontSize: '11px', color: '#71717a' }}>
+              {userProfile?.language === 'en' ? `Today's Spent ${formatBaht(summary.todayExpense)}` : `จ่ายวันนี้ ${formatBaht(summary.todayExpense)}`}
+            </span>
           </div>
 
           <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
@@ -320,7 +326,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                     height: '32px',
                     borderRadius: '8px',
                     backgroundColor: '#0a0a0c',
-                    color: '#ffe500',
+                    color: 'var(--theme-accent, #ffe500)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -352,7 +358,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
             color: '#0a0a0c',
           }}
         >
-          ประวัติรายการล่าสุด ({transactions.length} รายการ)
+          {userProfile?.language === 'en' ? `Transaction History (${transactions.length})` : `ประวัติรายการล่าสุด (${transactions.length} รายการ)`}
         </h2>
       </div>
 
@@ -369,7 +375,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
             }}
           >
             <Wallet size={28} color="#a1a1aa" style={{ margin: '0 auto 6px auto' }} />
-            <p style={{ fontSize: '13px', color: '#71717a' }}>ยังไม่มีรายการบันทึก คลิกที่ปุ่มด้านบนเพื่อเพิ่มรายการ</p>
+            <p style={{ fontSize: '13px', color: '#71717a' }}>{t.noTransactions}</p>
           </div>
         ) : (
           transactions.map((tx) => {
@@ -535,7 +541,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                     DAILY CASHFLOW REPORT
                   </span>
                   <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 800, margin: '4px 0 0 0' }}>
-                    สรุปยอดรายงานประจำวัน
+                    {userProfile?.language === 'en' ? 'Daily Cash Flow Report' : 'สรุปยอดรายงานประจำวัน'}
                   </h3>
                 </div>
                 <button
@@ -549,7 +555,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
               {/* Date Selector for Report */}
               <div style={{ marginBottom: '16px' }}>
                 <label style={{ fontSize: '12px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '6px' }}>
-                  เลือกวันที่ต้องการดูรายงานสรุป:
+                  {userProfile?.language === 'en' ? 'Select Date for Report:' : 'เลือกวันที่ต้องการดูรายงานสรุป:'}
                 </label>
                 <div
                   style={{
@@ -592,7 +598,9 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                 }}
               >
                 <span style={{ fontSize: '11px', color: '#a1a1aa', fontWeight: 600 }}>
-                  ส่วนต่างสุทธิประจำวันที่ {new Date(reportDate).toLocaleDateString('th-TH')}
+                  {userProfile?.language === 'en'
+                    ? `Net Balance on ${new Date(reportDate).toLocaleDateString('en-US')}`
+                    : `ส่วนต่างสุทธิประจำวันที่ ${new Date(reportDate).toLocaleDateString('th-TH')}`}
                 </span>
                 <div
                   style={{
@@ -617,13 +625,17 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                   }}
                 >
                   <div>
-                    <span style={{ fontSize: '11px', color: '#a1a1aa' }}>รายรับวันนั้น</span>
+                    <span style={{ fontSize: '11px', color: '#a1a1aa' }}>
+                      {userProfile?.language === 'en' ? 'Daily Income' : 'รายรับวันนั้น'}
+                    </span>
                     <strong style={{ color: '#10b981', display: 'block', fontSize: '15px', fontFamily: 'Outfit, sans-serif' }}>
                       +{formatBaht(dailyIncome)}
                     </strong>
                   </div>
                   <div>
-                    <span style={{ fontSize: '11px', color: '#a1a1aa' }}>รายจ่ายวันนั้น</span>
+                    <span style={{ fontSize: '11px', color: '#a1a1aa' }}>
+                      {userProfile?.language === 'en' ? 'Daily Expense' : 'รายจ่ายวันนั้น'}
+                    </span>
                     <strong style={{ color: '#f43f5e', display: 'block', fontSize: '15px', fontFamily: 'Outfit, sans-serif' }}>
                       -{formatBaht(dailyExpense)}
                     </strong>
@@ -634,12 +646,14 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
               {/* Itemized Transactions on this date */}
               <div>
                 <span style={{ fontSize: '12px', fontWeight: 700, color: '#71717a', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>
-                  รายการทั้งหมดของวันนี้นี้ ({dailyTransactions.length} รายการ):
+                  {userProfile?.language === 'en' ? `Transactions on this date (${dailyTransactions.length}):` : `รายการทั้งหมดของวันนี้นี้ (${dailyTransactions.length} รายการ):`}
                 </span>
 
                 {dailyTransactions.length === 0 ? (
                   <div style={{ textAlign: 'center', padding: '20px', backgroundColor: '#f9f9fa', borderRadius: '14px', border: '1px dashed #d4d4d8' }}>
-                    <p style={{ fontSize: '12px', color: '#71717a', margin: 0 }}>ไม่มีรายการรับหรือจ่ายในวันที่เลือกนี้</p>
+                    <p style={{ fontSize: '12px', color: '#71717a', margin: 0 }}>
+                      {userProfile?.language === 'en' ? 'No transactions on this date.' : 'ไม่มีรายการรับหรือจ่ายในวันที่เลือกนี้'}
+                    </p>
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -743,187 +757,187 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
               {/* Modal Header */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                 <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '18px', fontWeight: 800 }}>
-                  บันทึกรายการบัญชีใหม่
+                  {t.addModalTitle}
                 </h3>
                 <button
                   onClick={() => setShowAddModal(false)}
-                style={{ background: '#f4f4f5', border: 'none', borderRadius: '50%', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <X size={16} />
-              </button>
-            </div>
+                  style={{ background: '#f4f4f5', border: 'none', borderRadius: '50%', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <X size={16} />
+                </button>
+              </div>
 
-            {/* Income / Expense Switcher */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '8px',
-                backgroundColor: '#f4f4f5',
-                padding: '4px',
-                borderRadius: '16px',
-                marginBottom: '16px',
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => {
-                  setTxType('expense');
-                  setCategory(EXPENSE_CATEGORIES[0].name);
-                }}
+              {/* Income / Expense Switcher */}
+              <div
                 style={{
-                  padding: '10px',
-                  borderRadius: '12px',
-                  border: 'none',
-                  backgroundColor: txType === 'expense' ? '#0a0a0c' : 'transparent',
-                  color: txType === 'expense' ? '#ffffff' : '#71717a',
-                  fontFamily: 'Prompt, sans-serif',
-                  fontSize: '13px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '8px',
+                  backgroundColor: '#f4f4f5',
+                  padding: '4px',
+                  borderRadius: '16px',
+                  marginBottom: '16px',
                 }}
               >
-                รายจ่าย (Expense)
-              </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTxType('expense');
+                    setCategory(EXPENSE_CATEGORIES[0].name);
+                  }}
+                  style={{
+                    padding: '10px',
+                    borderRadius: '12px',
+                    border: 'none',
+                    backgroundColor: txType === 'expense' ? '#0a0a0c' : 'transparent',
+                    color: txType === 'expense' ? '#ffffff' : '#71717a',
+                    fontFamily: 'Prompt, sans-serif',
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {t.expense}
+                </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setTxType('income');
-                  setCategory(INCOME_CATEGORIES[0].name);
-                }}
-                style={{
-                  padding: '10px',
-                  borderRadius: '12px',
-                  border: 'none',
-                  backgroundColor: txType === 'income' ? '#0a0a0c' : 'transparent',
-                  color: txType === 'income' ? '#ffffff' : '#71717a',
-                  fontFamily: 'Prompt, sans-serif',
-                  fontSize: '13px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                }}
-              >
-                รายรับ (Income)
-              </button>
-            </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTxType('income');
+                    setCategory(INCOME_CATEGORIES[0].name);
+                  }}
+                  style={{
+                    padding: '10px',
+                    borderRadius: '12px',
+                    border: 'none',
+                    backgroundColor: txType === 'income' ? '#0a0a0c' : 'transparent',
+                    color: txType === 'income' ? '#ffffff' : '#71717a',
+                    fontFamily: 'Prompt, sans-serif',
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {t.income}
+                </button>
+              </div>
 
-            <form onSubmit={handleSaveTransaction} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {/* Amount */}
-              <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '6px' }}>
-                  จำนวนเงิน (บาท):
-                </label>
-                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <form onSubmit={handleSaveTransaction} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                {/* Amount */}
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '6px' }}>
+                    {t.amount}:
+                  </label>
+                  <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                    <input
+                      type="number"
+                      step="0.01"
+                      placeholder="0.00"
+                      autoFocus
+                      required
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      style={{
+                        width: '100%',
+                        border: '1.5px solid #0a0a0c',
+                        borderRadius: '14px',
+                        padding: '14px 16px',
+                        fontSize: '22px',
+                        fontFamily: 'Outfit, sans-serif',
+                        fontWeight: 800,
+                        outline: 'none',
+                      }}
+                    />
+                    <span style={{ position: 'absolute', right: '16px', fontWeight: 700, color: '#71717a' }}>฿</span>
+                  </div>
+                </div>
+
+                {/* Category Picker */}
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '6px' }}>
+                    {t.category}:
+                  </label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {currentCategories.map((c) => (
+                      <button
+                        type="button"
+                        key={c.name}
+                        onClick={() => setCategory(c.name)}
+                        style={{
+                          padding: '8px 12px',
+                          borderRadius: '10px',
+                          border: '1px solid ' + (category === c.name ? '#0a0a0c' : '#e4e4e7'),
+                          backgroundColor: category === c.name ? '#0a0a0c' : '#fafafa',
+                          color: category === c.name ? '#ffe500' : '#0a0a0c',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          fontFamily: 'Prompt, sans-serif',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                        }}
+                      >
+                        <CategoryIconBadge icon={c.icon} size={14} />
+                        <span>{c.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Note / Description */}
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '6px' }}>
+                    {t.note}:
+                  </label>
                   <input
-                    type="number"
-                    step="0.01"
-                    placeholder="0.00"
-                    autoFocus
-                    required
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    type="text"
+                    placeholder={t.notePlaceholder}
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
                     style={{
                       width: '100%',
                       border: '1.5px solid #0a0a0c',
                       borderRadius: '14px',
-                      padding: '14px 16px',
-                      fontSize: '22px',
-                      fontFamily: 'Outfit, sans-serif',
-                      fontWeight: 800,
+                      padding: '12px 14px',
+                      fontSize: '14px',
+                      fontFamily: 'Prompt, sans-serif',
                       outline: 'none',
                     }}
                   />
-                  <span style={{ position: 'absolute', right: '16px', fontWeight: 700, color: '#71717a' }}>฿</span>
                 </div>
-              </div>
 
-              {/* Category Picker */}
-              <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '6px' }}>
-                  หมวดหมู่:
-                </label>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {currentCategories.map((c) => (
-                    <button
-                      type="button"
-                      key={c.name}
-                      onClick={() => setCategory(c.name)}
-                      style={{
-                        padding: '8px 12px',
-                        borderRadius: '10px',
-                        border: '1px solid ' + (category === c.name ? '#0a0a0c' : '#e4e4e7'),
-                        backgroundColor: category === c.name ? '#0a0a0c' : '#fafafa',
-                        color: category === c.name ? '#ffe500' : '#0a0a0c',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        fontFamily: 'Prompt, sans-serif',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                      }}
-                    >
-                      <CategoryIconBadge icon={c.icon} size={14} />
-                      <span>{c.name}</span>
-                    </button>
-                  ))}
+                {/* Date */}
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '6px' }}>
+                    {t.dateLabel || 'Date:'}
+                  </label>
+                  <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    style={{
+                      width: '100%',
+                      border: '1.5px solid #0a0a0c',
+                      borderRadius: '14px',
+                      padding: '12px 14px',
+                      fontSize: '14px',
+                      fontFamily: 'Outfit, Prompt, sans-serif',
+                      outline: 'none',
+                    }}
+                  />
                 </div>
-              </div>
 
-              {/* Note / Description */}
-              <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '6px' }}>
-                  หมายเหตุ / รายละเอียด:
-                </label>
-                <input
-                  type="text"
-                  placeholder="เช่น ข้าวกะเพรา, กาแฟ, ค่าน้ำมัน..."
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  style={{
-                    width: '100%',
-                    border: '1.5px solid #0a0a0c',
-                    borderRadius: '14px',
-                    padding: '12px 14px',
-                    fontSize: '14px',
-                    fontFamily: 'Prompt, sans-serif',
-                    outline: 'none',
-                  }}
-                />
-              </div>
-
-              {/* Date */}
-              <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: '#52525b', display: 'block', marginBottom: '6px' }}>
-                  วันที่:
-                </label>
-                <input
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  style={{
-                    width: '100%',
-                    border: '1.5px solid #0a0a0c',
-                    borderRadius: '14px',
-                    padding: '12px 14px',
-                    fontSize: '14px',
-                    fontFamily: 'Outfit, Prompt, sans-serif',
-                    outline: 'none',
-                  }}
-                />
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="btn-black-pill"
-                style={{ padding: '16px', marginTop: '10px' }}
-              >
-                <span>บันทึกรายการทันที</span>
-                <ChevronRight size={18} />
-              </button>
-            </form>
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="btn-black-pill"
+                  style={{ padding: '16px', marginTop: '10px' }}
+                >
+                  <span>{t.saveTransactionBtn}</span>
+                  <ChevronRight size={18} />
+                </button>
+              </form>
           </div>
         </div>,
         document.body

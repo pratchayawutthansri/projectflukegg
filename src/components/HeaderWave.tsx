@@ -25,10 +25,10 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
 
   return (
     <div style={{ position: 'relative', width: '100%', zIndex: 10 }}>
-      {/* Top Black Section with iOS Notch / Dynamic Island Safe Area */}
+      {/* Top Black/Theme Section with iOS Notch / Dynamic Island Safe Area */}
       <div
         style={{
-          backgroundColor: '#0a0a0c',
+          background: 'var(--theme-header-bg, #0a0a0c)',
           color: '#ffffff',
           paddingTop: 'max(20px, env(safe-area-inset-top, 20px))',
           paddingLeft: '20px',
@@ -104,10 +104,10 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
                 type="button"
                 onClick={onToggleLanguage}
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: `1px solid ${theme.accentLight}`,
+                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                  border: '1px solid rgba(255, 255, 255, 0.25)',
                   borderRadius: '9999px',
-                  padding: '5px 10px',
+                  padding: '5px 11px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '5px',
@@ -120,7 +120,7 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
                 }}
                 title="Switch Language / สลับภาษา"
               >
-                <Languages size={13} color={theme.accent} />
+                <Languages size={13} color="#ffffff" />
                 <span>{isEn ? 'EN' : 'TH'}</span>
               </button>
             )}
@@ -131,7 +131,7 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
               title="ดูหน้าเว็บไซต์แนะนำ & วิธีใช้งาน"
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
                 color: '#ffffff',
                 borderRadius: '9999px',
                 padding: '5px 11px',
@@ -144,8 +144,8 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
                 transition: 'all 0.15s ease',
               }}
             >
-              <Globe size={13} color="#ffe500" />
-              <span>คู่มือ / เว็บไซต์</span>
+              <Globe size={13} color="#ffffff" />
+              <span>{isEn ? 'Manual' : 'คู่มือ / เว็บไซต์'}</span>
             </button>
           )}
           </div>
@@ -164,7 +164,7 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
               justifyContent: 'space-between',
               cursor: 'pointer',
               boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
-              border: `2px solid ${theme.accent}`,
+              border: `2px solid var(--theme-card-border, #0a0a0c)`,
               transition: 'transform 0.15s ease',
             }}
           >
@@ -185,8 +185,8 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
             </div>
             <div
               style={{
-                backgroundColor: '#0a0a0c',
-                color: theme.accent,
+                background: 'var(--theme-card-bg, #0a0a0c)',
+                color: '#ffffff',
                 borderRadius: '50%',
                 width: '26px',
                 height: '26px',
@@ -195,7 +195,7 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
                 justifyContent: 'center',
               }}
             >
-              <Plus size={15} />
+              <Plus size={15} color="#ffffff" />
             </div>
           </div>
         )}
@@ -214,7 +214,7 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
       >
         <path
           d="M0,0 L480,0 L480,12 C360,38 280,3 160,26 C80,38 30,15 0,22 Z"
-          fill="#0a0a0c"
+          fill="var(--theme-header-fill, #0a0a0c)"
         />
       </svg>
     </div>

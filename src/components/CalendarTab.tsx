@@ -11,6 +11,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import type { ScheduledPlan, UserProfile } from '../types';
+import { getTranslation } from '../utils/translations';
 
 interface CalendarTabProps {
   scheduledPlans: ScheduledPlan[];
@@ -29,6 +30,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
 }) => {
   const todayStr = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState(todayStr);
+  const t = getTranslation(userProfile.language || 'th');
 
   // Generate 7-day strip (2 days before, today, 4 days after)
   const getDaysStrip = () => {
@@ -38,7 +40,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
       const d = new Date(base);
       d.setDate(base.getDate() + i);
       const iso = d.toISOString().split('T')[0];
-      const dayName = d.toLocaleDateString('th-TH', { weekday: 'short' });
+      const dayName = d.toLocaleDateString(userProfile.language === 'en' ? 'en-US' : 'th-TH', { weekday: 'short' });
       const dayNum = d.getDate();
       days.push({ iso, dayName, dayNum, isToday: iso === todayStr });
     }
@@ -75,7 +77,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
               margin: '2px 0 0 0',
             }}
           >
-            ตารางยกและเวลาซ้อม
+            {t.calendarTitle}
           </h1>
         </div>
 
@@ -83,7 +85,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
           onClick={() => onOpenSchedulerWithDate(selectedDate)}
           style={{
             backgroundColor: '#0a0a0c',
-            color: '#ffe500',
+            color: 'var(--theme-accent, #ffe500)',
             border: 'none',
             borderRadius: '9999px',
             padding: '8px 16px',
@@ -96,7 +98,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
             boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
           }}
         >
-          <Plus size={14} /> จัดตารางซ้อม +
+          <Plus size={14} /> {t.scheduleWorkout}
         </button>
       </div>
 
@@ -173,7 +175,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <CalendarIcon size={16} color="#0a0a0c" />
           <span style={{ fontSize: '13px', fontWeight: 700, color: '#0a0a0c' }}>
-            วันที่: {new Date(selectedDate).toLocaleDateString('th-TH', { dateStyle: 'full' })}
+            {t.dateLabel} {new Date(selectedDate).toLocaleDateString(userProfile.language === 'en' ? 'en-US' : 'th-TH', { dateStyle: 'full' })}
           </span>
         </div>
         <span
@@ -186,7 +188,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
             fontWeight: 700,
           }}
         >
-          {plansForDate.length > 0 ? `มีโปรแกรม ${plansForDate.length} รายการ` : 'ยังไม่มีตารางซ้อม'}
+          {plansForDate.length > 0 ? (userProfile.language === 'en' ? `${plansForDate.length} Routine(s)` : `มีโปรแกรม ${plansForDate.length} รายการ`) : t.noRoutines}
         </span>
       </div>
 
@@ -220,10 +222,10 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
           </div>
           <div>
             <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', fontWeight: 800 }}>
-              ยังไม่ได้จัดตารางวันที่นี้
+              {t.noRoutineForDate}
             </h3>
             <p style={{ fontSize: '13px', color: '#71717a', maxWidth: '280px', margin: '4px auto 0 auto' }}>
-              พิมพ์กลุ่มกล้ามเนื้อ หรือระบุระยะทางวิ่ง (1, 2, 5, 10, 15, 20 โล) แล้วระบบจะคำนวณลงตารางให้อัตโนมัติ
+              {t.noRoutineDesc}
             </p>
           </div>
           <button
@@ -231,7 +233,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
             className="btn-black-pill"
             style={{ maxWidth: '260px', padding: '12px 20px', marginTop: '6px' }}
           >
-            <span>จัดตารางซ้อมวันนี้</span>
+            <span>{t.scheduleTodayBtn}</span>
             <Plus size={16} />
           </button>
         </div>
@@ -318,9 +320,11 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                 >
                   <Clock size={15} color="#0a0a0c" style={{ margin: '0 auto 2px auto' }} />
                   <div style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '14px' }}>
-                    {plan.targetHours} ชั่วโมง
+                    {plan.targetHours} {userProfile.language === 'en' ? 'Hours' : 'ชั่วโมง'}
                   </div>
-                  <div style={{ fontSize: '10px', color: '#71717a' }}>ระยะเวลาซ้อม</div>
+                  <div style={{ fontSize: '10px', color: '#71717a' }}>
+                    {userProfile.language === 'en' ? 'Duration' : 'ระยะเวลาซ้อม'}
+                  </div>
                 </div>
 
                 <div
@@ -336,7 +340,9 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                   <div style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '14px' }}>
                     ~{plan.estimatedCalories} kcal
                   </div>
-                  <div style={{ fontSize: '10px', color: '#71717a' }}>แคลอรีประเมิน</div>
+                  <div style={{ fontSize: '10px', color: '#71717a' }}>
+                    {userProfile.language === 'en' ? 'Est. Calories' : 'แคลอรีประเมิน'}
+                  </div>
                 </div>
 
                 <div
@@ -350,10 +356,10 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                 >
                   <Dumbbell size={15} color="#0a0a0c" style={{ margin: '0 auto 2px auto' }} />
                   <div style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '14px' }}>
-                    {plan.routineItems.length} เครื่อง
+                    {plan.routineItems.length} {userProfile.language === 'en' ? 'Machines' : 'เครื่อง'}
                   </div>
                   <div style={{ fontSize: '10px', color: '#71717a' }}>
-                    เซ็ตละ 15 ที
+                    {userProfile.language === 'en' ? '15 Reps/Set' : 'เซ็ตละ 15 ที'}
                   </div>
                 </div>
               </div>
@@ -363,7 +369,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                 <div
                   style={{
                     backgroundColor: '#0a0a0c',
-                    color: '#ffe500',
+                    color: 'var(--theme-accent, #ffe500)',
                     borderRadius: '12px',
                     padding: '8px 12px',
                     display: 'flex',
@@ -376,9 +382,13 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Navigation size={14} />
-                    <span>วิ่งระยะทางเป้าหมาย: {plan.runningDistanceKm} กิโลเมตร</span>
+                    <span>
+                      {userProfile.language === 'en'
+                        ? `Target Run: ${plan.runningDistanceKm} km`
+                        : `วิ่งระยะทางเป้าหมาย: ${plan.runningDistanceKm} กิโลเมตร`}
+                    </span>
                   </div>
-                  <span>~{Math.round(plan.runningDistanceKm * 6)} นาที</span>
+                  <span>~{Math.round(plan.runningDistanceKm * 6)} {t.minutes}</span>
                 </div>
               )}
 
@@ -395,7 +405,9 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                       marginBottom: '8px',
                     }}
                   >
-                    เครื่องเล่นตามตาราง (เครื่องละ 1 เซ็ต 15 ที):
+                    {userProfile.language === 'en'
+                      ? 'Scheduled Machines (1 Set of 15 Reps each):'
+                      : 'เครื่องเล่นตามตาราง (เครื่องละ 1 เซ็ต 15 ที):'}
                   </span>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     {plan.routineItems.map((item, idx) => (
@@ -433,7 +445,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                           <strong style={{ color: '#0a0a0c' }}>{item.exerciseName}</strong>
                         </div>
                         <div style={{ fontWeight: 700, color: '#0a0a0c' }}>
-                          1 เซ็ต × 15 ที
+                          {userProfile.language === 'en' ? '1 Set × 15 Reps' : '1 เซ็ต × 15 ที'}
                           {item.targetWeightKg > 0 && (
                             <span style={{ color: '#ca8a04', marginLeft: '6px' }}>
                               @{item.targetWeightKg}kg
@@ -453,7 +465,8 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                 style={{ padding: '14px 20px' }}
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Play size={16} fill="#ffe500" color="#ffe500" /> โหลดเข้าโหมดซ้อม Gym Gym Gym ทันที
+                  <Play size={16} fill="var(--theme-accent, #ffe500)" color="var(--theme-accent, #ffe500)" />
+                  {userProfile.language === 'en' ? 'Start Workout with this Routine Now' : 'โหลดเข้าโหมดซ้อม Gym Gym Gym ทันที'}
                 </span>
                 <ChevronRight size={18} />
               </button>

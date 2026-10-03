@@ -22,6 +22,7 @@ interface AuthModalProps {
   onClose: () => void;
   onSuccessAuth: (user: UserProfile) => void;
   isGateOnly?: boolean;
+  userProfile?: UserProfile;
 }
 
 type AuthView = 'gateway' | 'onboarding' | 'signup' | 'login';
@@ -31,6 +32,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   onSuccessAuth,
   isGateOnly = false,
+  userProfile,
 }) => {
   const [view, setView] = useState<AuthView>('gateway');
   const [onboardingStep, setOnboardingStep] = useState(0);
@@ -1198,6 +1200,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         onClose={() => setShowTermsModal(false)}
         onAccept={() => setIsAgreedTerms(true)}
         showAcceptButton={view === 'signup'}
+        language={userProfile?.language || 'th'}
       />
     </div>,
     document.body

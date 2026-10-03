@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import type { ScheduledPlan, Transaction, UserProfile, WorkoutSession } from '../types';
 import { formatBaht } from '../utils/financeEngine';
+import { getTranslation } from '../utils/translations';
 
 interface SummaryTabProps {
   userProfile: UserProfile;
@@ -28,6 +29,8 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
   transactions,
   onNavigateTab,
 }) => {
+  const t = getTranslation(userProfile.language);
+  const isEn = userProfile.language === 'en';
   const todayStr = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState<string>(todayStr);
 
@@ -99,7 +102,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
             letterSpacing: '0.5px',
           }}
         >
-          DAILY REPORT & ANALYTICS
+          {t.summarySubtitle}
         </span>
         <h1
           style={{
@@ -110,7 +113,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
             margin: '2px 0 0 0',
           }}
         >
-          สรุปยอดรายงานประจำวัน
+          {t.summaryTitle}
         </h1>
       </div>
 
@@ -132,7 +135,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
         <button
           type="button"
           onClick={() => changeDateByDays(-1)}
-          title="วันก่อนหน้า"
+          title={isEn ? 'Previous Day' : 'วันก่อนหน้า'}
           style={{
             width: '36px',
             height: '36px',
@@ -172,7 +175,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
               color: '#0a0a0c',
             }}
           >
-            {new Date(selectedDate).toLocaleDateString('th-TH', {
+            {new Date(selectedDate).toLocaleDateString(isEn ? 'en-US' : 'th-TH', {
               day: 'numeric',
               month: 'short',
               year: 'numeric',
@@ -203,7 +206,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
               onClick={() => setSelectedDate(todayStr)}
               style={{
                 backgroundColor: '#0a0a0c',
-                color: '#ffe500',
+                color: 'var(--theme-accent, #ffe500)',
                 border: 'none',
                 borderRadius: '8px',
                 padding: '6px 10px',
@@ -213,13 +216,13 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
                 cursor: 'pointer',
               }}
             >
-              วันนี้
+              {isEn ? 'Today' : 'วันนี้'}
             </button>
           )}
           <button
             type="button"
             onClick={() => changeDateByDays(1)}
-            title="วันถัดไป"
+            title={isEn ? 'Next Day' : 'วันถัดไป'}
             style={{
               width: '36px',
               height: '36px',
@@ -241,12 +244,12 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
       {/* Hero Overview Card: Workout & Finance Combined */}
       <div
         style={{
-          backgroundColor: '#0a0a0c',
+          background: 'var(--theme-card-bg, #0a0a0c)',
           color: '#ffffff',
           borderRadius: '24px',
           padding: '20px',
-          border: '2px solid #0a0a0c',
-          boxShadow: '0 6px 20px rgba(0,0,0,0.15)',
+          border: '2px solid var(--theme-card-border, #0a0a0c)',
+          boxShadow: '0 6px 20px rgba(0,0,0,0.18)',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -273,14 +276,14 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
           <div>
             <span style={{ fontSize: '11px', color: '#a1a1aa', fontWeight: 600 }}>
-              สรุปภาพรวมวันที่ {new Date(selectedDate).toLocaleDateString('th-TH', { dateStyle: 'medium' })}
+              {t.dailyReportOf} {new Date(selectedDate).toLocaleDateString(isEn ? 'en-US' : 'th-TH', { dateStyle: 'medium' })}
             </span>
             <div
               style={{
                 fontFamily: 'Outfit, sans-serif',
                 fontSize: '26px',
                 fontWeight: 800,
-                color: userProfile.themeMode === 'yellow' ? '#ffe500' : '#ffffff',
+                color: userProfile.themeMode === 'yellow' ? '#ffe500' : 'var(--theme-accent, #ffffff)',
                 marginTop: '2px',
               }}
             >
@@ -303,12 +306,12 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
             {isToday ? (
               <>
                 <CircleDot size={12} color="#10b981" />
-                <span>วันนี้ (Active)</span>
+                <span>{isEn ? 'Today (Active)' : 'วันนี้ (Active)'}</span>
               </>
             ) : (
               <>
                 <Calendar size={12} color="#a1a1aa" />
-                <span>ประวัติย้อนหลัง</span>
+                <span>{isEn ? 'Past History' : 'ประวัติย้อนหลัง'}</span>
               </>
             )}
           </div>
@@ -326,7 +329,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#f43f5e', fontSize: '11px', fontWeight: 700 }}>
-              <Flame size={14} /> เผาผลาญรวม
+              <Flame size={14} /> {t.totalCaloriesBurned}
             </div>
             <div
               style={{
@@ -340,7 +343,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
               {totalCalories} <span style={{ fontSize: '12px', fontWeight: 500, color: '#a1a1aa' }}>kcal</span>
             </div>
             <span style={{ fontSize: '10px', color: '#a1a1aa' }}>
-              เป้าหมาย: {userProfile.dailyCalorieTarget} kcal ({Math.min(100, Math.round((totalCalories / userProfile.dailyCalorieTarget) * 100))}%)
+              {isEn ? 'Target:' : 'เป้าหมาย:'} {userProfile.dailyCalorieTarget} kcal ({Math.min(100, Math.round((totalCalories / userProfile.dailyCalorieTarget) * 100))}%)
             </span>
           </div>
 
@@ -355,7 +358,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#10b981', fontSize: '11px', fontWeight: 700, whiteSpace: 'nowrap' }}>
-              <Wallet size={14} /> เงินคงเหลือสุทธิ
+              <Wallet size={14} /> {t.dailySummaryNet}
             </div>
             <div
               style={{
@@ -372,7 +375,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
               {dailyNet >= 0 ? '+' : ''}{formatBaht(dailyNet)}
             </div>
             <span style={{ fontSize: '10px', color: '#a1a1aa', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              รับ +{formatBaht(dailyIncome)} | จ่าย -{formatBaht(dailyExpense)}
+              {isEn ? 'In' : 'รับ'} +{formatBaht(dailyIncome)} | {isEn ? 'Out' : 'จ่าย'} -{formatBaht(dailyExpense)}
             </span>
           </div>
         </div>
@@ -396,7 +399,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
                 height: '32px',
                 borderRadius: '10px',
                 backgroundColor: '#0a0a0c',
-                color: '#ffe500',
+                color: 'var(--theme-accent, #ffe500)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -406,10 +409,10 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
             </div>
             <div>
               <h2 style={{ fontSize: '15px', fontWeight: 800, color: '#0a0a0c', margin: 0 }}>
-                สรุปการออกกำลังกาย & เครื่องเล่น
+                {t.workoutReport}
               </h2>
               <span style={{ fontSize: '11px', color: '#71717a' }}>
-                รวมเวลา {workoutMinutes} นาที · ยกไป {totalReps} ที · {completedSets} เซ็ต
+                {isEn ? 'Total' : 'รวมเวลา'} {workoutMinutes} {isEn ? 'mins' : 'นาที'} · {totalReps} {isEn ? 'reps' : 'ที'} · {completedSets} {isEn ? 'sets' : 'เซ็ต'}
               </span>
             </div>
           </div>
@@ -426,7 +429,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
               color: '#0a0a0c',
             }}
           >
-            ไปที่บันทึกซ้อม
+            {t.viewWorkout}
           </button>
         </div>
 
@@ -444,21 +447,21 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
           }}
         >
           <div>
-            <span style={{ fontSize: '10px', color: '#71717a', fontWeight: 600 }}>เครื่องเล่น</span>
+            <span style={{ fontSize: '10px', color: '#71717a', fontWeight: 600 }}>{isEn ? 'Machines' : 'เครื่องเล่น'}</span>
             <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', fontWeight: 800, color: '#0a0a0c' }}>
-              {totalExercises} ชนิด
+              {totalExercises} {isEn ? 'types' : 'ชนิด'}
             </div>
           </div>
           <div style={{ borderLeft: '1px solid #e4e4e7', borderRight: '1px solid #e4e4e7' }}>
-            <span style={{ fontSize: '10px', color: '#71717a', fontWeight: 600 }}>วิ่งสะสม</span>
+            <span style={{ fontSize: '10px', color: '#71717a', fontWeight: 600 }}>{isEn ? 'Running' : 'วิ่งสะสม'}</span>
             <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', fontWeight: 800, color: '#0a0a0c' }}>
-              {totalRunKm} โล
+              {totalRunKm} {isEn ? 'km' : 'โล'}
             </div>
           </div>
           <div>
-            <span style={{ fontSize: '10px', color: '#71717a', fontWeight: 600 }}>ยกสำเร็จ</span>
+            <span style={{ fontSize: '10px', color: '#71717a', fontWeight: 600 }}>{isEn ? 'Reps Done' : 'ยกสำเร็จ'}</span>
             <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', fontWeight: 800, color: '#16a34a' }}>
-              {totalReps} ที
+              {totalReps} {isEn ? 'reps' : 'ที'}
             </div>
           </div>
         </div>
@@ -467,7 +470,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
         {session && session.exercises.length > 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <span style={{ fontSize: '11px', fontWeight: 700, color: '#71717a', textTransform: 'uppercase' }}>
-              รายการเครื่องเล่นที่บันทึก:
+              {isEn ? 'Recorded Exercises:' : 'รายการเครื่องเล่นที่บันทึก:'}
             </span>
             {session.exercises.map((ex, idx) => {
               const exReps = ex.sets.reduce((acc, s) => acc + (s.completed ? s.reps : 0), 0);
@@ -493,16 +496,16 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
                     <div>
                       <strong style={{ color: '#0a0a0c' }}>{ex.name}</strong>
                       <span style={{ color: '#71717a', fontSize: '11px', display: 'block' }}>
-                        {ex.sets.length} เซ็ต · สูงสุด {maxWeight} kg
+                        {ex.sets.length} {isEn ? 'sets' : 'เซ็ต'} · {isEn ? 'Max' : 'สูงสุด'} {maxWeight} kg
                       </span>
                     </div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
                     <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, color: '#0a0a0c' }}>
-                      {exReps} ที
+                      {exReps} {isEn ? 'reps' : 'ที'}
                     </span>
                     <span style={{ fontSize: '10px', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '3px', fontWeight: 600 }}>
-                      <Check size={12} /> {ex.sets.filter((s) => s.completed).length}/{ex.sets.length} เซ็ต
+                      <Check size={12} /> {ex.sets.filter((s) => s.completed).length}/{ex.sets.length} {isEn ? 'sets' : 'เซ็ต'}
                     </span>
                   </div>
                 </div>
@@ -511,7 +514,9 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
           </div>
         ) : (
           <div style={{ textAlign: 'center', padding: '16px', backgroundColor: '#f9f9fa', borderRadius: '12px' }}>
-            <p style={{ fontSize: '12px', color: '#71717a', margin: 0 }}>ไม่มีรายการยกเวทในวันนี้</p>
+            <p style={{ fontSize: '12px', color: '#71717a', margin: 0 }}>
+              {isEn ? 'No workout recorded for this date' : 'ไม่มีรายการยกเวทในวันนี้'}
+            </p>
           </div>
         )}
 
@@ -519,7 +524,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
         {runningSessions.length > 0 && (
           <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <span style={{ fontSize: '11px', fontWeight: 700, color: '#71717a', textTransform: 'uppercase' }}>
-              รอบการวิ่ง (Cardio):
+              {isEn ? 'Cardio Runs:' : 'รอบการวิ่ง (Cardio):'}
             </span>
             {runningSessions.map((r) => (
               <div
@@ -537,8 +542,8 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Navigation size={13} color="#ea580c" />
-                  <strong>วิ่งระยะ {r.distanceKm} โล</strong>
-                  <span style={{ color: '#71717a' }}>({r.durationMinutes} นาที)</span>
+                  <strong>{isEn ? 'Run' : 'วิ่งระยะ'} {r.distanceKm} {isEn ? 'km' : 'โล'}</strong>
+                  <span style={{ color: '#71717a' }}>({r.durationMinutes} {isEn ? 'mins' : 'นาที'})</span>
                 </div>
                 <strong style={{ color: '#f43f5e', fontFamily: 'Outfit, sans-serif' }}>
                   +{r.caloriesBurned} kcal
@@ -577,10 +582,10 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
             </div>
             <div>
               <h2 style={{ fontSize: '15px', fontWeight: 800, color: '#0a0a0c', margin: 0 }}>
-                สรุปยอดเงินรายรับ-รายจ่าย
+                {t.financeReport}
               </h2>
               <span style={{ fontSize: '11px', color: '#71717a' }}>
-                รวมทั้งหมด {dailyTransactions.length} รายการ
+                {isEn ? 'Total' : 'รวมทั้งหมด'} {dailyTransactions.length} {isEn ? 'transactions' : 'รายการ'}
               </span>
             </div>
           </div>
@@ -597,20 +602,20 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
               color: '#0a0a0c',
             }}
           >
-            ไปที่บัญชีเงิน
+            {t.viewFinance}
           </button>
         </div>
 
         {/* 2 Cashflow Metric Cards */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
           <div style={{ backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', padding: '10px 12px', borderRadius: '12px' }}>
-            <span style={{ fontSize: '11px', color: '#166534', fontWeight: 600 }}>รายรับรวม</span>
+            <span style={{ fontSize: '11px', color: '#166534', fontWeight: 600 }}>{t.totalIncome}</span>
             <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', fontWeight: 800, color: '#15803d' }}>
               +{formatBaht(dailyIncome)}
             </div>
           </div>
           <div style={{ backgroundColor: '#fff1f2', border: '1px solid #fecdd3', padding: '10px 12px', borderRadius: '12px' }}>
-            <span style={{ fontSize: '11px', color: '#9f1239', fontWeight: 600 }}>รายจ่ายรวม</span>
+            <span style={{ fontSize: '11px', color: '#9f1239', fontWeight: 600 }}>{t.totalExpense}</span>
             <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', fontWeight: 800, color: '#be123c' }}>
               -{formatBaht(dailyExpense)}
             </div>
@@ -621,7 +626,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
         {Object.keys(expenseByCategory).length > 0 && (
           <div style={{ marginBottom: '12px' }}>
             <span style={{ fontSize: '11px', fontWeight: 700, color: '#71717a', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-              หมวดหมู่รายจ่ายในวันนี้:
+              {isEn ? "Today's Expense by Category:" : 'หมวดหมู่รายจ่ายในวันนี้:'}
             </span>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
               {Object.entries(expenseByCategory).map(([cat, amt]) => (
@@ -647,7 +652,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
         {dailyTransactions.length > 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <span style={{ fontSize: '11px', fontWeight: 700, color: '#71717a', textTransform: 'uppercase' }}>
-              รายการทั้งหมด:
+              {isEn ? 'All Transactions:' : 'รายการทั้งหมด:'}
             </span>
             {dailyTransactions.map((tx) => (
               <div
@@ -681,7 +686,9 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
           </div>
         ) : (
           <div style={{ textAlign: 'center', padding: '16px', backgroundColor: '#f9f9fa', borderRadius: '12px' }}>
-            <p style={{ fontSize: '12px', color: '#71717a', margin: 0 }}>ไม่มีรายการรับจ่ายในวันที่เลือก</p>
+            <p style={{ fontSize: '12px', color: '#71717a', margin: 0 }}>
+              {isEn ? 'No transactions for selected date' : 'ไม่มีรายการรับจ่ายในวันที่เลือก'}
+            </p>
           </div>
         )}
       </div>

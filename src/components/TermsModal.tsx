@@ -7,9 +7,10 @@ interface TermsModalProps {
   onClose: () => void;
   onAccept?: () => void;
   showAcceptButton?: boolean;
+  language?: 'th' | 'en';
 }
 
-const TERMS_ITEMS = [
+const TERMS_ITEMS_TH = [
   'ทำมาเพื่อให้ใช้งานออกกำลังกายและบันทึกข้อมูลได้ฟรี โดยไม่มีค่าใช้จ่ายหรือเรียกเก็บเงินย้อนหลังใดๆ',
   'ข้อมูลทั้งหมดจะถูกจัดเก็บเป็นความลับสูงสุดบนอุปกรณ์ของคุณ ไม่มีการเปิดเผยหรือส่งต่อให้บุคคลภายนอกเด็ดขาด',
   'ระบบเป็นเพียงเครื่องมือช่วยบันทึกการฝึกซ้อมส่วนบุคคลและคำนวณสถิติเบื้องต้น ไม่ใช่คำแนะนำทางการแพทย์',
@@ -17,12 +18,24 @@ const TERMS_ITEMS = [
   'การเข้าใช้งานหรือสมัครสมาชิก ถือว่าผู้ใช้งานได้รับทราบ เข้าใจ และยินยอมปฏิบัติตามข้อตกลงทั้งหมดนี้โดยสมบูรณ์',
 ];
 
+const TERMS_ITEMS_EN = [
+  'Created for 100% free workout and finance tracking with zero hidden fees or retroactive charges.',
+  'All data is kept strictly confidential on your local device and is never shared with third parties.',
+  'This application is a personal training journal and basic calculator, not professional medical advice.',
+  'Physical exercise carries risk; users waive claims or liability against the system creators under all circumstances.',
+  'Using the app or registering constitutes complete understanding and agreement with all terms.',
+];
+
 export const TermsModal: React.FC<TermsModalProps> = ({
   isOpen,
   onClose,
   onAccept,
+  language = 'th',
 }) => {
   if (!isOpen) return null;
+
+  const isEn = language === 'en';
+  const termsList = isEn ? TERMS_ITEMS_EN : TERMS_ITEMS_TH;
 
   const handleConfirm = () => {
     if (onAccept) {
@@ -67,7 +80,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({
           animation: 'fadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
-        {/* Modal Header: Theme Icon Badge (Black & Electric Yellow) + Bold Title + Close (X) */}
+        {/* Modal Header */}
         <div
           style={{
             padding: '18px 22px 14px 22px',
@@ -87,28 +100,28 @@ export const TermsModal: React.FC<TermsModalProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#ffe500',
+                color: 'var(--theme-accent, #ffe500)',
                 flexShrink: 0,
               }}
             >
-              <FileText size={18} color="#ffe500" strokeWidth={2.2} />
+              <FileText size={18} color="var(--theme-accent, #ffe500)" strokeWidth={2.2} />
             </div>
             <h2
               style={{
-                fontFamily: 'Prompt, sans-serif',
+                fontFamily: 'Prompt, Outfit, sans-serif',
                 fontSize: '18px',
                 fontWeight: 800,
                 color: '#0a0a0c',
                 margin: 0,
               }}
             >
-              ข้อตกลงและเงื่อนไขการใช้งาน
+              {isEn ? 'Terms & Conditions (5 Rules)' : 'ข้อตกลงและเงื่อนไขการใช้งาน'}
             </h2>
           </div>
 
           <button
             onClick={onClose}
-            title="ปิด"
+            title={isEn ? 'Close' : 'ปิด'}
             style={{
               background: '#f4f4f5',
               border: 'none',
@@ -127,7 +140,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({
           </button>
         </div>
 
-        {/* Content: Clean Numbered List matching reference style with Gym Gym Gym Theme */}
+        {/* Content: Clean Numbered List */}
         <div
           style={{
             padding: '22px 22px 14px 22px',
@@ -139,7 +152,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({
             gap: '16px',
           }}
         >
-          {TERMS_ITEMS.map((text, index) => (
+          {termsList.map((text, index) => (
             <div
               key={index}
               style={{
@@ -148,7 +161,6 @@ export const TermsModal: React.FC<TermsModalProps> = ({
                 gap: '12px',
               }}
             >
-              {/* Circular Number Pill (Theme: Carbon Black with Electric Yellow Number) */}
               <div
                 style={{
                   width: '26px',
@@ -156,7 +168,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({
                   minWidth: '26px',
                   borderRadius: '50%',
                   backgroundColor: '#0a0a0c',
-                  color: '#ffe500',
+                  color: 'var(--theme-accent, #ffe500)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -170,7 +182,6 @@ export const TermsModal: React.FC<TermsModalProps> = ({
                 {index + 1}
               </div>
 
-              {/* Text content on the right */}
               <p
                 style={{
                   margin: 0,
@@ -187,7 +198,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({
           ))}
         </div>
 
-        {/* Bottom Prominent Theme Button: รับทราบแล้ว */}
+        {/* Bottom Prominent Theme Button */}
         <div
           style={{
             padding: '14px 22px 22px 22px',
@@ -198,13 +209,13 @@ export const TermsModal: React.FC<TermsModalProps> = ({
             style={{
               width: '100%',
               backgroundColor: '#0a0a0c',
-              color: '#ffe500',
+              color: 'var(--theme-accent, #ffe500)',
               border: '2px solid #0a0a0c',
               borderRadius: '16px',
               padding: '15px 20px',
               fontSize: '16px',
               fontWeight: 800,
-              fontFamily: 'Prompt, sans-serif',
+              fontFamily: 'Prompt, Outfit, sans-serif',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -215,7 +226,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({
             onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.98)')}
             onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
           >
-            รับทราบแล้ว
+            {isEn ? 'I Understand and Agree' : 'รับทราบแล้ว'}
           </button>
         </div>
       </div>

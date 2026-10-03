@@ -16,7 +16,7 @@ import {
   Info,
 } from 'lucide-react';
 import type { UserProfile, ThemeMode } from '../types';
-import { THEMES, getTheme } from '../utils/theme';
+import { THEMES } from '../utils/theme';
 import { getTranslation } from '../utils/translations';
 
 interface SettingsTabProps {
@@ -53,7 +53,6 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
   const [showInstallHelp, setShowInstallHelp] = useState(false);
 
   const t = getTranslation(userProfile.language || 'th');
-  const currentTheme = getTheme(userProfile.themeMode);
 
   useEffect(() => {
     // Check if already running as installed standalone PWA
@@ -133,7 +132,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             letterSpacing: '0.5px',
           }}
         >
-          USER IDENTITY & SYSTEM SETTINGS
+          {t.settingsSubtitle}
         </span>
         <h1
           style={{
@@ -144,19 +143,19 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             margin: '2px 0 0 0',
           }}
         >
-          ตั้งค่าข้อมูล & บัญชีสมาชิก
+          {t.settingsTitle}
         </h1>
       </div>
 
       {/* Hero Profile Badge */}
       <div
         style={{
-          backgroundColor: '#0a0a0c',
+          background: 'var(--theme-card-bg, #0a0a0c)',
           color: '#ffffff',
           borderRadius: '24px',
           padding: '22px',
-          border: '2px solid #0a0a0c',
-          boxShadow: '0 6px 20px rgba(0,0,0,0.15)',
+          border: '2px solid var(--theme-card-border, #0a0a0c)',
+          boxShadow: '0 6px 20px rgba(0,0,0,0.18)',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -187,15 +186,15 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               width: '54px',
               height: '54px',
               borderRadius: '50%',
-              backgroundColor: currentTheme.accent,
-              color: currentTheme.accentText,
+              backgroundColor: '#ffffff',
+              color: '#0a0a0c',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontWeight: 900,
               fontSize: '20px',
               fontFamily: 'Outfit, sans-serif',
-              boxShadow: `0 4px 12px ${currentTheme.accentGlow}`,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             }}
           >
             {userProfile.name ? userProfile.name.substring(0, 2).toUpperCase() : 'FX'}
@@ -210,6 +209,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   fontWeight: 800,
                   margin: 0,
                   letterSpacing: '-0.3px',
+                  color: '#ffffff',
                 }}
               >
                 {userProfile.name || 'Fluke'}
@@ -217,17 +217,17 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               <span
                 onClick={onOpenAuth}
                 style={{
-                  backgroundColor: currentTheme.accentLight,
-                  color: currentTheme.accent,
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  color: '#ffffff',
                   fontSize: '10px',
                   fontWeight: 800,
                   padding: '2px 8px',
                   borderRadius: '9999px',
-                  border: `1px solid ${currentTheme.accent}`,
+                  border: '1px solid rgba(255, 255, 255, 0.35)',
                   cursor: 'pointer',
                 }}
               >
-                {userProfile.isRegistered ? 'ACTIVE VIP' : 'เข้าสู่ระบบ'}
+                {userProfile.isRegistered ? 'ACTIVE VIP' : (userProfile.language === 'en' ? 'Log In' : 'เข้าสู่ระบบ')}
               </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
@@ -239,7 +239,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   fontWeight: 500,
                 }}
               >
-                สูง {userProfile.heightCm || 175} ซม. · อายุ {userProfile.age || 25} ปี
+                {userProfile.language === 'en'
+                  ? `Height ${userProfile.heightCm || 175} cm · Age ${userProfile.age || 25} yrs`
+                  : `สูง ${userProfile.heightCm || 175} ซม. · อายุ ${userProfile.age || 25} ปี`}
               </span>
             </div>
           </div>
@@ -259,21 +261,27 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           }}
         >
           <div>
-            <span style={{ fontSize: '10px', color: '#a1a1aa' }}>น้ำหนัก</span>
+            <span style={{ fontSize: '10px', color: '#a1a1aa' }}>
+              {userProfile.language === 'en' ? 'Weight' : 'น้ำหนัก'}
+            </span>
             <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800 }}>
               {userProfile.weightKg} kg
             </div>
           </div>
           <div style={{ borderLeft: '1px solid #27272a', borderRight: '1px solid #27272a' }}>
-            <span style={{ fontSize: '10px', color: '#a1a1aa' }}>ส่วนสูง</span>
+            <span style={{ fontSize: '10px', color: '#a1a1aa' }}>
+              {userProfile.language === 'en' ? 'Height' : 'ส่วนสูง'}
+            </span>
             <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800 }}>
               {userProfile.heightCm || 175} cm
             </div>
           </div>
           <div>
-            <span style={{ fontSize: '10px', color: '#a1a1aa' }}>อายุ</span>
-            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800, color: '#ffe500' }}>
-              {userProfile.age || 25} ปี
+            <span style={{ fontSize: '10px', color: '#a1a1aa' }}>
+              {userProfile.language === 'en' ? 'Age' : 'อายุ'}
+            </span>
+            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800, color: 'var(--theme-accent, #ffe500)' }}>
+              {userProfile.age || 25} {userProfile.language === 'en' ? 'yrs' : 'ปี'}
             </div>
           </div>
         </div>
@@ -296,19 +304,19 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         }}
       >
         <h3 style={{ fontSize: '15px', fontWeight: 800, color: '#0a0a0c', margin: 0 }}>
-          แก้ไขรายละเอียดข้อมูลส่วนตัว
+          {t.editProfile}
         </h3>
 
         {/* Input: Name */}
         <div>
           <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-            <User size={14} /> ชื่อของคุณ (Display Name)
+            <User size={14} /> {t.displayName}
           </label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="เช่น Fluke, ปลั๊ก..."
+            placeholder={userProfile.language === 'en' ? 'e.g. Fluke, Alex...' : 'เช่น Fluke, ปลั๊ก...'}
             style={{
               width: '100%',
               padding: '12px 14px',
@@ -327,7 +335,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
           <div>
             <label style={{ fontSize: '11px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-              <Scale size={12} /> น้ำหนัก (กก.)
+              <Scale size={12} /> {t.weightKgLabel}
             </label>
             <input
               type="number"
@@ -351,7 +359,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
 
           <div>
             <label style={{ fontSize: '11px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-              <Ruler size={12} /> ส่วนสูง (ซม.)
+              <Ruler size={12} /> {t.heightCmLabel}
             </label>
             <input
               type="number"
@@ -375,7 +383,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
 
           <div>
             <label style={{ fontSize: '11px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-              <Calendar size={12} /> อายุ (ปี)
+              <Calendar size={12} /> {t.ageLabel}
             </label>
             <input
               type="number"
@@ -401,7 +409,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         {/* Calorie Target */}
         <div>
           <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-            <Target size={14} /> เป้าหมายเผาผลาญประจำวัน (kcal)
+            <Target size={14} /> {t.calorieTargetLabel}
           </label>
           <input
             type="number"
@@ -466,7 +474,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 fontSize: '12px',
                 fontWeight: 700,
                 cursor: 'pointer',
-                backgroundColor: (userProfile.language || 'th') === 'th' ? '#0a0a0c' : 'transparent',
+                background: (userProfile.language || 'th') === 'th' ? 'var(--theme-card-bg, #0a0a0c)' : 'transparent',
                 color: (userProfile.language || 'th') === 'th' ? '#ffffff' : '#71717a',
                 transition: 'all 0.15s ease',
               }}
@@ -483,7 +491,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 fontSize: '12px',
                 fontWeight: 700,
                 cursor: 'pointer',
-                backgroundColor: userProfile.language === 'en' ? '#0a0a0c' : 'transparent',
+                background: userProfile.language === 'en' ? 'var(--theme-card-bg, #0a0a0c)' : 'transparent',
                 color: userProfile.language === 'en' ? '#ffffff' : '#71717a',
                 transition: 'all 0.15s ease',
               }}
@@ -553,7 +561,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
-                      backgroundColor: pal.previewColor,
+                      background: pal.gradient || pal.previewColor,
                       border: '1.5px solid #0a0a0c',
                       boxShadow: isSelected ? `0 0 10px ${pal.accentGlow}` : 'none',
                       display: 'flex',
@@ -598,7 +606,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             color: '#ffffff',
           }}
         >
-          <span>{isSaved ? 'บันทึกข้อมูลสำเร็จเรียบร้อย!' : 'บันทึกการตั้งค่า'}</span>
+          <span>{isSaved ? (userProfile.language === 'en' ? 'Settings Saved Successfully!' : 'บันทึกข้อมูลสำเร็จเรียบร้อย!') : t.saveSettings}</span>
           {isSaved ? <Check size={18} /> : <ShieldCheck size={18} />}
         </button>
       </form>
@@ -637,15 +645,15 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             </div>
             <div>
               <div style={{ fontSize: '14px', fontWeight: 800, color: '#0a0a0c' }}>
-                หน้าเว็บไซต์แนะนำ & วิธีการใช้งาน
+                {userProfile.language === 'en' ? 'User Guide & System Walkthrough' : 'หน้าเว็บไซต์แนะนำ & วิธีการใช้งาน'}
               </div>
               <div style={{ fontSize: '11px', color: '#71717a' }}>
-                อ่านเป้าหมายระบบ คู่มือ 4 ขั้นตอน และคำถามที่พบบ่อย
+                {userProfile.language === 'en' ? 'Read system goals, 4-step workflow, and FAQ' : 'อ่านเป้าหมายระบบ คู่มือ 4 ขั้นตอน และคำถามที่พบบ่อย'}
               </div>
             </div>
           </div>
           <span style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c' }}>
-            เปิดดู →
+            {userProfile.language === 'en' ? 'View →' : 'เปิดดู →'}
           </span>
         </div>
       )}
@@ -674,7 +682,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             }}
           >
             <Trash2 size={16} />
-            <span>ล้างข้อมูลทดสอบทั้งหมด (Reset Demo Data)</span>
+            <span>{t.resetData}</span>
           </button>
         </div>
       )}
@@ -712,10 +720,12 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             </div>
             <div>
               <div style={{ fontSize: '15px', fontWeight: 800, fontFamily: 'Outfit, Prompt, sans-serif' }}>
-                ติดตั้งแอพพลิเคชัน (Install App)
+                {t.installPwa}
               </div>
               <div style={{ fontSize: '12px', color: '#a1a1aa' }}>
-                {isInstalled ? 'ติดตั้งลงเครื่องเรียบร้อยแล้ว' : 'ใช้งานเต็มจอ ไร้แถบ URL รวดเร็วและบันทึกออฟไลน์'}
+                {isInstalled
+                  ? (userProfile.language === 'en' ? 'Installed on device' : 'ติดตั้งลงเครื่องเรียบร้อยแล้ว')
+                  : t.installPwaDesc}
               </div>
             </div>
           </div>
@@ -731,7 +741,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 border: '1px solid #22c55e',
               }}
             >
-              ติดตั้งแล้ว
+              {userProfile.language === 'en' ? 'Installed' : 'ติดตั้งแล้ว'}
             </span>
           )}
         </div>
@@ -761,7 +771,11 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               }}
             >
               <Download size={18} />
-              <span>{deferredPrompt ? 'กดติดตั้งแอปลงเครื่องทันที' : 'ดูวิธีติดตั้งลงหน้าจอโฮม'}</span>
+              <span>
+                {deferredPrompt
+                  ? t.installBtn
+                  : (userProfile.language === 'en' ? 'How to Add to Home Screen' : 'ดูวิธีติดตั้งลงหน้าจอโฮม')}
+              </span>
             </button>
 
             {showInstallHelp && (
@@ -777,13 +791,13 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 }}
               >
                 <div style={{ fontWeight: 700, color: '#facc15', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Info size={14} /> วิธีเพิ่มลงหน้าจอมือถือ:
+                  <Info size={14} /> {userProfile.language === 'en' ? 'How to install on phone:' : 'วิธีเพิ่มลงหน้าจอมือถือ:'}
                 </div>
                 <div>
-                  • <strong>iOS (Safari):</strong> แตะปุ่มแชร์ <strong>(Share 📤)</strong> ด้านล่าง แล้วเลือก <strong>"เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen ➕)</strong>
+                  • <strong>iOS (Safari):</strong> {userProfile.language === 'en' ? 'Tap Share 📤 button at bottom, then select "Add to Home Screen ➕"' : 'แตะปุ่มแชร์ (Share 📤) ด้านล่าง แล้วเลือก "เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen ➕)'}
                 </div>
                 <div>
-                  • <strong>Android (Chrome):</strong> แตะจุด 3 จุดมุมขวาบน <strong>(⋮)</strong> แล้วเลือก <strong>"ติดตั้งแอป" (Install app)</strong>
+                  • <strong>Android (Chrome):</strong> {userProfile.language === 'en' ? 'Tap 3 dots (⋮) at top-right, then select "Install app"' : 'แตะจุด 3 จุดมุมขวาบน (⋮) แล้วเลือก "ติดตั้งแอป" (Install app)'}
                 </div>
               </div>
             )}
@@ -816,7 +830,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           }}
         >
           <LogOut size={18} />
-          <span>ออกจากระบบ (Log Out)</span>
+          <span>{userProfile.language === 'en' ? 'Log Out' : 'ออกจากระบบ (Log Out)'}</span>
         </button>
       </div>
 
@@ -871,10 +885,12 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             </div>
 
             <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0a0a0c', margin: '0 0 8px 0' }}>
-              ล้างข้อมูลเริ่มต้นทั้งหมด?
+              {userProfile.language === 'en' ? 'Reset All Demo Data?' : 'ล้างข้อมูลเริ่มต้นทั้งหมด?'}
             </h3>
             <p style={{ fontSize: '13px', color: '#71717a', lineHeight: 1.5, margin: '0 0 20px 0' }}>
-              ระบบจะลบข้อมูลประวัติการซ้อม ตารางที่วางไว้ และรายการบัญชีเงิน เพื่อให้แอพพร้อมใช้งานจริงแบบคลีน 100%
+              {userProfile.language === 'en'
+                ? 'This will clear workout logs, scheduled plans, and transactions so you can start completely fresh.'
+                : 'ระบบจะลบข้อมูลประวัติการซ้อม ตารางที่วางไว้ และรายการบัญชีเงิน เพื่อให้แอพพร้อมใช้งานจริงแบบคลีน 100%'}
             </p>
 
             <div style={{ display: 'flex', gap: '10px' }}>
@@ -894,7 +910,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   cursor: 'pointer',
                 }}
               >
-                ยกเลิก
+                {t.cancel}
               </button>
               <button
                 type="button"
@@ -916,7 +932,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   boxShadow: '0 4px 12px rgba(234, 88, 12, 0.3)',
                 }}
               >
-                ล้างข้อมูลทันที
+                {userProfile.language === 'en' ? 'Reset Now' : 'ล้างข้อมูลทันที'}
               </button>
             </div>
           </div>
@@ -974,10 +990,12 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             </div>
 
             <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0a0a0c', margin: '0 0 8px 0' }}>
-              ออกจากระบบใช่หรือไม่?
+              {userProfile.language === 'en' ? 'Log out of account?' : 'ออกจากระบบใช่หรือไม่?'}
             </h3>
             <p style={{ fontSize: '13px', color: '#71717a', lineHeight: 1.5, margin: '0 0 20px 0' }}>
-              คุณต้องการออกจากบัญชี <strong>{userProfile.name}</strong> ใช่หรือไม่? ข้อมูลและประวัติการออกกำลังกายที่บันทึกไว้ในอุปกรณ์นี้จะไม่สูญหาย
+              {userProfile.language === 'en'
+                ? `Are you sure you want to log out from ${userProfile.name}? Your workout records on this device will remain saved.`
+                : `คุณต้องการออกจากบัญชี ${userProfile.name} ใช่หรือไม่? ข้อมูลและประวัติการออกกำลังกายที่บันทึกไว้ในอุปกรณ์นี้จะไม่สูญหาย`}
             </p>
 
             <div style={{ display: 'flex', gap: '10px' }}>
@@ -997,7 +1015,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   cursor: 'pointer',
                 }}
               >
-                ยกเลิก
+                {t.cancel}
               </button>
               <button
                 type="button"
@@ -1019,7 +1037,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   boxShadow: '0 4px 12px rgba(225, 29, 72, 0.3)',
                 }}
               >
-                ยืนยันออกจากระบบ
+                {userProfile.language === 'en' ? 'Confirm Log Out' : 'ยืนยันออกจากระบบ'}
               </button>
             </div>
           </div>
