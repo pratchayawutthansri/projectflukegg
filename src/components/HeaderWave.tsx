@@ -1,12 +1,15 @@
 import React from 'react';
-import { Plus, Dumbbell, Globe } from 'lucide-react';
+import { Plus, Dumbbell, Globe, Languages } from 'lucide-react';
 import type { UserProfile } from '../types';
+import { getTheme } from '../utils/theme';
+import { getTranslation } from '../utils/translations';
 
 interface HeaderWaveProps {
   userProfile: UserProfile;
   onOpenScheduler: () => void;
   showQuickScheduler?: boolean;
   onOpenLanding?: () => void;
+  onToggleLanguage?: () => void;
 }
 
 export const HeaderWave: React.FC<HeaderWaveProps> = ({
@@ -14,7 +17,12 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
   onOpenScheduler,
   showQuickScheduler = true,
   onOpenLanding,
+  onToggleLanguage,
 }) => {
+  const theme = getTheme(userProfile.themeMode);
+  const t = getTranslation(userProfile.language || 'th');
+  const isEn = userProfile.language === 'en';
+
   return (
     <div style={{ position: 'relative', width: '100%', zIndex: 10 }}>
       {/* Top Black Section with iOS Notch / Dynamic Island Safe Area */}
@@ -29,7 +37,7 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
           position: 'relative',
         }}
       >
-        {/* Top bar with Logo, Brand Name, and Website/Guide Link */}
+        {/* Top bar with Logo, Brand Name, and Quick Language & Website Link */}
         <div
           style={{
             display: 'flex',
@@ -50,8 +58,8 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: '#000000',
-                border: userProfile.themeMode === 'yellow' ? '1px solid rgba(255,229,0,0.5)' : '1px solid rgba(255,255,255,0.25)',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                border: `1.5px solid ${theme.accent}`,
+                boxShadow: `0 2px 10px ${theme.accentGlow}`,
               }}
             >
               <img
@@ -61,19 +69,61 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
               />
             </div>
 
-            <span
-              style={{
-                fontFamily: 'Outfit, sans-serif',
-                fontWeight: 800,
-                fontSize: '19px',
-                letterSpacing: '-0.3px',
-                color: '#ffffff',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              GYM GYM GYM
-            </span>
+            <div>
+              <span
+                style={{
+                  fontFamily: 'Outfit, sans-serif',
+                  fontWeight: 800,
+                  fontSize: '18px',
+                  letterSpacing: '-0.3px',
+                  color: '#ffffff',
+                  display: 'block',
+                  lineHeight: 1.1,
+                }}
+              >
+                GYM GYM GYM
+              </span>
+              <span
+                style={{
+                  fontFamily: 'Outfit, sans-serif',
+                  fontWeight: 600,
+                  fontSize: '9px',
+                  color: theme.accent,
+                  letterSpacing: '1px',
+                }}
+              >
+                {t.appSub}
+              </span>
+            </div>
           </div>
+
+          {/* Right Action Icons: Language Toggle & Website Guide */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {onToggleLanguage && (
+              <button
+                type="button"
+                onClick={onToggleLanguage}
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  border: `1px solid ${theme.accentLight}`,
+                  borderRadius: '9999px',
+                  padding: '5px 10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  color: '#ffffff',
+                  fontFamily: 'Outfit, Prompt, sans-serif',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                }}
+                title="Switch Language / สลับภาษา"
+              >
+                <Languages size={13} color={theme.accent} />
+                <span>{isEn ? 'EN' : 'TH'}</span>
+              </button>
+            )}
 
           {onOpenLanding && (
             <button
@@ -98,6 +148,7 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
               <span>คู่มือ / เว็บไซต์</span>
             </button>
           )}
+          </div>
         </div>
 
         {/* Quick Scheduler Prompt Bar - Only shown on Dashboard (ภาพรวม) */}
@@ -113,7 +164,7 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
               justifyContent: 'space-between',
               cursor: 'pointer',
               boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
-              border: userProfile.themeMode === 'yellow' ? '2px solid #ffe500' : '1px solid #ffffff',
+              border: `2px solid ${theme.accent}`,
               transition: 'transform 0.15s ease',
             }}
           >
@@ -127,13 +178,15 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
                   fontWeight: 500,
                 }}
               >
-                จัดตารางซ้อมด่วน เช่น &quot;อก + แขน 1.5 ชม.&quot; หรือ &quot;วิ่ง 5 โล&quot;...
+                {isEn
+                  ? 'Quick schedule: "Chest + Arms 1.5h" or "Run 5km"...'
+                  : 'จัดตารางซ้อมด่วน เช่น "อก + แขน 1.5 ชม." หรือ "วิ่ง 5 โล"...'}
               </span>
             </div>
             <div
               style={{
                 backgroundColor: '#0a0a0c',
-                color: userProfile.themeMode === 'yellow' ? '#ffe500' : '#ffffff',
+                color: theme.accent,
                 borderRadius: '50%',
                 width: '26px',
                 height: '26px',

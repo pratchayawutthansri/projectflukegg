@@ -15,7 +15,9 @@ import {
   Download,
   Info,
 } from 'lucide-react';
-import type { UserProfile } from '../types';
+import type { UserProfile, ThemeMode } from '../types';
+import { THEMES, getTheme } from '../utils/theme';
+import { getTranslation } from '../utils/translations';
 
 interface SettingsTabProps {
   userProfile: UserProfile;
@@ -31,7 +33,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
   userProfile,
   onUpdateProfile,
   onOpenAuth,
-  onToggleTheme,
+  onToggleTheme: _onToggleTheme,
   onLogout,
   onOpenLanding,
   onResetAllData,
@@ -49,6 +51,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [showInstallHelp, setShowInstallHelp] = useState(false);
+
+  const t = getTranslation(userProfile.language || 'th');
+  const currentTheme = getTheme(userProfile.themeMode);
 
   useEffect(() => {
     // Check if already running as installed standalone PWA
@@ -182,15 +187,15 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               width: '54px',
               height: '54px',
               borderRadius: '50%',
-              backgroundColor: userProfile.themeMode === 'yellow' ? '#ffe500' : '#ffffff',
-              color: '#0a0a0c',
+              backgroundColor: currentTheme.accent,
+              color: currentTheme.accentText,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontWeight: 900,
               fontSize: '20px',
               fontFamily: 'Outfit, sans-serif',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+              boxShadow: `0 4px 12px ${currentTheme.accentGlow}`,
             }}
           >
             {userProfile.name ? userProfile.name.substring(0, 2).toUpperCase() : 'FX'}
@@ -212,13 +217,13 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               <span
                 onClick={onOpenAuth}
                 style={{
-                  backgroundColor: 'rgba(255, 229, 0, 0.2)',
-                  color: '#ffe500',
+                  backgroundColor: currentTheme.accentLight,
+                  color: currentTheme.accent,
                   fontSize: '10px',
                   fontWeight: 800,
                   padding: '2px 8px',
                   borderRadius: '9999px',
-                  border: '1px solid rgba(255, 229, 0, 0.4)',
+                  border: `1px solid ${currentTheme.accent}`,
                   cursor: 'pointer',
                 }}
               >
@@ -417,42 +422,170 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           />
         </div>
 
-        {/* Theme mode toggle */}
+        {/* Language Selection Bar */}
         <div
-          onClick={onToggleTheme}
           style={{
-            padding: '12px 14px',
-            backgroundColor: '#f8f8f9',
-            borderRadius: '12px',
-            border: '1px solid #e4e4e7',
+            padding: '14px 16px',
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            border: '1.5px solid #0a0a0c',
+            boxShadow: '0 2px 0 #0a0a0c',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            cursor: 'pointer',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Palette size={16} />
+            <Globe size={18} color="#0a0a0c" />
             <div>
-              <strong style={{ fontSize: '12px', color: '#0a0a0c', display: 'block' }}>ธีมสีเน้น (Accent Theme)</strong>
+              <strong style={{ fontSize: '13px', color: '#0a0a0c', display: 'block' }}>
+                {t.languageSelection}
+              </strong>
               <span style={{ fontSize: '11px', color: '#71717a' }}>
-                {userProfile.themeMode === 'yellow' ? 'เหลืองสปอร์ต (Electric Yellow)' : 'ขาว-ดำโมโนโครม (Monochrome)'}
+                {userProfile.language === 'en' ? 'English (Active)' : 'ภาษาไทย (ใช้งานอยู่)'}
               </span>
             </div>
           </div>
-          <span
+
+          <div
             style={{
-              padding: '4px 10px',
+              display: 'flex',
+              backgroundColor: '#f4f4f5',
               borderRadius: '9999px',
-              backgroundColor: userProfile.themeMode === 'yellow' ? '#ffe500' : '#0a0a0c',
-              color: userProfile.themeMode === 'yellow' ? '#0a0a0c' : '#ffffff',
-              fontSize: '11px',
-              fontWeight: 800,
+              padding: '3px',
+              border: '1px solid #e4e4e7',
             }}
           >
-            {userProfile.themeMode === 'yellow' ? 'Yellow' : 'Mono'}
-          </span>
+            <button
+              type="button"
+              onClick={() => onUpdateProfile({ ...userProfile, language: 'th' })}
+              style={{
+                border: 'none',
+                padding: '6px 12px',
+                borderRadius: '9999px',
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                backgroundColor: (userProfile.language || 'th') === 'th' ? '#0a0a0c' : 'transparent',
+                color: (userProfile.language || 'th') === 'th' ? '#ffffff' : '#71717a',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              🇹🇭 TH
+            </button>
+            <button
+              type="button"
+              onClick={() => onUpdateProfile({ ...userProfile, language: 'en' })}
+              style={{
+                border: 'none',
+                padding: '6px 12px',
+                borderRadius: '9999px',
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                backgroundColor: userProfile.language === 'en' ? '#0a0a0c' : 'transparent',
+                color: userProfile.language === 'en' ? '#ffffff' : '#71717a',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              🇺🇸 EN
+            </button>
+          </div>
         </div>
+
+        {/* 6-Color Theme Palette Picker */}
+        <div
+          style={{
+            padding: '16px',
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            border: '1.5px solid #0a0a0c',
+            boxShadow: '0 2px 0 #0a0a0c',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Palette size={18} color="#0a0a0c" />
+            <div>
+              <strong style={{ fontSize: '13px', color: '#0a0a0c', display: 'block' }}>
+                {t.themeSelection}
+              </strong>
+              <span style={{ fontSize: '11px', color: '#71717a' }}>
+                {userProfile.language === 'en' ? 'Select your primary accent color' : 'เลือกโทนสีเอกลักษณ์ประจำตัวของคุณ'}
+              </span>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '8px',
+            }}
+          >
+            {(Object.keys(THEMES) as ThemeMode[]).map((mode) => {
+              const pal = THEMES[mode];
+              const isSelected = (userProfile.themeMode || 'yellow') === mode;
+              return (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => onUpdateProfile({ ...userProfile, themeMode: mode })}
+                  style={{
+                    padding: '10px 8px',
+                    borderRadius: '12px',
+                    border: isSelected ? '2px solid #0a0a0c' : '1.5px solid #e4e4e7',
+                    backgroundColor: isSelected ? '#fafafb' : '#ffffff',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '6px',
+                    cursor: 'pointer',
+                    boxShadow: isSelected ? '0 2px 0 #0a0a0c' : 'none',
+                    transform: isSelected ? 'scale(1.02)' : 'none',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '50%',
+                      backgroundColor: pal.previewColor,
+                      border: '1.5px solid #0a0a0c',
+                      boxShadow: isSelected ? `0 0 10px ${pal.accentGlow}` : 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {isSelected && (
+                      <Check
+                        size={12}
+                        color={mode === 'yellow' || mode === 'green' || mode === 'cyan' ? '#0a0a0c' : '#ffffff'}
+                        strokeWidth={3}
+                      />
+                    )}
+                  </div>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      fontFamily: 'Outfit, Prompt, sans-serif',
+                      fontWeight: isSelected ? 800 : 600,
+                      color: isSelected ? '#0a0a0c' : '#71717a',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {userProfile.language === 'en' ? pal.nameEn : pal.nameTh}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
 
         {/* Save feedback button */}
         <button

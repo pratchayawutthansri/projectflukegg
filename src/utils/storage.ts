@@ -18,6 +18,7 @@ export const INITIAL_USER_PROFILE: UserProfile = {
   dailyCalorieTarget: 650,
   gymName: 'Gym Gym Gym',
   themeMode: 'yellow',
+  language: 'th',
   isRegistered: false,
   registeredDate: undefined,
 };

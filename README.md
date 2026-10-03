@@ -29,8 +29,10 @@
 2. **Financial Discipline Track (Finance)**:
    * **Fit & Daily Cash Flow**: บันทึกรายรับ-รายจ่ายทั้งในหมวดหมู่สุขภาพ (เวย์โปรตีน, อาหารคลีน, ค่าฟิตเนส) และค่าใช้จ่ายชีวิตประจำวัน
    * **Realtime Net Balance**: คำนวณยอดเงินคงเหลือสุทธิและสรุปสถานะการเงินทันทีเมื่อมีรายการใหม่
-3. **Design System & Aesthetics**:
-   * **Neo-Brutalist Minimalism**: ใช้เส้นขอบคมชัด (Borders 1.5–2px), คอนทราสต์สูง, แถบสีดำตัดเหลืองนีออน (`#facc15`), ฟอนต์สากลระดับพรีเมียม **Outfit** (อังกฤษ) และ **Prompt** (ไทย)
+3. **Design System, Multi-Theme & Bilingual Experience**:
+   * **Multi-Color Theme Engine**: รองรับการเลือกธีมสีหลักได้ถึง 6 โทนสีตามสไตล์ของผู้ใช้ (Electric Yellow ⚡, Neon Lime 🍏, Cyber Cyan 💎, Lava Orange 🔥, Ultra Violet 🔮, Stealth Monochrome 🏁) พร้อมระบบ Dynamic CSS Injection ที่ปรับแต่งสีเส้นขอบ, ปุ่มกด และเงากลอสแบบเรียลไทม์
+   * **Bilingual Toggle (TH / EN)**: สลับภาษาระหว่างภาษาไทยและภาษาอังกฤษได้ใน 1 วินาที ทั้งผ่านปุ่ม Toggle บน Top Header Wave ด้านบนสุด และในแท็บตั้งค่า (Settings)
+   * **Neo-Brutalist Minimalism**: ใช้เส้นขอบคมชัด (Borders 1.5–2px), คอนทราสต์สูง, แถบสีพรีเมียม, ฟอนต์สากลระดับพรีเมียม **Outfit** (อังกฤษ) และ **Prompt** (ไทย)
    * **Fluid Organic Wave**: กราฟิกเส้นสายของเหลวโค้งมนสีดำด้านบนของหน้าจอ ช่วยเพิ่มมิติความพรีเมียม
    * **Lucide Icons 100%**: ดีไซน์สะอาดตา ปราศจาก Emoji พื้นฐาน ใช้ Vector Icons ทันสมัยทั้งหมด
 

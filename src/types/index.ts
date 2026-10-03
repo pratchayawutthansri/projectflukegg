@@ -68,6 +68,9 @@ export interface Transaction {
   note: string;
 }
 
+export type ThemeMode = 'yellow' | 'green' | 'cyan' | 'orange' | 'purple' | 'monochrome';
+export type Language = 'th' | 'en';
+
 export interface UserProfile {
   name: string;
   memberId?: string; // Optional auto-assigned ID e.g. "FX-007"
@@ -76,7 +79,8 @@ export interface UserProfile {
   age?: number;
   dailyCalorieTarget: number;
   gymName: string;
-  themeMode: 'monochrome' | 'yellow';
+  themeMode: ThemeMode;
+  language?: Language;
   isRegistered?: boolean;
   registeredDate?: string;
 }

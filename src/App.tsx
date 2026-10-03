@@ -34,6 +34,8 @@ import {
   syncTransaction,
   syncWorkoutSession,
 } from './utils/supabaseSync';
+import { getTheme, applyThemeToDocument } from './utils/theme';
+import { getTranslation } from './utils/translations';
 
 export const App: React.FC = () => {
   // State from LocalStorage
@@ -65,10 +67,28 @@ export const App: React.FC = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
+  const currentTheme = getTheme(userProfile.themeMode);
+  const t = getTranslation(userProfile.language || 'th');
+
+  // Dynamically apply current theme to CSS variables
+  useEffect(() => {
+    applyThemeToDocument(currentTheme);
+  }, [currentTheme]);
+
+  // Toggle language handler
+  const handleToggleLanguage = () => {
+    const nextLang = userProfile.language === 'en' ? 'th' : 'en';
+    setUserProfile((prev) => ({
+      ...prev,
+      language: nextLang,
+    }));
+  };
+
   // Sync to LocalStorage on changes
   useEffect(() => {
     saveStorage(STORAGE_KEYS.USER_PROFILE, userProfile);
   }, [userProfile]);
+
 
   useEffect(() => {
     saveStorage(STORAGE_KEYS.SCHEDULED_PLANS, scheduledPlans);
@@ -244,6 +264,7 @@ export const App: React.FC = () => {
         <HeaderWave
           userProfile={userProfile}
           showQuickScheduler={activeTab === 'dashboard'}
+          onToggleLanguage={handleToggleLanguage}
           onOpenScheduler={() => {
             setSchedulerTargetDate(new Date().toISOString().split('T')[0]);
             setIsSchedulerOpen(true);
@@ -325,61 +346,115 @@ export const App: React.FC = () => {
           <button
             onClick={() => setActiveTab('dashboard')}
             className={`nav-tab-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
+            style={{
+              color: activeTab === 'dashboard' ? '#0a0a0c' : '#71717a',
+            }}
           >
-            <div className="nav-icon-wrap">
+            <div
+              className="nav-icon-wrap"
+              style={{
+                backgroundColor: activeTab === 'dashboard' ? '#0a0a0c' : 'transparent',
+                color: activeTab === 'dashboard' ? currentTheme.accent : '#71717a',
+              }}
+            >
               <Home size={17} />
             </div>
-            <span>ภาพรวม</span>
+            <span>{t.dashboard}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('workout')}
             className={`nav-tab-btn ${activeTab === 'workout' ? 'active' : ''}`}
+            style={{
+              color: activeTab === 'workout' ? '#0a0a0c' : '#71717a',
+            }}
           >
-            <div className="nav-icon-wrap">
+            <div
+              className="nav-icon-wrap"
+              style={{
+                backgroundColor: activeTab === 'workout' ? '#0a0a0c' : 'transparent',
+                color: activeTab === 'workout' ? currentTheme.accent : '#71717a',
+              }}
+            >
               <Dumbbell size={17} />
             </div>
-            <span>บันทึกซ้อม</span>
+            <span>{t.workout}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('calendar')}
             className={`nav-tab-btn ${activeTab === 'calendar' ? 'active' : ''}`}
+            style={{
+              color: activeTab === 'calendar' ? '#0a0a0c' : '#71717a',
+            }}
           >
-            <div className="nav-icon-wrap">
+            <div
+              className="nav-icon-wrap"
+              style={{
+                backgroundColor: activeTab === 'calendar' ? '#0a0a0c' : 'transparent',
+                color: activeTab === 'calendar' ? currentTheme.accent : '#71717a',
+              }}
+            >
               <Calendar size={17} />
             </div>
-            <span>ตารางวัน</span>
+            <span>{t.calendar}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('finance')}
             className={`nav-tab-btn ${activeTab === 'finance' ? 'active' : ''}`}
+            style={{
+              color: activeTab === 'finance' ? '#0a0a0c' : '#71717a',
+            }}
           >
-            <div className="nav-icon-wrap">
+            <div
+              className="nav-icon-wrap"
+              style={{
+                backgroundColor: activeTab === 'finance' ? '#0a0a0c' : 'transparent',
+                color: activeTab === 'finance' ? currentTheme.accent : '#71717a',
+              }}
+            >
               <Wallet size={17} />
             </div>
-            <span>บัญชีผู้ใช้</span>
+            <span>{t.finance}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('summary')}
             className={`nav-tab-btn ${activeTab === 'summary' ? 'active' : ''}`}
+            style={{
+              color: activeTab === 'summary' ? '#0a0a0c' : '#71717a',
+            }}
           >
-            <div className="nav-icon-wrap">
+            <div
+              className="nav-icon-wrap"
+              style={{
+                backgroundColor: activeTab === 'summary' ? '#0a0a0c' : 'transparent',
+                color: activeTab === 'summary' ? currentTheme.accent : '#71717a',
+              }}
+            >
               <FileText size={17} />
             </div>
-            <span>สรุป</span>
+            <span>{t.summary}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('settings')}
             className={`nav-tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
+            style={{
+              color: activeTab === 'settings' ? '#0a0a0c' : '#71717a',
+            }}
           >
-            <div className="nav-icon-wrap">
+            <div
+              className="nav-icon-wrap"
+              style={{
+                backgroundColor: activeTab === 'settings' ? '#0a0a0c' : 'transparent',
+                color: activeTab === 'settings' ? currentTheme.accent : '#71717a',
+              }}
+            >
               <Settings size={17} />
             </div>
-            <span>ตั้งค่า</span>
+            <span>{t.settings}</span>
           </button>
         </nav>
 
