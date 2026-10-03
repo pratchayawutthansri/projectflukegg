@@ -28,6 +28,12 @@ import { SettingsTab } from './components/SettingsTab';
 import { SmartSchedulerModal } from './components/SmartSchedulerModal';
 import { ProfileModal } from './components/ProfileModal';
 import { AuthModal } from './components/AuthModal';
+import {
+  saveCloudProfile,
+  syncScheduledPlan,
+  syncTransaction,
+  syncWorkoutSession,
+} from './utils/supabaseSync';
 
 export const App: React.FC = () => {
   // State from LocalStorage
@@ -78,6 +84,9 @@ export const App: React.FC = () => {
       const filtered = prev.filter((p) => p.id !== plan.id);
       return [plan, ...filtered];
     });
+    if (userProfile.memberId) {
+      syncScheduledPlan(userProfile.memberId, plan);
+    }
   };
 
   // 1-Click: Start scheduled workout directly in gym session
@@ -134,6 +143,10 @@ export const App: React.FC = () => {
     setActiveSession(finishedSession);
     saveStorage(STORAGE_KEYS.WORKOUT_SESSIONS, [finishedSession]);
 
+    if (userProfile.memberId) {
+      syncWorkoutSession(userProfile.memberId, finishedSession);
+    }
+
     // Mark matching scheduled plan as completed
     setScheduledPlans((prev) =>
       prev.map((p) => (p.date === completed.date ? { ...p, status: 'completed' as const } : p))
@@ -145,6 +158,9 @@ export const App: React.FC = () => {
   // Transactions handlers
   const handleAddTransaction = (newTx: Transaction) => {
     setTransactions((prev) => [newTx, ...prev]);
+    if (userProfile.memberId) {
+      syncTransaction(userProfile.memberId, newTx);
+    }
   };
 
   const handleDeleteTransaction = (id: string) => {
@@ -162,12 +178,18 @@ export const App: React.FC = () => {
   // User profile update
   const handleUpdateProfile = (updated: UserProfile) => {
     setUserProfile(updated);
+    if (updated.memberId) {
+      saveCloudProfile(updated.memberId, updated);
+    }
   };
 
   // Authentication & registration success
   const handleSuccessAuth = (user: UserProfile) => {
     setUserProfile(user);
     saveStorage(STORAGE_KEYS.USER_PROFILE, user);
+    if (user.memberId) {
+      saveCloudProfile(user.memberId, user);
+    }
     setIsAuthOpen(false);
   };
 
