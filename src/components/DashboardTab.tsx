@@ -11,7 +11,7 @@ import { CircularProgress } from './CircularProgress';
 import type { ScheduledPlan, Transaction, UserProfile, WorkoutSession } from '../types';
 import { formatBaht } from '../utils/financeEngine';
 
-import { getTranslation } from '../utils/translations';
+import { getTranslation, translateRoutineTitle } from '../utils/translations';
 
 interface DashboardTabProps {
   userProfile: UserProfile;
@@ -316,7 +316,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
                     margin: 0,
                   }}
                 >
-                  {primaryTodayPlan.title}
+                  {translateRoutineTitle(primaryTodayPlan.title, userProfile.language || 'th')}
                 </h3>
                 <span style={{ fontSize: '12px', color: '#71717a', fontWeight: 500 }}>
                   {primaryTodayPlan.targetHours} {t.hours} • {primaryTodayPlan.routineItems.length} {t.machines} • ~

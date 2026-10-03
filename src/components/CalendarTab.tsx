@@ -11,7 +11,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import type { ScheduledPlan, UserProfile } from '../types';
-import { getTranslation } from '../utils/translations';
+import { getTranslation, translateRoutineTitle } from '../utils/translations';
 
 interface CalendarTabProps {
   scheduledPlans: ScheduledPlan[];
@@ -269,7 +269,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                       {plan.timeSlot}
                     </span>
                     <span style={{ fontSize: '11px', color: '#71717a', fontWeight: 600 }}>
-                      กลุ่ม: {plan.muscleGroupText}
+                      {userProfile.language === 'en' ? 'Focus:' : 'กลุ่ม:'} {plan.muscleGroupText}
                     </span>
                   </div>
                   <h3
@@ -281,13 +281,13 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                       margin: '6px 0 2px 0',
                     }}
                   >
-                    {plan.title}
+                    {translateRoutineTitle(plan.title, userProfile.language || 'th')}
                   </h3>
                 </div>
 
                 <button
                   onClick={() => onDeletePlan(plan.id)}
-                  title="ลบโปรแกรมนี้"
+                  title={userProfile.language === 'en' ? 'Delete this routine' : 'ลบโปรแกรมนี้'}
                   style={{
                     background: 'none',
                     border: 'none',
@@ -448,7 +448,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
                           {userProfile.language === 'en' ? '1 Set × 15 Reps' : '1 เซ็ต × 15 ที'}
                           {item.targetWeightKg > 0 && (
                             <span style={{ color: '#ca8a04', marginLeft: '6px' }}>
-                              @{item.targetWeightKg}kg
+                              @{Math.round(item.targetWeightKg)}kg
                             </span>
                           )}
                         </div>

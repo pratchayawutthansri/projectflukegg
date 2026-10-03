@@ -45,33 +45,33 @@ const MUSCLE_OPTIONS: {
 ];
 
 const DURATION_PRESETS = [
-  { hours: 0.5, label: '30 นาที' },
-  { hours: 0.75, label: '45 นาที' },
-  { hours: 1.0, label: '1 ชม.' },
-  { hours: 1.5, label: '1.5 ชม.' },
-  { hours: 2.0, label: '2 ชม.' },
+  { hours: 0.5, labelTh: '30 นาที', labelEn: '30m' },
+  { hours: 0.75, labelTh: '45 นาที', labelEn: '45m' },
+  { hours: 1.0, labelTh: '1 ชม.', labelEn: '1h' },
+  { hours: 1.5, labelTh: '1.5 ชม.', labelEn: '1.5h' },
+  { hours: 2.0, labelTh: '2 ชม.', labelEn: '2h' },
 ];
 
 const RUNNING_OPTIONS = [
-  { km: 0, label: 'ไม่วิ่ง' },
-  { km: 2, label: '2 โล' },
-  { km: 5, label: '5 โล' },
-  { km: 10, label: '10 โล' },
+  { km: 0, labelTh: 'ไม่วิ่ง', labelEn: 'None' },
+  { km: 2, labelTh: '2 โล', labelEn: '2 km' },
+  { km: 5, labelTh: '5 โล', labelEn: '5 km' },
+  { km: 10, labelTh: '10 โล', labelEn: '10 km' },
 ];
 
 const TIME_PRESETS = [
-  { time: '07:00', label: 'เช้า (07:00)' },
-  { time: '12:00', label: 'กลางวัน (12:00)' },
-  { time: '17:30', label: 'เย็น (17:30)' },
-  { time: '19:30', label: 'ค่ำ (19:30)' },
+  { time: '07:00', labelTh: 'เช้า (07:00)', labelEn: 'Morning (07:00)' },
+  { time: '12:00', labelTh: 'กลางวัน (12:00)', labelEn: 'Noon (12:00)' },
+  { time: '17:30', labelTh: 'เย็น (17:30)', labelEn: 'Evening (17:30)' },
+  { time: '19:30', labelTh: 'ค่ำ (19:30)', labelEn: 'Night (19:30)' },
 ];
 
 const PRESETS = [
-  { label: 'อก + แขน 1.5 ชม.', muscles: ['chest', 'arms'] as MuscleGroup[], hours: 1.5, running: 0 },
-  { label: 'หลัง + แขน 1 ชม.', muscles: ['back', 'arms'] as MuscleGroup[], hours: 1.0, running: 0 },
-  { label: 'ขา + ท้อง 1 ชม.', muscles: ['legs', 'abs'] as MuscleGroup[], hours: 1.0, running: 0 },
-  { label: 'วิ่ง 5 โล + อก 45 นาที', muscles: ['chest'] as MuscleGroup[], hours: 0.75, running: 5 },
-  { label: 'วิ่ง 10 โล', muscles: [] as MuscleGroup[], hours: 1.0, running: 10 },
+  { labelTh: 'อก + แขน 1.5 ชม.', labelEn: 'Chest + Arms (1.5h)', muscles: ['chest', 'arms'] as MuscleGroup[], hours: 1.5, running: 0 },
+  { labelTh: 'หลัง + แขน 1 ชม.', labelEn: 'Back + Arms (1h)', muscles: ['back', 'arms'] as MuscleGroup[], hours: 1.0, running: 0 },
+  { labelTh: 'ขา + ท้อง 1 ชม.', labelEn: 'Legs + Abs (1h)', muscles: ['legs', 'abs'] as MuscleGroup[], hours: 1.0, running: 0 },
+  { labelTh: 'วิ่ง 5 โล + อก 45 นาที', labelEn: 'Run 5km + Chest (45m)', muscles: ['chest'] as MuscleGroup[], hours: 0.75, running: 5 },
+  { labelTh: 'วิ่ง 10 โล', labelEn: 'Run 10km (Cardio)', muscles: [] as MuscleGroup[], hours: 1.0, running: 10 },
 ];
 
 export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
@@ -81,6 +81,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
   userProfile,
   initialDate = new Date().toISOString().split('T')[0],
 }) => {
+  const isEn = userProfile.language === 'en';
   const [selectedDate, setSelectedDate] = useState(initialDate);
   const [selectedMuscles, setSelectedMuscles] = useState<MuscleGroup[]>(['chest', 'arms']);
   const [targetHours, setTargetHours] = useState<number>(1.5);
@@ -139,9 +140,9 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
             exerciseName: item.name,
             muscleGroup: group,
             sets: 1,
-            reps: '15 ที',
+            reps: isEn ? '15 reps' : '15 ที',
             restSec: item.restSec,
-            targetWeightKg: item.baseWeight,
+            targetWeightKg: Math.round(item.baseWeight),
           });
         }
       }
@@ -194,12 +195,12 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
     setRoutineItems((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Adjust weight
+  // Adjust weight by 1 kg
   const handleAdjustWeight = (index: number, delta: number) => {
     setRoutineItems((prev) =>
       prev.map((item, i) => {
         if (i !== index) return item;
-        const newWeight = Math.max(0, item.targetWeightKg + delta);
+        const newWeight = Math.max(0, Math.round(item.targetWeightKg) + delta);
         return { ...item, targetWeightKg: newWeight };
       })
     );
@@ -211,9 +212,9 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
       exerciseName: exercise.name,
       muscleGroup: addSelectedCategory,
       sets: 1,
-      reps: '15 ที',
+      reps: isEn ? '15 reps' : '15 ที',
       restSec: exercise.restSec,
-      targetWeightKg: exercise.baseWeight,
+      targetWeightKg: Math.round(exercise.baseWeight),
     };
     setRoutineItems((prev) => [...prev, newItem]);
     setShowAddSelector(false);
@@ -238,7 +239,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
   const timeSlotStr = `${startTime || '17:30'} - ${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`;
 
   // Title
-  const muscleLabels: Record<MuscleGroup, string> = {
+  const muscleLabelsTh: Record<MuscleGroup, string> = {
     chest: 'อก',
     back: 'หลัง',
     legs: 'ขา',
@@ -248,10 +249,20 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
     cardio: 'คาร์ดิโอ',
     fullbody: 'ทั่วร่าง',
   };
-  const muscleTitle = selectedMuscles.map((m) => muscleLabels[m]).join(' + ') || 'คาร์ดิโอ';
-  const planTitle = runningKm > 0
-    ? `โปรแกรม ${muscleTitle} + วิ่ง ${runningKm} โล (${targetHours} ชม.)`
-    : `โปรแกรม ${muscleTitle} (${targetHours} ชม.)`;
+  const muscleLabelsEn: Record<MuscleGroup, string> = {
+    chest: 'Chest',
+    back: 'Back',
+    legs: 'Legs',
+    shoulders: 'Shoulders',
+    arms: 'Arms',
+    abs: 'Abs',
+    cardio: 'Cardio',
+    fullbody: 'Full Body',
+  };
+  const muscleTitle = selectedMuscles.map((m) => isEn ? muscleLabelsEn[m] : muscleLabelsTh[m]).join(' + ') || (isEn ? 'Cardio' : 'คาร์ดิโอ');
+  const planTitle = isEn
+    ? (runningKm > 0 ? `${muscleTitle} + Run ${runningKm}km (${targetHours}h)` : `${muscleTitle} Routine (${targetHours}h)`)
+    : (runningKm > 0 ? `โปรแกรม ${muscleTitle} + วิ่ง ${runningKm} โล (${targetHours} ชม.)` : `โปรแกรม ${muscleTitle} (${targetHours} ชม.)`);
 
   // Save to calendar
   const handleSaveToCalendar = () => {
@@ -357,7 +368,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                 GYM GYM GYM
               </span>
               <span style={{ fontSize: '12px', color: '#71717a', fontWeight: 600 }}>
-                เครื่องเล่นเซ็ตละ 15 ที & คาร์ดิโอ
+                {isEn ? '15 Reps/Set Protocol & Cardio' : 'เครื่องเล่นเซ็ตละ 15 ที & คาร์ดิโอ'}
               </span>
             </div>
             <h2
@@ -369,7 +380,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                 margin: '2px 0 0 0',
               }}
             >
-              จัดตารางและปรับแต่งท่าซ้อม
+              {isEn ? 'Smart Workout Scheduler' : 'จัดตารางและปรับแต่งท่าซ้อม'}
             </h2>
           </div>
           <button
@@ -397,7 +408,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
           {/* STEP 1: DATE SELECTION */}
           <div>
             <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-              <Calendar size={15} /> วันที่ต้องการลงตาราง
+              <Calendar size={15} /> {isEn ? 'Scheduled Date' : 'วันที่ต้องการลงตาราง'}
             </label>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               <div
@@ -444,7 +455,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                   whiteSpace: 'nowrap',
                 }}
               >
-                วันนี้
+                {isEn ? 'Today' : 'วันนี้'}
               </button>
               <button
                 type="button"
@@ -462,7 +473,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                   whiteSpace: 'nowrap',
                 }}
               >
-                พรุ่งนี้
+                {isEn ? 'Tomorrow' : 'พรุ่งนี้'}
               </button>
             </div>
           </div>
@@ -471,9 +482,11 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
               <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Dumbbell size={15} /> 1. เลือกส่วนกล้ามเนื้อ (กดเลือกได้หลายส่วน)
+                <Dumbbell size={15} /> {isEn ? '1. Target Muscles (Multi-select)' : '1. เลือกส่วนกล้ามเนื้อ (กดเลือกได้หลายส่วน)'}
               </label>
-              <span style={{ fontSize: '11px', color: '#71717a' }}>เลือกแล้ว {selectedMuscles.length} ส่วน</span>
+              <span style={{ fontSize: '11px', color: '#71717a' }}>
+                {isEn ? `Selected ${selectedMuscles.length} groups` : `เลือกแล้ว ${selectedMuscles.length} ส่วน`}
+              </span>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
@@ -517,10 +530,10 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                       <MuscleIcon size={18} color={isSelected ? '#ffffff' : 'currentColor'} />
                     </div>
                     <span style={{ fontFamily: 'Prompt, sans-serif', fontSize: '13px', fontWeight: 700, color: isSelected ? '#ffffff' : '#0a0a0c' }}>
-                      {m.label}
+                      {isEn ? m.en : m.label}
                     </span>
                     <span style={{ fontSize: '10px', color: isSelected ? 'rgba(255, 255, 255, 0.85)' : '#71717a', fontWeight: 600 }}>
-                      {m.en}
+                      {isEn ? m.label : m.en}
                     </span>
                     {isSelected && (
                       <div
@@ -551,10 +564,10 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
               <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Clock size={15} /> 2. เลือกระยะเวลาซ้อม
+                <Clock size={15} /> {isEn ? '2. Workout Duration' : '2. เลือกระยะเวลาซ้อม'}
               </label>
               <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: 700 }}>
-                {targetHours} ชม. ({Math.round(targetHours * 60)} นาที)
+                {isEn ? `${targetHours} hrs (${Math.round(targetHours * 60)} mins)` : `${targetHours} ชม. (${Math.round(targetHours * 60)} นาที)`}
               </span>
             </div>
 
@@ -580,7 +593,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                       transition: 'all 0.15s ease',
                     }}
                   >
-                    {d.label}
+                    {isEn ? d.labelEn : d.labelTh}
                   </button>
                 );
               })}
@@ -599,7 +612,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
               }}
             >
               <span style={{ fontSize: '12px', color: '#52525b', fontWeight: 600 }}>
-                ปรับเวลาละเอียด (+/- ทีละ 15 นาที):
+                {isEn ? 'Fine-tune (+/- 15 mins):' : 'ปรับเวลาละเอียด (+/- ทีละ 15 นาที):'}
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <button
@@ -622,7 +635,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                   -
                 </button>
                 <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '14px', fontWeight: 800, minWidth: '60px', textAlign: 'center' }}>
-                  {Math.round(targetHours * 60)} นาที
+                  {Math.round(targetHours * 60)} {isEn ? 'mins' : 'นาที'}
                 </span>
                 <button
                   type="button"
@@ -651,17 +664,18 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
               <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Navigation size={15} /> 3. วิ่งเก็บระยะ (ลู่วิ่ง / สวนสาธารณะ)
+                <Navigation size={15} /> {isEn ? '3. Cardio & Running (Treadmill / Park)' : '3. วิ่งเก็บระยะ (ลู่วิ่ง / สวนสาธารณะ)'}
               </label>
               {runningKm > 0 && (
                 <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: 600 }}>
-                  +~{Math.round(runningKm * 6)} นาที (~{Math.round(runningKm * userProfile.weightKg * 1.036)} kcal)
+                  +~{Math.round(runningKm * 6)} {isEn ? 'mins' : 'นาที'} (~{Math.round(runningKm * userProfile.weightKg * 1.036)} kcal)
                 </span>
               )}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
               {RUNNING_OPTIONS.map((r) => {
                 const isSelected = runningKm === r.km;
+                const label = isEn ? r.labelEn : r.labelTh;
                 return (
                   <button
                     key={r.km}
@@ -686,7 +700,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                     }}
                   >
                     {r.km > 0 && <Navigation size={12} color={isSelected ? '#ffffff' : 'currentColor'} />}
-                    <span>{r.label}</span>
+                    <span>{label}</span>
                   </button>
                 );
               })}
@@ -697,10 +711,10 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
               <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Clock size={15} /> 4. ช่วงเวลาเริ่มซ้อม
+                <Clock size={15} /> {isEn ? '4. Workout Start Time' : '4. ช่วงเวลาเริ่มซ้อม'}
               </label>
               <span style={{ fontSize: '11px', color: '#71717a', fontWeight: 600 }}>
-                ช่วงเวลา: {timeSlotStr}
+                {isEn ? 'Time Slot:' : 'ช่วงเวลา:'} {timeSlotStr}
               </span>
             </div>
 
@@ -708,6 +722,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', marginBottom: '8px' }}>
               {TIME_PRESETS.map((slot) => {
                 const isSelected = startTime === slot.time;
+                const label = isEn ? slot.labelEn : slot.labelTh;
                 return (
                   <button
                     key={slot.time}
@@ -726,7 +741,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                       textAlign: 'center',
                     }}
                   >
-                    {slot.label}
+                    {label}
                   </button>
                 );
               })}
@@ -757,7 +772,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
               >
                 <Clock size={16} color="#0a0a0c" />
                 <span style={{ fontSize: '13px', color: '#0a0a0c', fontWeight: 700 }}>
-                  กำหนดเวลาเริ่มเอง:
+                  {isEn ? 'Custom start time:' : 'กำหนดเวลาเริ่มเอง:'}
                 </span>
               </div>
 
@@ -765,7 +780,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                 <button
                   type="button"
                   onClick={() => handleAdjustStartTime(-15)}
-                  title="ลด 15 นาที"
+                  title={isEn ? 'Subtract 15 mins' : 'ลด 15 นาที'}
                   style={{
                     width: '32px',
                     height: '32px',
@@ -789,7 +804,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                 <div
                   className="time-picker-full-cover"
                   onClick={handleOpenTimePicker}
-                  title="กดเพื่อเลือกเวลาเริ่มซ้อม"
+                  title={isEn ? 'Click to select start time' : 'กดเพื่อเลือกเวลาเริ่มซ้อม'}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -811,7 +826,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                     type="time"
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
-                    aria-label="เลือกเวลาเริ่มซ้อม"
+                    aria-label={isEn ? 'Select workout start time' : 'เลือกเวลาเริ่มซ้อม'}
                   />
                   <Clock size={14} color="#ffffff" />
                   <span
@@ -823,14 +838,14 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                       letterSpacing: '0.5px',
                     }}
                   >
-                    {startTime} น.
+                    {startTime} {isEn ? '' : 'น.'}
                   </span>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => handleAdjustStartTime(15)}
-                  title="เพิ่ม 15 นาที"
+                  title={isEn ? 'Add 15 mins' : 'เพิ่ม 15 นาที'}
                   style={{
                     width: '32px',
                     height: '32px',
@@ -858,30 +873,33 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
               <Sparkles size={14} color="#eab308" />
               <span style={{ fontSize: '11px', fontWeight: 700, color: '#52525b' }}>
-                หรือเลือกโปรแกรมยอดนิยม 1 คลิก:
+                {isEn ? 'Or choose a 1-click popular program:' : 'หรือเลือกโปรแกรมยอดนิยม 1 คลิก:'}
               </span>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              {PRESETS.map((p) => (
-                <button
-                  key={p.label}
-                  type="button"
-                  onClick={() => handleApplyPreset(p)}
-                  style={{
-                    backgroundColor: '#ffffff',
-                    border: '1.5px solid #d4d4d8',
-                    borderRadius: '9999px',
-                    padding: '5px 12px',
-                    fontSize: '11px',
-                    fontFamily: 'Prompt, sans-serif',
-                    fontWeight: 600,
-                    color: '#0a0a0c',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {p.label}
-                </button>
-              ))}
+              {PRESETS.map((p) => {
+                const label = isEn ? p.labelEn : p.labelTh;
+                return (
+                  <button
+                    key={p.labelEn}
+                    type="button"
+                    onClick={() => handleApplyPreset(p)}
+                    style={{
+                      backgroundColor: '#ffffff',
+                      border: '1.5px solid #d4d4d8',
+                      borderRadius: '9999px',
+                      padding: '5px 12px',
+                      fontSize: '11px',
+                      fontFamily: 'Prompt, sans-serif',
+                      fontWeight: 600,
+                      color: '#0a0a0c',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -915,7 +933,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Dumbbell size={16} color="#0a0a0c" />
                   <span style={{ fontSize: '15px', fontWeight: 800, color: '#0a0a0c' }}>
-                    เครื่องเล่นที่ระบบจัดให้
+                    {isEn ? 'Generated Routine Machines' : 'เครื่องเล่นที่ระบบจัดให้'}
                   </span>
                 </div>
 
@@ -930,7 +948,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                     fontFamily: 'Outfit, sans-serif',
                   }}
                 >
-                  {routineItems.length} ท่า
+                  {routineItems.length} {isEn ? 'exercises' : 'ท่า'}
                 </span>
               </div>
 
@@ -946,7 +964,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setRoutineItems(generateRoutine(selectedMuscles, targetHours))}
-                  title="สุ่มจัดท่าใหม่"
+                  title={isEn ? 'Shuffle Routine' : 'สุ่มจัดท่าใหม่'}
                   style={{
                     backgroundColor: '#f4f4f5',
                     color: '#0a0a0c',
@@ -967,7 +985,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                   }}
                 >
                   <RotateCcw size={15} />
-                  <span>สุ่มจัดท่าใหม่</span>
+                  <span>{isEn ? 'Shuffle Routine' : 'สุ่มจัดท่าใหม่'}</span>
                 </button>
 
                 <button
@@ -993,13 +1011,15 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                   }}
                 >
                   {showAddSelector ? <X size={15} color="#ffffff" /> : <Plus size={15} color="#ffffff" />}
-                  <span>{showAddSelector ? 'ปิดเมนู' : '+ เพิ่มท่าเล่น'}</span>
+                  <span>{showAddSelector ? (isEn ? 'Close' : 'ปิดเมนู') : (isEn ? '+ Add Exercise' : '+ เพิ่มท่าเล่น')}</span>
                 </button>
               </div>
 
               {/* Row 3: Helper Subtitle */}
               <span style={{ fontSize: '11px', color: '#71717a', lineHeight: 1.4, display: 'block' }}>
-                เครื่องละ 1 เซ็ต 15 ที · ปรับน้ำหนัก [-] [+] ลบท่า [🗑️] หรือกดเพิ่มท่าเล่นได้ตามใจ
+                {isEn
+                  ? '1 set of 15 reps each · Adjust weight [-] [+], delete [🗑️], or add extra machines freely'
+                  : 'เครื่องละ 1 เซ็ต 15 ที · ปรับน้ำหนัก [-] [+] ลบท่า [🗑️] หรือกดเพิ่มท่าเล่นได้ตามใจ'}
               </span>
             </div>
 
@@ -1016,7 +1036,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                   <span style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c' }}>
-                    เลือกท่าที่จะเพิ่มเข้าตาราง:
+                    {isEn ? 'Select exercise to add:' : 'เลือกท่าที่จะเพิ่มเข้าตาราง:'}
                   </span>
                   <select
                     value={addSelectedCategory}
@@ -1031,12 +1051,12 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                       backgroundColor: '#ffffff',
                     }}
                   >
-                    <option value="chest">อก (Chest)</option>
-                    <option value="back">หลัง (Back)</option>
-                    <option value="legs">ขา (Legs)</option>
-                    <option value="shoulders">ไหล่ (Shoulders)</option>
-                    <option value="arms">แขน (Arms)</option>
-                    <option value="abs">หน้าท้อง (Abs)</option>
+                    <option value="chest">{isEn ? 'Chest' : 'อก (Chest)'}</option>
+                    <option value="back">{isEn ? 'Back' : 'หลัง (Back)'}</option>
+                    <option value="legs">{isEn ? 'Legs' : 'ขา (Legs)'}</option>
+                    <option value="shoulders">{isEn ? 'Shoulders' : 'ไหล่ (Shoulders)'}</option>
+                    <option value="arms">{isEn ? 'Arms' : 'แขน (Arms)'}</option>
+                    <option value="abs">{isEn ? 'Abs' : 'หน้าท้อง (Abs)'}</option>
                   </select>
                 </div>
 
@@ -1058,7 +1078,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <strong style={{ fontSize: '12px', color: '#0a0a0c' }}>{ex.name}</strong>
                         <span style={{ fontSize: '10.5px', color: '#71717a', marginLeft: '6px' }}>
-                          เริ่มต้น @{ex.baseWeight}kg · 15 ที
+                          {isEn ? 'Start @' : 'เริ่มต้น @'}{Math.round(ex.baseWeight)}kg · {isEn ? '15 reps' : '15 ที'}
                         </span>
                       </div>
                       <button
@@ -1077,7 +1097,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                           boxShadow: '0 2px 4px rgba(0,0,0,0.12)',
                         }}
                       >
-                        + เพิ่ม
+                        + {isEn ? 'Add' : 'เพิ่ม'}
                       </button>
                     </div>
                   ))}
@@ -1088,7 +1108,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
             {/* List of routine items */}
             {routineItems.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '20px', color: '#71717a', fontSize: '13px' }}>
-                ยังไม่มีเครื่องเล่นในตาราง กดปุ่ม <strong>+ เพิ่มท่า</strong> ด้านบนเพื่อเลือกเครื่องเล่น
+                {isEn ? 'No machines in routine yet. Click "+ Add Exercise" above to pick.' : 'ยังไม่มีเครื่องเล่นในตาราง กดปุ่ม + เพิ่มท่า ด้านบนเพื่อเลือกเครื่องเล่น'}
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -1139,14 +1159,14 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                           {item.exerciseName}
                         </strong>
                         <span style={{ fontSize: '10px', color: '#71717a' }}>
-                          {item.sets} เซ็ต × {item.reps}
+                          {item.sets} {isEn ? 'sets' : 'เซ็ต'} × {item.reps}
                         </span>
                       </div>
                     </div>
 
                     {/* Right: Weight Adjuster & Delete */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-                      {/* Weight Stepper */}
+                      {/* Weight Stepper: step by 1 kg strictly */}
                       <div
                         style={{
                           display: 'flex',
@@ -1159,7 +1179,8 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                       >
                         <button
                           type="button"
-                          onClick={() => handleAdjustWeight(idx, -2.5)}
+                          onClick={() => handleAdjustWeight(idx, -1)}
+                          title={isEn ? 'Decrease 1 kg' : 'ลด 1 kg'}
                           style={{
                             padding: '3px 7px',
                             border: 'none',
@@ -1183,11 +1204,12 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                             color: '#0a0a0c',
                           }}
                         >
-                          {item.targetWeightKg}kg
+                          {Math.round(item.targetWeightKg)}kg
                         </span>
                         <button
                           type="button"
-                          onClick={() => handleAdjustWeight(idx, 2.5)}
+                          onClick={() => handleAdjustWeight(idx, 1)}
+                          title={isEn ? 'Increase 1 kg' : 'เพิ่ม 1 kg'}
                           style={{
                             padding: '3px 7px',
                             border: 'none',
@@ -1206,7 +1228,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                       <button
                         type="button"
                         onClick={() => handleDeleteExercise(idx)}
-                        title="ลบท่านี้"
+                        title={isEn ? 'Delete this exercise' : 'ลบท่านี้'}
                         style={{
                           backgroundColor: '#fee2e2',
                           color: '#ef4444',
@@ -1249,7 +1271,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
             >
               <Clock size={16} color="#0a0a0c" style={{ margin: '0 auto 2px auto' }} />
               <div style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '15px' }}>
-                {targetHours} ชม.
+                {targetHours} {isEn ? 'hrs' : 'ชม.'}
               </div>
               <div style={{ fontSize: '10px', color: '#71717a' }}>{timeSlotStr}</div>
             </div>
@@ -1268,7 +1290,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
               <div style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '15px', color: '#f43f5e' }}>
                 ~{estimatedCalories}
               </div>
-              <div style={{ fontSize: '10px', color: '#71717a' }}>แคลอรีที่เผาผลาญ</div>
+              <div style={{ fontSize: '10px', color: '#71717a' }}>{isEn ? 'Burned Calories' : 'แคลอรีที่เผาผลาญ'}</div>
             </div>
 
             <div
@@ -1283,10 +1305,10 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
             >
               <Dumbbell size={16} color="#0a0a0c" style={{ margin: '0 auto 2px auto' }} />
               <div style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '15px' }}>
-                {routineItems.length} เครื่อง
+                {routineItems.length} {isEn ? 'exercises' : 'เครื่อง'}
               </div>
               <div style={{ fontSize: '10px', color: '#71717a' }}>
-                {runningKm > 0 ? `+ วิ่ง ${runningKm} โล` : 'เซ็ตละ 15 ที'}
+                {runningKm > 0 ? (isEn ? `+ Run ${runningKm} km` : `+ วิ่ง ${runningKm} โล`) : (isEn ? '15 reps per set' : 'เซ็ตละ 15 ที')}
               </div>
             </div>
           </div>
@@ -1307,7 +1329,9 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               {isSuccess ? <Check size={18} color="#ffffff" /> : <Play size={16} fill="currentColor" color="#ffffff" />}
-              {isSuccess ? 'จัดลงตารางเรียบร้อยแล้ว!' : 'ยืนยันและนำไปใส่ตารางซ้อมทันที'}
+              {isSuccess
+                ? (isEn ? 'Scheduled to Calendar!' : 'จัดลงตารางเรียบร้อยแล้ว!')
+                : (isEn ? 'Confirm & Add to Schedule' : 'ยืนยันและนำไปใส่ตารางซ้อมทันที')}
             </span>
             <ChevronRight size={18} color="#ffffff" />
           </button>

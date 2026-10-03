@@ -34,6 +34,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   isGateOnly = false,
   userProfile,
 }) => {
+  const isEn = userProfile?.language === 'en';
   const [view, setView] = useState<AuthView>('gateway');
   const [onboardingStep, setOnboardingStep] = useState(0);
 
@@ -76,27 +77,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setErrorMessage('');
 
     if (!userId.trim()) {
-      setErrorMessage('กรุณากรอกไอดีผู้ใช้งาน (User ID / ID สมาชิก)');
+      setErrorMessage(isEn ? 'Please enter a User ID / Member ID' : 'กรุณากรอกไอดีผู้ใช้งาน (User ID / ID สมาชิก)');
       return;
     }
     if (!name.trim()) {
-      setErrorMessage('กรุณากรอกชื่อของคุณ (Display Name)');
+      setErrorMessage(isEn ? 'Please enter your Display Name' : 'กรุณากรอกชื่อของคุณ (Display Name)');
       return;
     }
     if (!password) {
-      setErrorMessage('กรุณากรอกรหัสผ่าน (Password)');
+      setErrorMessage(isEn ? 'Please enter a password' : 'กรุณากรอกรหัสผ่าน (Password)');
       return;
     }
     if (password.length < 4) {
-      setErrorMessage('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร');
+      setErrorMessage(isEn ? 'Password must be at least 4 characters' : 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร');
       return;
     }
     if (password !== confirmPassword) {
-      setErrorMessage('รหัสผ่านทั้ง 2 ครั้งไม่ตรงกัน กรุณาตรวจสอบอีกครั้ง');
+      setErrorMessage(isEn ? 'Passwords do not match. Please verify again.' : 'รหัสผ่านทั้ง 2 ครั้งไม่ตรงกัน กรุณาตรวจสอบอีกครั้ง');
       return;
     }
     if (!isAgreedTerms) {
-      setErrorMessage('กรุณาทำเครื่องหมายยอมรับข้อตกลงและเงื่อนไขการใช้งาน');
+      setErrorMessage(isEn ? 'Please check and accept the Terms & Conditions' : 'กรุณาทำเครื่องหมายยอมรับข้อตกลงและเงื่อนไขการใช้งาน');
       return;
     }
 
@@ -108,7 +109,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     );
 
     if (isDuplicate) {
-      setErrorMessage('ไอดีหรือชื่อผู้ใช้งานนี้มีอยู่ในระบบแล้ว กรุณาใช้ไอดีอื่น หรือเข้าสู่ระบบ');
+      setErrorMessage(isEn ? 'This User ID or Name is already registered. Please use another ID or log in.' : 'ไอดีหรือชื่อผู้ใช้งานนี้มีอยู่ในระบบแล้ว กรุณาใช้ไอดีอื่น หรือเข้าสู่ระบบ');
       return;
     }
 
@@ -152,11 +153,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setLoginErrorMessage('');
 
     if (!loginIdOrName.trim()) {
-      setLoginErrorMessage('กรุณากรอกไอดีหรือชื่อผู้ใช้งาน');
+      setLoginErrorMessage(isEn ? 'Please enter your User ID or Display Name' : 'กรุณากรอกไอดีหรือชื่อผู้ใช้งาน');
       return;
     }
     if (!loginPassword) {
-      setLoginErrorMessage('กรุณากรอกรหัสผ่าน');
+      setLoginErrorMessage(isEn ? 'Please enter your password' : 'กรุณากรอกรหัสผ่าน');
       return;
     }
 
@@ -169,15 +170,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
     if (!match) {
       if (accounts.length === 0) {
-        setLoginErrorMessage('ยังไม่มีบัญชีในระบบ กรุณากด "สมัครสมาชิก" ก่อนเข้าสู่ระบบ');
+        setLoginErrorMessage(isEn ? 'No accounts registered yet. Please click "Sign Up" first.' : 'ยังไม่มีบัญชีในระบบ กรุณากด "สมัครสมาชิก" ก่อนเข้าสู่ระบบ');
       } else {
-        setLoginErrorMessage('ไม่พบชื่อผู้ใช้หรือไอดีนี้ในระบบ กรุณาสมัครสมาชิกใหม่');
+        setLoginErrorMessage(isEn ? 'User ID or Name not found. Please sign up for a new account.' : 'ไม่พบชื่อผู้ใช้หรือไอดีนี้ในระบบ กรุณาสมัครสมาชิกใหม่');
       }
       return;
     }
 
     if (match.password !== loginPassword) {
-      setLoginErrorMessage('รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบรหัสผ่านอีกครั้ง');
+      setLoginErrorMessage(isEn ? 'Incorrect password. Please try again.' : 'รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบรหัสผ่านอีกครั้ง');
       return;
     }
 
@@ -339,7 +340,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   margin: 0,
                 }}
               >
-                Fit & Finance | ออกกำลัง & บัญชีเงิน
+                Fit & Finance | {isEn ? 'Workout & Budget Tracker' : 'ออกกำลัง & บัญชีเงิน'}
               </p>
             </div>
 
@@ -375,7 +376,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   userSelect: 'none',
                 }}
               >
-                Sign Up (สมัครสมาชิก)
+                {isEn ? 'Sign Up' : 'Sign Up (สมัครสมาชิก)'}
               </button>
 
               {/* White Outline Button: Log In */}
@@ -399,7 +400,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   userSelect: 'none',
                 }}
               >
-                Log In (เข้าสู่ระบบ)
+                {isEn ? 'Log In' : 'Log In (เข้าสู่ระบบ)'}
               </button>
 
               {/* Terms & Liability Waiver link */}
@@ -421,7 +422,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 }}
               >
                 <ShieldAlert size={13} />
-                <span>ข้อตกลงและเงื่อนไขการใช้งาน 5 ข้อ (ฟรี • ข้อมูลเป็นความลับ)</span>
+                <span>{isEn ? '5 Terms & Conditions (Free • Confidential & Safe)' : 'ข้อตกลงและเงื่อนไขการใช้งาน 5 ข้อ (ฟรี • ข้อมูลเป็นความลับ)'}</span>
               </button>
             </div>
           </div>
@@ -619,7 +620,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 }}
               >
                 <ArrowLeft size={16} />
-                <span>ย้อนกลับ</span>
+                <span>{isEn ? 'Back' : 'ย้อนกลับ'}</span>
               </button>
             </div>
 
@@ -652,7 +653,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               Sign Up
             </h2>
             <p style={{ fontSize: '13px', color: '#71717a', margin: '0 0 16px 0' }}>
-              กรอก ID, ข้อมูลส่วนตัว และตั้งรหัสผ่าน 2 ครั้งเพื่อยืนยัน
+              {isEn ? 'Enter ID, profile stats, and password twice to confirm' : 'กรอก ID, ข้อมูลส่วนตัว และตั้งรหัสผ่าน 2 ครั้งเพื่อยืนยัน'}
             </p>
 
             {/* Error Message Box */}
@@ -681,12 +682,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {/* FIELD 1: User ID / ID สมาชิก */}
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '6px' }}>
-                  <UserCheck size={14} /> ไอดีผู้ใช้งาน (User ID / ID สมาชิก) <span style={{ color: '#f43f5e' }}>*</span>
+                  <UserCheck size={14} /> {isEn ? 'User ID / Member ID' : 'ไอดีผู้ใช้งาน (User ID / ID สมาชิก)'} <span style={{ color: '#f43f5e' }}>*</span>
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="เช่น GYM-007 หรือ fluke99"
+                  placeholder={isEn ? 'e.g. GYM-007 or fluke99' : 'เช่น GYM-007 หรือ fluke99'}
                   value={userId}
                   onChange={(e) => setUserId(e.target.value)}
                   style={{
@@ -706,12 +707,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {/* FIELD 2: Display Name */}
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '6px' }}>
-                  <User size={14} /> ชื่อของคุณ (Display Name) <span style={{ color: '#f43f5e' }}>*</span>
+                  <User size={14} /> {isEn ? 'Display Name' : 'ชื่อของคุณ (Display Name)'} <span style={{ color: '#f43f5e' }}>*</span>
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="เช่น Fluke, ปลั๊ก..."
+                  placeholder={isEn ? 'e.g. Fluke, Alex...' : 'เช่น Fluke, ปลั๊ก...'}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   style={{
@@ -731,11 +732,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
                 <div>
                   <label style={{ fontSize: '11px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-                    <Scale size={12} /> น้ำหนัก (กก.)
+                    <Scale size={12} /> {isEn ? 'Weight (kg)' : 'น้ำหนัก (กก.)'}
                   </label>
                   <input
                     type="number"
-                    step="0.5"
+                    step="1"
                     required
                     placeholder="70"
                     value={weightKg}
@@ -757,7 +758,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
                 <div>
                   <label style={{ fontSize: '11px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-                    <Ruler size={12} /> ส่วนสูง (ซม.)
+                    <Ruler size={12} /> {isEn ? 'Height (cm)' : 'ส่วนสูง (ซม.)'}
                   </label>
                   <input
                     type="number"
@@ -783,7 +784,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
                 <div>
                   <label style={{ fontSize: '11px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-                    <Calendar size={12} /> อายุ (ปี)
+                    <Calendar size={12} /> {isEn ? 'Age (yrs)' : 'อายุ (ปี)'}
                   </label>
                   <input
                     type="number"
@@ -811,12 +812,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {/* FIELD 4: Password ครั้งที่ 1 */}
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '6px' }}>
-                  <Lock size={14} /> รหัสผ่าน (Password) <span style={{ color: '#f43f5e' }}>*</span>
+                  <Lock size={14} /> {isEn ? 'Password' : 'รหัสผ่าน (Password)'} <span style={{ color: '#f43f5e' }}>*</span>
                 </label>
                 <input
                   type="password"
                   required
-                  placeholder="กรอกรหัสผ่าน (อย่างน้อย 4 ตัวอักษร)"
+                  placeholder={isEn ? 'Enter password (at least 4 characters)' : 'กรอกรหัสผ่าน (อย่างน้อย 4 ตัวอักษร)'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   style={{
@@ -834,12 +835,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {/* FIELD 5: Password ครั้งที่ 2 เพื่อยืนยัน */}
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '6px' }}>
-                  <Lock size={14} /> ยืนยันรหัสผ่าน (Confirm Password 2 ครั้ง) <span style={{ color: '#f43f5e' }}>*</span>
+                  <Lock size={14} /> {isEn ? 'Confirm Password' : 'ยืนยันรหัสผ่าน (Confirm Password 2 ครั้ง)'} <span style={{ color: '#f43f5e' }}>*</span>
                 </label>
                 <input
                   type="password"
                   required
-                  placeholder="กรอกรหัสผ่านซ้ำอีกครั้งเพื่อยืนยัน"
+                  placeholder={isEn ? 'Re-enter password to confirm' : 'กรอกรหัสผ่านซ้ำอีกครั้งเพื่อยืนยัน'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   style={{
@@ -861,9 +862,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 {confirmPassword.length > 0 && (
                   <div style={{ marginTop: '5px', fontSize: '11px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
                     {password === confirmPassword ? (
-                      <span style={{ color: '#10b981' }}>✓ รหัสผ่านตรงกันเรียบร้อย</span>
+                      <span style={{ color: '#10b981' }}>{isEn ? '✓ Passwords match' : '✓ รหัสผ่านตรงกันเรียบร้อย'}</span>
                     ) : (
-                      <span style={{ color: '#f43f5e' }}>✗ รหัสผ่าน 2 ครั้งไม่ตรงกัน กรุณาตรวจสอบ</span>
+                      <span style={{ color: '#f43f5e' }}>{isEn ? '✗ Passwords do not match' : '✗ รหัสผ่าน 2 ครั้งไม่ตรงกัน กรุณาตรวจสอบ'}</span>
                     )}
                   </div>
                 )}
@@ -907,7 +908,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     }}
                   />
                   <span>
-                    ฉันได้อ่านและยินยอมตาม <strong>ข้อตกลงและเงื่อนไข 5 ข้อ</strong> (ใช้งานและบันทึกได้ฟรี • ข้อมูลเป็นความลับไม่มีเปิดเผย • สละสิทธิ์ฟ้องร้อง)
+                    {isEn
+                      ? 'I have read and agree to the 5 Terms & Conditions (Free usage • Confidential & secure data • Liability waiver)'
+                      : 'ฉันได้อ่านและยินยอมตาม ข้อตกลงและเงื่อนไข 5 ข้อ (ใช้งานและบันทึกได้ฟรี • ข้อมูลเป็นความลับไม่มีเปิดเผย • สละสิทธิ์ฟ้องร้อง)'}
                   </span>
                 </label>
 
@@ -930,7 +933,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   }}
                 >
                   <ShieldAlert size={14} color="#0a0a0c" />
-                  <span>คลิกอ่านข้อตกลง 5 ข้อฉบับเต็ม</span>
+                  <span>{isEn ? 'Click to read full 5 terms' : 'คลิกอ่านข้อตกลง 5 ข้อฉบับเต็ม'}</span>
                 </button>
               </div>
 
@@ -959,11 +962,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 {isSuccess ? (
                   <>
                     <CheckCircle2 size={18} />
-                    <span>สมัครสมาชิกสำเร็จ!</span>
+                    <span>{isEn ? 'Account Created Successfully!' : 'สมัครสมาชิกสำเร็จ!'}</span>
                   </>
                 ) : (
                   <>
-                    <span>Create Account (ยืนยันสมัครสมาชิก)</span>
+                    <span>{isEn ? 'Create Account' : 'Create Account (ยืนยันสมัครสมาชิก)'}</span>
                     <ChevronRight size={16} />
                   </>
                 )}
@@ -1005,7 +1008,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 }}
               >
                 <ArrowLeft size={16} />
-                <span>ย้อนกลับ</span>
+                <span>{isEn ? 'Back' : 'ย้อนกลับ'}</span>
               </button>
             </div>
 
@@ -1038,7 +1041,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               Log In
             </h2>
             <p style={{ fontSize: '13px', color: '#71717a', margin: '0 0 16px 0' }}>
-              เข้าสู่ระบบด้วยไอดีผู้ใช้งาน (User ID) หรือชื่อสมาชิก
+              {isEn ? 'Sign in with your User ID or Display Name' : 'เข้าสู่ระบบด้วยไอดีผู้ใช้งาน (User ID) หรือชื่อสมาชิก'}
             </p>
 
             {/* Error Message Box */}
@@ -1067,12 +1070,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {/* User ID or Display Name */}
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '6px' }}>
-                  <UserCheck size={14} /> ไอดีผู้ใช้งาน หรือ ชื่อสมาชิก (User ID / Display Name)
+                  <UserCheck size={14} /> {isEn ? 'User ID or Member Name' : 'ไอดีผู้ใช้งาน หรือ ชื่อสมาชิก (User ID / Display Name)'}
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="เช่น GYM-007 หรือ Fluke"
+                  placeholder={isEn ? 'e.g. GYM-007 or Fluke' : 'เช่น GYM-007 หรือ Fluke'}
                   value={loginIdOrName}
                   onChange={(e) => setLoginIdOrName(e.target.value)}
                   style={{
@@ -1092,7 +1095,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {/* Password */}
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0c', display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '6px' }}>
-                  <Lock size={14} /> รหัสผ่าน (Password)
+                  <Lock size={14} /> {isEn ? 'Password' : 'รหัสผ่าน (Password)'}
                 </label>
                 <input
                   type="password"
@@ -1136,18 +1139,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 {isSuccess ? (
                   <>
                     <CheckCircle2 size={18} />
-                    <span>เข้าสู่ระบบสำเร็จ!</span>
+                    <span>{isEn ? 'Login Successful!' : 'เข้าสู่ระบบสำเร็จ!'}</span>
                   </>
                 ) : (
                   <>
-                    <span>Log In to Gym (เข้าสู่ระบบ)</span>
+                    <span>{isEn ? 'Log In to Gym Gym Gym' : 'Log In to Gym (เข้าสู่ระบบ)'}</span>
                     <ChevronRight size={16} />
                   </>
                 )}
               </button>
 
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                <span style={{ fontSize: '12px', color: '#71717a' }}>ยังไม่มีบัญชีสมาชิก? </span>
+                <span style={{ fontSize: '12px', color: '#71717a' }}>{isEn ? "Don't have an account? " : 'ยังไม่มีบัญชีสมาชิก? '}</span>
                 <button
                   type="button"
                   onClick={() => {
@@ -1164,7 +1167,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     cursor: 'pointer',
                   }}
                 >
-                  สมัครสมาชิกใหม่ที่นี่
+                  {isEn ? 'Sign up here' : 'สมัครสมาชิกใหม่ที่นี่'}
                 </button>
               </div>
 
@@ -1186,7 +1189,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   }}
                 >
                   <ShieldAlert size={12} />
-                  <span>อ่านข้อตกลงและเงื่อนไขการใช้งาน 5 ข้อ</span>
+                  <span>{isEn ? 'Read 5 Terms & Conditions' : 'อ่านข้อตกลงและเงื่อนไขการใช้งาน 5 ข้อ'}</span>
                 </button>
               </div>
             </form>

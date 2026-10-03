@@ -776,13 +776,13 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                   }}
                   onFocus={(e) => (e.target.style.border = '1px solid #0a0a0c')}
                   onBlur={(e) => (e.target.style.border = '1px solid transparent')}
-                  title="คลิกเพื่อแก้ไขชื่อเครื่องเล่น"
+                  title={userProfile.language === 'en' ? 'Click to edit machine name' : 'คลิกเพื่อแก้ไขชื่อเครื่องเล่น'}
                 />
               </div>
 
               <button
                 onClick={() => handleRemoveExercise(ex.id)}
-                title="ลบเครื่องนี้"
+                title={userProfile.language === 'en' ? 'Delete this machine' : 'ลบเครื่องนี้'}
                 style={{
                   background: 'none',
                   border: 'none',
@@ -843,11 +843,11 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                     #{set.setNumber}
                   </span>
 
-                  {/* Weight [-] [Input] [+] */}
+                  {/* Weight [-] [Input] [+] : steps strictly by 1 kg */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '2px', backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid #d4d4d8', padding: '2px' }}>
                     <button
-                      onClick={() => handleUpdateSet(ex.id, set.id, 'weightKg', Math.max(0, set.weightKg - 2.5))}
-                      title="ลดน้ำหนัก 2.5 kg"
+                      onClick={() => handleUpdateSet(ex.id, set.id, 'weightKg', Math.max(0, Math.round(set.weightKg) - 1))}
+                      title={userProfile.language === 'en' ? "Decrease 1 kg" : "ลดน้ำหนัก 1 kg"}
                       style={{
                         backgroundColor: '#f4f4f5',
                         border: 'none',
@@ -865,9 +865,9 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                     </button>
                     <input
                       type="number"
-                      value={set.weightKg}
+                      value={Math.round(set.weightKg)}
                       onChange={(e) =>
-                        handleUpdateSet(ex.id, set.id, 'weightKg', parseFloat(e.target.value) || 0)
+                        handleUpdateSet(ex.id, set.id, 'weightKg', Math.round(parseFloat(e.target.value) || 0))
                       }
                       style={{
                         width: '100%',
@@ -881,8 +881,8 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                       }}
                     />
                     <button
-                      onClick={() => handleUpdateSet(ex.id, set.id, 'weightKg', set.weightKg + 2.5)}
-                      title="เพิ่มน้ำหนัก 2.5 kg"
+                      onClick={() => handleUpdateSet(ex.id, set.id, 'weightKg', Math.round(set.weightKg) + 1)}
+                      title={userProfile.language === 'en' ? "Increase 1 kg" : "เพิ่มน้ำหนัก 1 kg"}
                       style={{
                         backgroundColor: '#f4f4f5',
                         border: 'none',
@@ -904,7 +904,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                   <div style={{ display: 'flex', alignItems: 'center', gap: '2px', backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid #d4d4d8', padding: '2px' }}>
                     <button
                       onClick={() => handleUpdateSet(ex.id, set.id, 'reps', Math.max(1, set.reps - 1))}
-                      title="ลด 1 ที"
+                      title={userProfile.language === 'en' ? "Decrease 1 rep" : "ลด 1 ที"}
                       style={{
                         backgroundColor: '#f4f4f5',
                         border: 'none',
@@ -939,7 +939,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                     />
                     <button
                       onClick={() => handleUpdateSet(ex.id, set.id, 'reps', set.reps + 1)}
-                      title="เพิ่ม 1 ที"
+                      title={userProfile.language === 'en' ? "Increase 1 rep" : "เพิ่ม 1 ที"}
                       style={{
                         backgroundColor: '#f4f4f5',
                         border: 'none',

@@ -57,6 +57,7 @@ import {
   EXPENSE_CATEGORIES,
   formatBaht,
   INCOME_CATEGORIES,
+  getCategoryName,
 } from '../utils/financeEngine';
 import { getTranslation } from '../utils/translations';
 
@@ -337,7 +338,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                   <CategoryIconBadge icon={cat.icon} size={16} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '11px', color: '#71717a', fontWeight: 600 }}>{cat.category}</div>
+                  <div style={{ fontSize: '11px', color: '#71717a', fontWeight: 600 }}>{getCategoryName(cat.category, userProfile?.language || 'th')}</div>
                   <div style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '13px' }}>
                     {formatBaht(cat.amount)}{' '}
                     <span style={{ fontSize: '10px', color: '#a1a1aa', fontWeight: 600 }}>({cat.percentage}%)</span>
@@ -437,7 +438,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                           fontWeight: 600,
                         }}
                       >
-                        {tx.category}
+                        {getCategoryName(tx.category, userProfile?.language || 'th')}
                       </span>
                       <span style={{ fontSize: '10px', color: '#a1a1aa' }}>{tx.date}</span>
                     </div>
@@ -459,7 +460,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                   </span>
                   <button
                     onClick={() => onDeleteTransaction(tx.id)}
-                    title="ลบรายการ"
+                    title={userProfile?.language === 'en' ? 'Delete transaction' : 'ลบรายการ'}
                     style={{
                       background: 'none',
                       border: 'none',
@@ -674,7 +675,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                       >
                         <div>
                           <strong style={{ color: '#0a0a0c' }}>{tx.note}</strong>
-                          <span style={{ color: '#71717a', fontSize: '11px', display: 'block' }}>{tx.category}</span>
+                          <span style={{ color: '#71717a', fontSize: '11px', display: 'block' }}>{getCategoryName(tx.category, userProfile?.language || 'th')}</span>
                         </div>
                         <span
                           style={{
@@ -699,7 +700,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                 className="btn-black-pill"
                 style={{ padding: '14px', marginTop: '16px' }}
               >
-                <span>ปิดหน้ารายงานสรุป</span>
+                <span>{userProfile?.language === 'en' ? 'Close Report' : 'ปิดหน้ารายงานสรุป'}</span>
                 <X size={16} />
               </button>
             </div>
@@ -880,7 +881,7 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                         }}
                       >
                         <CategoryIconBadge icon={c.icon} size={14} />
-                        <span>{c.name}</span>
+                        <span>{userProfile?.language === 'en' ? (c.nameEn || c.name) : c.name}</span>
                       </button>
                     ))}
                   </div>

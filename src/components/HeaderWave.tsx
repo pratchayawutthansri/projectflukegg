@@ -132,7 +132,7 @@ export const HeaderWave: React.FC<HeaderWaveProps> = ({
             {onOpenLanding && (
               <button
                 onClick={onOpenLanding}
-                title="ดูหน้าเว็บไซต์แนะนำ & วิธีใช้งาน"
+                title={isEn ? "View Website Guide & Manual" : "ดูหน้าเว็บไซต์แนะนำ & วิธีใช้งาน"}
                 style={{
                   backgroundColor: 'rgba(0, 0, 0, 0.32)',
                   backdropFilter: 'blur(8px)',

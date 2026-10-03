@@ -136,7 +136,7 @@ export const App: React.FC = () => {
           {
             id: `s_${idx}_1`,
             setNumber: 1,
-            weightKg: item.targetWeightKg || 30,
+            weightKg: Math.round(item.targetWeightKg || 30),
             reps: 15,
             completed: false,
           },

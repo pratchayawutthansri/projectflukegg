@@ -340,7 +340,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             </label>
             <input
               type="number"
-              step="0.5"
+              step="1"
               value={weightKg}
               onChange={(e) => setWeightKg(e.target.value)}
               style={{

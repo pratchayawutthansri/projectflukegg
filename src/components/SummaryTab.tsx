@@ -12,7 +12,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import type { ScheduledPlan, Transaction, UserProfile, WorkoutSession } from '../types';
-import { formatBaht } from '../utils/financeEngine';
+import { formatBaht, getCategoryName } from '../utils/financeEngine';
 import { getTranslation } from '../utils/translations';
 
 interface SummaryTabProps {
@@ -641,7 +641,7 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
                     fontWeight: 600,
                   }}
                 >
-                  {cat}: <strong style={{ color: '#be123c' }}>-{formatBaht(amt)}</strong>
+                  {getCategoryName(cat, userProfile.language)}: <strong style={{ color: '#be123c' }}>-{formatBaht(amt)}</strong>
                 </div>
               ))}
             </div>
@@ -670,7 +670,9 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({
               >
                 <div>
                   <strong style={{ color: '#0a0a0c' }}>{tx.note}</strong>
-                  <span style={{ color: '#71717a', fontSize: '11px', display: 'block' }}>{tx.category}</span>
+                  <span style={{ color: '#71717a', fontSize: '11px', display: 'block' }}>
+                    {getCategoryName(tx.category, userProfile.language)}
+                  </span>
                 </div>
                 <strong
                   style={{

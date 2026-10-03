@@ -14,7 +14,7 @@ export const EXERCISE_LIBRARY: Record<MuscleGroup, Array<{ name: string; isCompo
     { name: 'Seated Cable Row', isCompound: false, baseWeight: 40, defaultReps: '15 ที', restSec: 45 },
     { name: 'Barbell Bent-over Row', isCompound: true, baseWeight: 40, defaultReps: '15 ที', restSec: 60 },
     { name: 'Deadlift', isCompound: true, baseWeight: 60, defaultReps: '15 ที', restSec: 90 },
-    { name: 'Face Pulls', isCompound: false, baseWeight: 17.5, defaultReps: '15 ที', restSec: 45 },
+    { name: 'Face Pulls', isCompound: false, baseWeight: 18, defaultReps: '15 ที', restSec: 45 },
   ],
   legs: [
     { name: 'Leg Press 45°', isCompound: true, baseWeight: 80, defaultReps: '15 ที', restSec: 60 },
@@ -27,12 +27,12 @@ export const EXERCISE_LIBRARY: Record<MuscleGroup, Array<{ name: string; isCompo
     { name: 'Overhead Dumbbell Press', isCompound: true, baseWeight: 16, defaultReps: '15 ที', restSec: 60 },
     { name: 'Dumbbell Lateral Raise', isCompound: false, baseWeight: 8, defaultReps: '15 ที', restSec: 45 },
     { name: 'Shoulder Press Machine', isCompound: true, baseWeight: 30, defaultReps: '15 ที', restSec: 45 },
-    { name: 'Cable Lateral Raise', isCompound: false, baseWeight: 7.5, defaultReps: '15 ที', restSec: 45 },
+    { name: 'Cable Lateral Raise', isCompound: false, baseWeight: 8, defaultReps: '15 ที', restSec: 45 },
     { name: 'Reverse Pec Deck Fly', isCompound: false, baseWeight: 25, defaultReps: '15 ที', restSec: 45 },
   ],
   arms: [
     { name: 'Barbell Bicep Curl', isCompound: false, baseWeight: 20, defaultReps: '15 ที', restSec: 45 },
-    { name: 'Tricep Rope Pushdown', isCompound: false, baseWeight: 22.5, defaultReps: '15 ที', restSec: 45 },
+    { name: 'Tricep Rope Pushdown', isCompound: false, baseWeight: 22, defaultReps: '15 ที', restSec: 45 },
     { name: 'Dumbbell Hammer Curl', isCompound: false, baseWeight: 12, defaultReps: '15 ที', restSec: 45 },
     { name: 'Preacher Curl Machine', isCompound: false, baseWeight: 25, defaultReps: '15 ที', restSec: 45 },
     { name: 'Tricep Overhead Extension', isCompound: false, baseWeight: 15, defaultReps: '15 ที', restSec: 45 },
@@ -191,7 +191,7 @@ export function parseAndGeneratePlan(
           sets: 1, // 1 set per exercise as requested!
           reps: '15 ที', // 15 reps as requested!
           restSec: item.restSec,
-          targetWeightKg: item.baseWeight
+          targetWeightKg: Math.round(item.baseWeight)
         });
       }
     }
