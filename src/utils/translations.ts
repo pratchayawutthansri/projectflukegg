@@ -70,7 +70,7 @@ export const TRANSLATIONS = {
 
     // Calendar Tab
     calendarTitle: 'ตารางยกและเวลาซ้อม',
-    scheduleWorkout: 'จัดตารางซ้อม +',
+    scheduleWorkout: 'จัดตารางซ้อม',
     dateLabel: 'วันที่:',
     hasRoutines: 'มีโปรแกรม',
     noRoutines: 'ยังไม่มีตารางซ้อม',
@@ -220,7 +220,7 @@ export const TRANSLATIONS = {
 
     // Calendar Tab
     calendarTitle: 'Training Schedule & Routines',
-    scheduleWorkout: 'Schedule Workout +',
+    scheduleWorkout: 'Schedule Workout',
     dateLabel: 'Date:',
     hasRoutines: 'Routines',
     noRoutines: 'No Routine',

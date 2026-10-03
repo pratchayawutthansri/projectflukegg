@@ -151,12 +151,38 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
     return newItems;
   };
 
+  // Helper to format reps bilingually
+  const formatReps = (repsStr: string, isEnglish: boolean) => {
+    if (!repsStr) return isEnglish ? '15 reps' : '15 ที';
+    if (isEnglish) {
+      return repsStr.replace(/ที/g, 'reps').replace(/นาที/g, 'mins');
+    }
+    return repsStr.replace(/reps/g, 'ที').replace(/mins/g, 'นาที');
+  };
+
+  const formatSets = (sets: number, isEnglish: boolean) => {
+    if (isEnglish) {
+      return `${sets} ${sets === 1 ? 'set' : 'sets'}`;
+    }
+    return `${sets} เซ็ต`;
+  };
+
   // Initial population or when muscles/hours change
   useEffect(() => {
     if (routineItems.length === 0) {
       setRoutineItems(generateRoutine(selectedMuscles, targetHours));
     }
   }, []);
+
+  // Sync reps language whenever language changes
+  useEffect(() => {
+    setRoutineItems((prev) =>
+      prev.map((item) => ({
+        ...item,
+        reps: formatReps(item.reps, isEn),
+      }))
+    );
+  }, [isEn]);
 
   if (!isOpen) return null;
 
@@ -1011,7 +1037,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                   }}
                 >
                   {showAddSelector ? <X size={15} color="#ffffff" /> : <Plus size={15} color="#ffffff" />}
-                  <span>{showAddSelector ? (isEn ? 'Close' : 'ปิดเมนู') : (isEn ? '+ Add Exercise' : '+ เพิ่มท่าเล่น')}</span>
+                  <span>{showAddSelector ? (isEn ? 'Close' : 'ปิดเมนู') : (isEn ? 'Add Exercise' : 'เพิ่มท่าเล่น')}</span>
                 </button>
               </div>
 
@@ -1159,7 +1185,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                           {item.exerciseName}
                         </strong>
                         <span style={{ fontSize: '10px', color: '#71717a' }}>
-                          {item.sets} {isEn ? 'sets' : 'เซ็ต'} × {item.reps}
+                          {formatSets(item.sets, isEn)} · {formatReps(item.reps, isEn)}
                         </span>
                       </div>
                     </div>

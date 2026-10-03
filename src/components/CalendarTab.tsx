@@ -96,6 +96,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
             gap: '6px',
             cursor: 'pointer',
             boxShadow: '0 4px 10px rgba(0,0,0,0.15)',
+            whiteSpace: 'nowrap',
           }}
         >
           <Plus size={14} color="#ffffff" /> {t.scheduleWorkout}
