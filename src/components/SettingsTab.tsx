@@ -253,34 +253,35 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '8px',
             marginTop: '16px',
-            backgroundColor: '#16161b',
+            backgroundColor: 'rgba(0, 0, 0, 0.22)',
+            backdropFilter: 'blur(8px)',
             padding: '10px',
             borderRadius: '14px',
-            border: '1px solid rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255, 255, 255, 0.25)',
             textAlign: 'center',
           }}
         >
           <div>
-            <span style={{ fontSize: '10px', color: '#a1a1aa' }}>
+            <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.85)' }}>
               {userProfile.language === 'en' ? 'Weight' : 'น้ำหนัก'}
             </span>
-            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800 }}>
+            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>
               {userProfile.weightKg} kg
             </div>
           </div>
-          <div style={{ borderLeft: '1px solid #27272a', borderRight: '1px solid #27272a' }}>
-            <span style={{ fontSize: '10px', color: '#a1a1aa' }}>
+          <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.25)', borderRight: '1px solid rgba(255, 255, 255, 0.25)' }}>
+            <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.85)' }}>
               {userProfile.language === 'en' ? 'Height' : 'ส่วนสูง'}
             </span>
-            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800 }}>
+            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>
               {userProfile.heightCm || 175} cm
             </div>
           </div>
           <div>
-            <span style={{ fontSize: '10px', color: '#a1a1aa' }}>
+            <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.85)' }}>
               {userProfile.language === 'en' ? 'Age' : 'อายุ'}
             </span>
-            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800, color: 'var(--theme-accent, #ffe500)' }}>
+            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>
               {userProfile.age || 25} {userProfile.language === 'en' ? 'yrs' : 'ปี'}
             </div>
           </div>
@@ -634,14 +635,14 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 width: '38px',
                 height: '38px',
                 borderRadius: '10px',
-                backgroundColor: '#0a0a0c',
-                color: '#ffe500',
+                background: 'var(--theme-card-bg, #0a0a0c)',
+                color: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Globe size={18} />
+              <Globe size={18} color="#ffffff" />
             </div>
             <div>
               <div style={{ fontSize: '14px', fontWeight: 800, color: '#0a0a0c' }}>
@@ -690,11 +691,11 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
       {/* PWA / Install Application Card */}
       <div
         style={{
-          backgroundColor: '#0a0a0c',
+          background: 'var(--theme-card-bg, #0a0a0c)',
           color: '#ffffff',
           borderRadius: '24px',
           padding: '20px',
-          border: '2px solid #0a0a0c',
+          border: '2px solid var(--theme-card-border, #0a0a0c)',
           boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
           display: 'flex',
           flexDirection: 'column',
@@ -708,7 +709,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 width: '40px',
                 height: '40px',
                 borderRadius: '12px',
-                backgroundColor: '#facc15',
+                backgroundColor: '#ffffff',
                 color: '#0a0a0c',
                 display: 'flex',
                 alignItems: 'center',
@@ -716,13 +717,13 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 fontWeight: 900,
               }}
             >
-              <Smartphone size={22} />
+              <Smartphone size={22} color="#0a0a0c" />
             </div>
             <div>
-              <div style={{ fontSize: '15px', fontWeight: 800, fontFamily: 'Outfit, Prompt, sans-serif' }}>
+              <div style={{ fontSize: '15px', fontWeight: 800, fontFamily: 'Outfit, Prompt, sans-serif', color: '#ffffff' }}>
                 {t.installPwa}
               </div>
-              <div style={{ fontSize: '12px', color: '#a1a1aa' }}>
+              <div style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.85)' }}>
                 {isInstalled
                   ? (userProfile.language === 'en' ? 'Installed on device' : 'ติดตั้งลงเครื่องเรียบร้อยแล้ว')
                   : t.installPwaDesc}
@@ -732,13 +733,13 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           {isInstalled && (
             <span
               style={{
-                backgroundColor: 'rgba(34, 197, 94, 0.2)',
-                color: '#4ade80',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                color: '#ffffff',
                 fontSize: '11px',
                 fontWeight: 700,
                 padding: '4px 10px',
                 borderRadius: '9999px',
-                border: '1px solid #22c55e',
+                border: '1px solid rgba(255, 255, 255, 0.4)',
               }}
             >
               {userProfile.language === 'en' ? 'Installed' : 'ติดตั้งแล้ว'}
@@ -754,7 +755,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               style={{
                 width: '100%',
                 padding: '12px 18px',
-                backgroundColor: '#facc15',
+                backgroundColor: '#ffffff',
                 color: '#0a0a0c',
                 border: 'none',
                 borderRadius: '9999px',
@@ -766,11 +767,11 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 justifyContent: 'center',
                 gap: '8px',
                 cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(250, 204, 21, 0.35)',
+                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
                 transition: 'transform 0.15s ease',
               }}
             >
-              <Download size={18} />
+              <Download size={18} color="#0a0a0c" />
               <span>
                 {deferredPrompt
                   ? t.installBtn

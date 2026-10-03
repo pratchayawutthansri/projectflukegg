@@ -188,8 +188,8 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
               setShowAddModal(true);
             }}
             style={{
-              backgroundColor: '#0a0a0c',
-              color: 'var(--theme-accent, #ffe500)',
+              background: 'var(--theme-card-bg, #0a0a0c)',
+              color: '#ffffff',
               border: 'none',
               borderRadius: '9999px',
               padding: '8px 16px',
@@ -199,10 +199,10 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
               alignItems: 'center',
               gap: '6px',
               cursor: 'pointer',
-              boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.15)',
             }}
           >
-            <Plus size={15} /> {t.newTransaction}
+            <Plus size={15} color="#ffffff" /> {t.newTransaction}
           </button>
         </div>
       </div>
@@ -210,15 +210,15 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
       {/* Main Net Balance HUD Card (Monochrome styling) */}
       <div
         style={{
-          backgroundColor: '#0a0a0c',
+          background: 'var(--theme-card-bg, #0a0a0c)',
           color: '#ffffff',
           borderRadius: '24px',
           padding: '22px',
-          border: '2px solid #0a0a0c',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+          border: '2px solid var(--theme-card-border, #0a0a0c)',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
         }}
       >
-        <span style={{ fontSize: '12px', color: '#a1a1aa', fontWeight: 600 }}>{t.netBalance}</span>
+        <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.85)', fontWeight: 600 }}>{t.netBalance}</span>
         <div
           style={{
             fontFamily: 'Outfit, sans-serif',
@@ -238,10 +238,11 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gap: '10px',
-            backgroundColor: '#16161b',
+            backgroundColor: 'rgba(0, 0, 0, 0.22)',
+            backdropFilter: 'blur(8px)',
             padding: '12px',
             borderRadius: '16px',
-            border: '1px solid rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255,255,255,0.2)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -250,18 +251,18 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                 width: '32px',
                 height: '32px',
                 borderRadius: '10px',
-                backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#10b981',
+                color: '#ffffff',
               }}
             >
-              <ArrowDownLeft size={16} />
+              <ArrowDownLeft size={16} color="#ffffff" />
             </div>
             <div>
-              <span style={{ fontSize: '11px', color: '#a1a1aa', display: 'block' }}>{t.totalIncome}</span>
-              <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '14px', color: '#10b981' }}>
+              <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.85)', display: 'block' }}>{t.totalIncome}</span>
+              <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '14px', color: '#ffffff' }}>
                 +{formatBaht(summary.totalIncome)}
               </strong>
             </div>
@@ -273,18 +274,18 @@ export const FinanceTab: React.FC<FinanceTabProps> = ({
                 width: '32px',
                 height: '32px',
                 borderRadius: '10px',
-                backgroundColor: 'rgba(244, 63, 94, 0.15)',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#f43f5e',
+                color: '#ffffff',
               }}
             >
-              <ArrowUpRight size={16} />
+              <ArrowUpRight size={16} color="#ffffff" />
             </div>
             <div>
-              <span style={{ fontSize: '11px', color: '#a1a1aa', display: 'block' }}>{t.totalExpense}</span>
-              <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '14px', color: '#f43f5e' }}>
+              <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.85)', display: 'block' }}>{t.totalExpense}</span>
+              <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '14px', color: '#ffffff' }}>
                 -{formatBaht(summary.totalExpense)}
               </strong>
             </div>

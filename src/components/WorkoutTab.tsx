@@ -485,14 +485,14 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                 width: '28px',
                 height: '28px',
                 borderRadius: '8px',
-                backgroundColor: '#0a0a0c',
-                color: '#ffe500',
+                background: 'var(--theme-card-bg, #0a0a0c)',
+                color: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Navigation size={16} />
+              <Navigation size={16} color="#ffffff" />
             </div>
             <div>
               <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800, margin: 0 }}>
@@ -506,13 +506,13 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
           {totalRunningKm > 0 && (
             <span
               style={{
-                backgroundColor: 'var(--theme-accent, #ffe500)',
-                color: '#0a0a0c',
+                background: 'var(--theme-card-bg, #0a0a0c)',
+                color: '#ffffff',
                 fontWeight: 800,
                 fontSize: '11px',
                 padding: '3px 8px',
                 borderRadius: '6px',
-                border: '1px solid #0a0a0c',
+                border: '1px solid var(--theme-card-border, #0a0a0c)',
               }}
             >
               {userProfile.language === 'en' ? `Total ${totalRunningKm} km` : `รวม ${totalRunningKm} กม.`}
@@ -753,8 +753,8 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                     width: '28px',
                     height: '28px',
                     borderRadius: '8px',
-                    backgroundColor: '#0a0a0c',
-                    color: '#ffe500',
+                    background: 'var(--theme-card-bg, #0a0a0c)',
+                    color: '#ffffff',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',

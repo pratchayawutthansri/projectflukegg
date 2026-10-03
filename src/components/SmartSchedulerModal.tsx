@@ -346,8 +346,8 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
               <span
                 style={{
                   fontSize: '11px',
-                  backgroundColor: '#0a0a0c',
-                  color: '#ffe500',
+                  background: 'var(--theme-card-bg, #0a0a0c)',
+                  color: '#ffffff',
                   padding: '2px 8px',
                   borderRadius: '6px',
                   fontWeight: 700,
@@ -434,8 +434,8 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                 style={{
                   padding: '10px 14px',
                   borderRadius: '14px',
-                  border: selectedDate === todayStr ? '1.5px solid #0a0a0c' : '1px solid #d4d4d8',
-                  backgroundColor: selectedDate === todayStr ? '#0a0a0c' : '#ffffff',
+                  border: selectedDate === todayStr ? '1.5px solid var(--theme-card-border, #0a0a0c)' : '1px solid #d4d4d8',
+                  background: selectedDate === todayStr ? 'var(--theme-card-bg, #0a0a0c)' : '#ffffff',
                   color: selectedDate === todayStr ? '#ffffff' : '#27272a',
                   fontFamily: 'Prompt, sans-serif',
                   fontSize: '12px',
@@ -452,8 +452,8 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                 style={{
                   padding: '10px 14px',
                   borderRadius: '14px',
-                  border: selectedDate === tomorrowStr ? '1.5px solid #0a0a0c' : '1px solid #d4d4d8',
-                  backgroundColor: selectedDate === tomorrowStr ? '#0a0a0c' : '#ffffff',
+                  border: selectedDate === tomorrowStr ? '1.5px solid var(--theme-card-border, #0a0a0c)' : '1px solid #d4d4d8',
+                  background: selectedDate === tomorrowStr ? 'var(--theme-card-bg, #0a0a0c)' : '#ffffff',
                   color: selectedDate === tomorrowStr ? '#ffffff' : '#27272a',
                   fontFamily: 'Prompt, sans-serif',
                   fontSize: '12px',
@@ -488,8 +488,8 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                     style={{
                       padding: '12px 8px',
                       borderRadius: '14px',
-                      border: isSelected ? '2px solid #0a0a0c' : '1.5px solid #e4e4e7',
-                      backgroundColor: isSelected ? '#0a0a0c' : '#ffffff',
+                      border: isSelected ? '2px solid var(--theme-card-border, #0a0a0c)' : '1.5px solid #e4e4e7',
+                      background: isSelected ? 'var(--theme-card-bg, #0a0a0c)' : '#ffffff',
                       color: isSelected ? '#ffffff' : '#0a0a0c',
                       display: 'flex',
                       flexDirection: 'column',
@@ -507,19 +507,19 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                         width: '32px',
                         height: '32px',
                         borderRadius: '10px',
-                        backgroundColor: isSelected ? '#1e1e24' : '#f4f4f5',
+                        backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.22)' : '#f4f4f5',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: isSelected ? '#ffe500' : '#0a0a0c',
+                        color: isSelected ? '#ffffff' : '#0a0a0c',
                       }}
                     >
-                      <MuscleIcon size={18} />
+                      <MuscleIcon size={18} color={isSelected ? '#ffffff' : 'currentColor'} />
                     </div>
-                    <span style={{ fontFamily: 'Prompt, sans-serif', fontSize: '13px', fontWeight: 700 }}>
+                    <span style={{ fontFamily: 'Prompt, sans-serif', fontSize: '13px', fontWeight: 700, color: isSelected ? '#ffffff' : '#0a0a0c' }}>
                       {m.label}
                     </span>
-                    <span style={{ fontSize: '10px', color: isSelected ? '#ffe500' : '#71717a', fontWeight: 600 }}>
+                    <span style={{ fontSize: '10px', color: isSelected ? 'rgba(255, 255, 255, 0.85)' : '#71717a', fontWeight: 600 }}>
                       {m.en}
                     </span>
                     {isSelected && (
@@ -531,14 +531,14 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                           width: '16px',
                           height: '16px',
                           borderRadius: '50%',
-                          backgroundColor: '#ffe500',
+                          backgroundColor: '#ffffff',
                           color: '#0a0a0c',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                         }}
                       >
-                        <Check size={10} strokeWidth={3} />
+                        <Check size={10} strokeWidth={3} color="#0a0a0c" />
                       </div>
                     )}
                   </button>
@@ -569,9 +569,9 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                     style={{
                       padding: '10px 4px',
                       borderRadius: '12px',
-                      border: isSelected ? '2px solid #0a0a0c' : '1.5px solid #e4e4e7',
-                      backgroundColor: isSelected ? '#0a0a0c' : '#f8f8f9',
-                      color: isSelected ? '#ffe500' : '#27272a',
+                      border: isSelected ? '2px solid var(--theme-card-border, #0a0a0c)' : '1.5px solid #e4e4e7',
+                      background: isSelected ? 'var(--theme-card-bg, #0a0a0c)' : '#f8f8f9',
+                      color: isSelected ? '#ffffff' : '#27272a',
                       fontFamily: 'Prompt, sans-serif',
                       fontSize: '12px',
                       fontWeight: 700,
@@ -670,9 +670,9 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                     style={{
                       padding: '10px 4px',
                       borderRadius: '12px',
-                      border: isSelected ? '2px solid #0a0a0c' : '1.5px solid #e4e4e7',
-                      backgroundColor: isSelected ? '#0a0a0c' : '#f8f8f9',
-                      color: isSelected ? '#ffe500' : '#27272a',
+                      border: isSelected ? '2px solid var(--theme-card-border, #0a0a0c)' : '1.5px solid #e4e4e7',
+                      background: isSelected ? 'var(--theme-card-bg, #0a0a0c)' : '#f8f8f9',
+                      color: isSelected ? '#ffffff' : '#27272a',
                       fontFamily: 'Prompt, sans-serif',
                       fontSize: '12px',
                       fontWeight: 700,
@@ -685,7 +685,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                       gap: '4px',
                     }}
                   >
-                    {r.km > 0 && <Navigation size={12} />}
+                    {r.km > 0 && <Navigation size={12} color={isSelected ? '#ffffff' : 'currentColor'} />}
                     <span>{r.label}</span>
                   </button>
                 );
@@ -716,8 +716,8 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                     style={{
                       padding: '8px 4px',
                       borderRadius: '12px',
-                      border: isSelected ? '2px solid #0a0a0c' : '1.5px solid #e4e4e7',
-                      backgroundColor: isSelected ? '#0a0a0c' : '#f8f8f9',
+                      border: isSelected ? '2px solid var(--theme-card-border, #0a0a0c)' : '1.5px solid #e4e4e7',
+                      background: isSelected ? 'var(--theme-card-bg, #0a0a0c)' : '#f8f8f9',
                       color: isSelected ? '#ffffff' : '#27272a',
                       fontFamily: 'Prompt, sans-serif',
                       fontSize: '11px',
@@ -794,11 +794,11 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '6px',
-                    backgroundColor: '#0a0a0c',
-                    color: '#ffe500',
+                    background: 'var(--theme-card-bg, #0a0a0c)',
+                    color: '#ffffff',
                     borderRadius: '10px',
                     padding: '6px 12px',
-                    border: '1.5px solid #0a0a0c',
+                    border: '1.5px solid var(--theme-card-border, #0a0a0c)',
                     position: 'relative',
                     cursor: 'pointer',
                     minWidth: '95px',
@@ -813,13 +813,13 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                     onChange={(e) => setStartTime(e.target.value)}
                     aria-label="เลือกเวลาเริ่มซ้อม"
                   />
-                  <Clock size={14} color="#ffe500" />
+                  <Clock size={14} color="#ffffff" />
                   <span
                     style={{
                       fontFamily: 'Outfit, sans-serif',
                       fontSize: '14px',
                       fontWeight: 800,
-                      color: '#ffe500',
+                      color: '#ffffff',
                       letterSpacing: '0.5px',
                     }}
                   >
@@ -921,8 +921,8 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
 
                 <span
                   style={{
-                    backgroundColor: '#0a0a0c',
-                    color: '#ffe500',
+                    background: 'var(--theme-card-bg, #0a0a0c)',
+                    color: '#ffffff',
                     fontSize: '11px',
                     fontWeight: 700,
                     padding: '3px 10px',
@@ -974,9 +974,9 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                   type="button"
                   onClick={() => setShowAddSelector(!showAddSelector)}
                   style={{
-                    backgroundColor: showAddSelector ? '#ef4444' : '#0a0a0c',
-                    color: showAddSelector ? '#ffffff' : '#ffe500',
-                    border: showAddSelector ? '1.5px solid #ef4444' : '1.5px solid #0a0a0c',
+                    background: showAddSelector ? '#ef4444' : 'var(--theme-card-bg, #0a0a0c)',
+                    color: '#ffffff',
+                    border: showAddSelector ? '1.5px solid #ef4444' : '1.5px solid var(--theme-card-border, #0a0a0c)',
                     borderRadius: '12px',
                     padding: '10px 8px',
                     fontSize: '13px',
@@ -992,7 +992,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                     transition: 'all 0.15s ease',
                   }}
                 >
-                  {showAddSelector ? <X size={15} /> : <Plus size={15} />}
+                  {showAddSelector ? <X size={15} color="#ffffff" /> : <Plus size={15} color="#ffffff" />}
                   <span>{showAddSelector ? 'ปิดเมนู' : '+ เพิ่มท่าเล่น'}</span>
                 </button>
               </div>
@@ -1064,7 +1064,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                         type="button"
                         onClick={() => handleAddExerciseFromLibrary(ex)}
                         style={{
-                          backgroundColor: '#0a0a0c',
+                          background: 'var(--theme-card-bg, #0a0a0c)',
                           color: '#ffffff',
                           border: 'none',
                           borderRadius: '6px',
@@ -1109,7 +1109,7 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
                           width: '22px',
                           height: '22px',
                           borderRadius: '50%',
-                          backgroundColor: '#0a0a0c',
+                          background: 'var(--theme-card-bg, #0a0a0c)',
                           color: '#ffffff',
                           display: 'flex',
                           alignItems: 'center',
@@ -1296,17 +1296,17 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
             className="btn-black-pill"
             style={{
               padding: '16px 20px',
-              backgroundColor: isSuccess ? '#10b981' : '#0a0a0c',
-              borderColor: isSuccess ? '#10b981' : '#0a0a0c',
+              background: isSuccess ? '#10b981' : 'var(--theme-card-bg, #0a0a0c)',
+              borderColor: isSuccess ? '#10b981' : 'var(--theme-card-border, #0a0a0c)',
               color: '#ffffff',
               boxShadow: '0 4px 14px rgba(0,0,0,0.2)',
             }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {isSuccess ? <Check size={18} /> : <Play size={16} fill="currentColor" />}
+              {isSuccess ? <Check size={18} color="#ffffff" /> : <Play size={16} fill="currentColor" color="#ffffff" />}
               {isSuccess ? 'จัดลงตารางเรียบร้อยแล้ว!' : 'ยืนยันและนำไปใส่ตารางซ้อมทันที'}
             </span>
-            <ChevronRight size={18} />
+            <ChevronRight size={18} color="#ffffff" />
           </button>
         </div>
       </div>
