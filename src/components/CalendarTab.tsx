@@ -467,7 +467,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Play size={16} fill="#ffffff" color="#ffffff" />
-                  {userProfile.language === 'en' ? 'Start Workout with this Routine Now' : 'โหลดเข้าโหมดซ้อม Gym Gym Gym ทันที'}
+                  {userProfile.language === 'en' ? 'Start Workout with this Routine Now' : 'โหลดเข้าโหมดซ้อมทันที'}
                 </span>
                 <ChevronRight size={18} />
               </button>

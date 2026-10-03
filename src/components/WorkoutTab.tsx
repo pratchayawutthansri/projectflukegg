@@ -1009,7 +1009,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
         style={{ padding: '16px 24px', marginTop: '6px' }}
       >
         <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Check size={18} color="#ffffff" /> {userProfile.language === 'en' ? 'Finish & Summary Today Workout' : 'สรุปและเสร็จสิ้นการซ้อมที่ Gym Gym Gym'}
+          <Check size={18} color="#ffffff" /> {userProfile.language === 'en' ? 'Finish & Summary Today Workout' : 'สรุปและเสร็จสิ้นการซ้อม'}
         </span>
         <ChevronRight size={18} />
       </button>

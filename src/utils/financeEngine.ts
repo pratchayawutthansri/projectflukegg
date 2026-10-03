@@ -3,7 +3,7 @@ import type { Language, Transaction } from '../types';
 export const EXPENSE_CATEGORIES = [
   { id: 'food_clean', name: 'อาหาร & คลีนฟู้ด', nameEn: 'Food & Clean Eating', icon: 'utensils' },
   { id: 'supplements', name: 'เวย์โปรตีน & อาหารเสริม', nameEn: 'Whey & Supplements', icon: 'package' },
-  { id: 'gym_membership', name: 'สมาชิก Gym Gym Gym', nameEn: 'Gym Membership', icon: 'dumbbell' },
+  { id: 'gym_membership', name: 'สมาชิกยิม / ค่าฟิตเนส', nameEn: 'Gym Membership', icon: 'dumbbell' },
   { id: 'gear', name: 'อุปกรณ์กีฬา & เสื้อผ้า', nameEn: 'Sports Gear & Apparel', icon: 'shirt' },
   { id: 'transport', name: 'เดินทาง & ค่าน้ำมัน', nameEn: 'Transport & Fuel', icon: 'car' },
   { id: 'coffee', name: 'กาแฟ & คาเฟ่', nameEn: 'Coffee & Cafe', icon: 'coffee' },

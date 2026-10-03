@@ -303,7 +303,9 @@ export const SmartSchedulerModal: React.FC<SmartSchedulerModalProps> = ({
       timeSlot: timeSlotStr,
       routineItems,
       runningDistanceKm: runningKm > 0 ? runningKm : undefined,
-      notes: `Gym Gym Gym: เครื่องละ 1 เซ็ต 15 ที รวม ${routineItems.length} เครื่อง` + (runningKm > 0 ? ` + วิ่ง ${runningKm} กม.` : ''),
+      notes: isEn
+        ? `1 set of 15 reps each, total ${routineItems.length} machines` + (runningKm > 0 ? ` + Run ${runningKm} km` : '')
+        : `เครื่องละ 1 เซ็ต 15 ที รวม ${routineItems.length} เครื่อง` + (runningKm > 0 ? ` + วิ่ง ${runningKm} กม.` : ''),
     };
 
     onSavePlan(finalPlan);

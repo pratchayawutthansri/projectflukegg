@@ -441,7 +441,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   {userProfile.language === 'en' ? 'Membership & Account Switch' : 'ระบบสมัครสมาชิก / สลับบัญชี'}
                 </strong>
                 <span style={{ fontSize: '11px', color: '#71717a' }}>
-                  {userProfile.language === 'en' ? 'Sign up or log into Gym Gym Gym' : 'สมัครสมาชิกใหม่ หรือเข้าสู่ระบบ Gym Gym Gym'}
+                  {userProfile.language === 'en' ? 'Sign up or log into account' : 'สมัครสมาชิกใหม่ หรือเข้าสู่ระบบ'}
                 </span>
               </div>
             </div>

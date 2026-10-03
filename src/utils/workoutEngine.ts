@@ -233,7 +233,7 @@ export function parseAndGeneratePlan(
     timeSlot: '17:30 - ' + addMinutesToTimeString('17:30', durationMinutes),
     routineItems,
     runningDistanceKm: detectedRunningKm,
-    notes: `Gym Gym Gym: เครื่องเล่นเซ็ตละ 15 ที รวม ${routineItems.length} เครื่องเล่น` + (detectedRunningKm ? ` + วิ่ง ${detectedRunningKm} กม.` : '')
+    notes: `เครื่องเล่นเซ็ตละ 15 ที รวม ${routineItems.length} เครื่องเล่น` + (detectedRunningKm ? ` + วิ่ง ${detectedRunningKm} กม.` : '')
   };
 }
 

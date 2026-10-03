@@ -1143,7 +1143,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   </>
                 ) : (
                   <>
-                    <span>{isEn ? 'Log In to Gym Gym Gym' : 'Log In to Gym (เข้าสู่ระบบ)'}</span>
+                    <span>{isEn ? 'Log In' : 'เข้าสู่ระบบ (Log In)'}</span>
                     <ChevronRight size={16} />
                   </>
                 )}
