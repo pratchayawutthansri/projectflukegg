@@ -796,38 +796,7 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
               </button>
             </div>
 
-            {/* Exercise Guidance / Form Tips (เพื่อให้คนออกกำลังกายรู้จุดโฟกัสและวิธีเล่น) */}
-            {(() => {
-              const detail = findExerciseDetail(ex.name);
-              if (!detail) return null;
-              return (
-                <div
-                  style={{
-                    backgroundColor: '#f8f8f9',
-                    border: '1px solid #e4e4e7',
-                    borderRadius: '12px',
-                    padding: '8px 12px',
-                    marginBottom: '10px',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '8px',
-                    fontSize: '11.5px',
-                    lineHeight: 1.5,
-                    color: '#3f3f46',
-                  }}
-                >
-                  <span style={{ fontSize: '13px', flexShrink: 0, marginTop: '1px' }}>💡</span>
-                  <div>
-                    <div style={{ fontWeight: 800, color: '#0a0a0c', marginBottom: '2px' }}>
-                      {userProfile.language === 'en' ? detail.targetMuscleEn : `จุดโฟกัส: ${detail.targetMuscleTh}`}
-                    </div>
-                    <div>
-                      {userProfile.language === 'en' ? detail.tipsEn : detail.tipsTh}
-                    </div>
-                  </div>
-                </div>
-              );
-            })()}
+
 
             {/* Sets Table with + / - Buttons for both weight and reps */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -1199,91 +1168,50 @@ export const WorkoutTab: React.FC<WorkoutTabProps> = ({
                         style={{
                           backgroundColor: '#ffffff',
                           border: '1.5px solid #0a0a0c',
-                          borderRadius: '18px',
-                          padding: '14px',
-                          boxShadow: '0 3px 0 #0a0a0c',
+                          borderRadius: '16px',
+                          padding: '12px 14px',
+                          boxShadow: '0 2px 0 #0a0a0c',
                           cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '10px',
                           transition: 'transform 0.1s ease',
                         }}
                         onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.99)')}
                         onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                       >
-                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '2px' }}>
-                              <strong style={{ color: '#0a0a0c', fontSize: '15px', fontWeight: 800, fontFamily: 'Outfit, Prompt, sans-serif' }}>
-                                {item.name}
-                              </strong>
-                              <span
-                                style={{
-                                  background: 'var(--theme-card-bg, #0a0a0c)',
-                                  color: '#ffffff',
-                                  fontSize: '10px',
-                                  fontWeight: 700,
-                                  padding: '2px 8px',
-                                  borderRadius: '9999px',
-                                  whiteSpace: 'nowrap',
-                                }}
-                              >
-                                {userProfile.language === 'en' ? item.muscleLabelEn : item.muscleLabelTh}
-                              </span>
-                            </div>
-                            <div style={{ fontSize: '12px', color: '#52525b', fontWeight: 600 }}>
-                              {userProfile.language === 'en' ? item.name : item.nameTh}
-                            </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <strong style={{ color: '#0a0a0c', fontSize: '14.5px', fontWeight: 800, fontFamily: 'Outfit, Prompt, sans-serif', display: 'block' }}>
+                            {item.name}
+                          </strong>
+                          <div style={{ fontSize: '11px', color: '#71717a', marginTop: '2px' }}>
+                            {userProfile.language === 'en'
+                              ? `Target: ${item.muscleLabelEn} · Default 1 set 15 reps`
+                              : `กลุ่มกล้ามเนื้อ: ${item.muscleLabelTh} · ตั้งต้น 1 เซ็ต 15 ที`}
                           </div>
-
-                          <button
-                            type="button"
-                            title={userProfile.language === 'en' ? 'Add this machine' : 'เพิ่มเครื่องเล่นนี้'}
-                            style={{
-                              width: '32px',
-                              height: '32px',
-                              borderRadius: '50%',
-                              background: 'var(--theme-card-bg, #0a0a0c)',
-                              border: 'none',
-                              color: '#ffffff',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              flexShrink: 0,
-                              boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <Plus size={16} color="#ffffff" strokeWidth={2.5} />
-                          </button>
                         </div>
 
-                        {/* Exercise Detail & Guidance Box (ตัวคนออกกำลังกายจะได้รู้) */}
-                        <div
+                        <button
+                          type="button"
+                          title={userProfile.language === 'en' ? 'Add this machine' : 'เพิ่มเครื่องเล่นนี้'}
                           style={{
-                            backgroundColor: '#f8f8f9',
-                            border: '1px solid #e4e4e7',
-                            borderRadius: '12px',
-                            padding: '9px 12px',
-                            marginTop: '10px',
-                            fontSize: '11.5px',
-                            lineHeight: 1.5,
-                            color: '#3f3f46',
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            background: 'var(--theme-card-bg, #0a0a0c)',
+                            border: 'none',
+                            color: '#ffffff',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                            cursor: 'pointer',
                           }}
                         >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 800, color: '#0a0a0c', marginBottom: '3px' }}>
-                            <span>💡</span>
-                            <span>
-                              {userProfile.language === 'en'
-                                ? `Target Focus: ${item.targetMuscleEn}`
-                                : `จุดโฟกัสกล้ามเนื้อ: ${item.targetMuscleTh}`}
-                            </span>
-                          </div>
-                          <div style={{ color: '#52525b', marginBottom: '6px' }}>
-                            {userProfile.language === 'en' ? item.tipsEn : item.tipsTh}
-                          </div>
-                          <div style={{ paddingTop: '6px', borderTop: '1px dashed #d4d4d8', fontSize: '10.5px', color: '#71717a', display: 'flex', justifyContent: 'space-between' }}>
-                            <span>{userProfile.language === 'en' ? 'Default: 1 set × 15 reps' : 'ตั้งต้น: 1 เซ็ต × 15 ที'}</span>
-                            <span style={{ fontWeight: 600 }}>{userProfile.language === 'en' ? `Weight: ~${item.baseWeightKg} kg` : `น้ำหนักแนะนำ: ~${item.baseWeightKg} kg`}</span>
-                          </div>
-                        </div>
+                          <Plus size={16} color="#ffffff" strokeWidth={2.5} />
+                        </button>
                       </div>
                     ))}
                   </div>
